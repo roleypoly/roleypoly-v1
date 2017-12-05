@@ -1,0 +1,46 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+:root {
+  --c-white: #efefef;
+  --c-9: #EBD6D4;
+  --c-7: #AB9C9A;
+  --c-5: #6B6261;
+  --c-3: #5E5655;
+  --c-1: #453F3E;
+  --c-dark: #5E5655;
+}
+
+::selection {
+  background: var(--c-9);
+  color: var(--c-1);
+}
+
+::-moz-selection {
+  background: var(--c-9);
+  color: var(--c-1);
+}
+
+html {
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  overflow: auto;
+  color: var(--c-white);
+  background-color: var(--c-1);
+  overflow-y: hidden;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  color: var(--c-9);
+}
+
+.uk-navbar-nav>li>a {
+  color: var(--c-7);
+}

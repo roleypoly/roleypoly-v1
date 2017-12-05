@@ -1,0 +1,13 @@
+version: '2.1'
+services:
+
+    pg:
+        image: postgres:10-alpine
+        container_name: roleypoly-pg
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_PASSWORD: 19216801
+            POSTGRES_DB: roleypoly
+            POSTGRES_USER: roleypoly
+            POSTGRES_INITDB_ARGS: -A trust

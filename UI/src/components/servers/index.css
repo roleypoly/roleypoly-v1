@@ -1,0 +1,20 @@
+.servers {
+  display: grid;
+  grid-template-rows: 100px calc(100vh - 75px);
+  grid-template-columns: 300px 1fr;
+  grid-template-areas:  "user    content"
+                        "listing content";
+}
+
+.servers__nav {
+  grid-area: listing;
+  overflow-y: scroll;
+  height: calc(100vh - 175px);
+}
+
+.servers__content {
+  grid-area: content;
+  background-color: var(--c-3);
+  padding: 15px;
+  overflow-y: scroll;
+}
