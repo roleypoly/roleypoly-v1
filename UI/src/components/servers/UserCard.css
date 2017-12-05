@@ -2,7 +2,7 @@
   position: relative;
   display: flex;
   background-color: rgba(0,0,0,0.3);
-  border-bottom: 1px solid var(--c-3);  
+  /* border-bottom: 1px solid var(--c-3);   */
   padding: 25px 15px;
   grid-area: user;
 }
@@ -38,6 +38,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.user-card__actions svg {
+  transition: transform 0.05s ease-in-out;
+}
+
+.user-card__actions svg:hover {
+  transform: scale(1.15);
 }
 
 .user-card__actions polygon {

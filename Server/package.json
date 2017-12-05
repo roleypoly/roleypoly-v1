@@ -29,7 +29,7 @@
     "pg": "^7.4.0",
     "pg-hstore": "^2.3.2",
     "pm2": "^2.8.0",
-    "sequelize": "^4.25.1",
+    "sequelize": "^4.26.0",
     "socket.io": "^2.0.4",
     "standard": "^10.0.3",
     "superagent": "^3.8.1",

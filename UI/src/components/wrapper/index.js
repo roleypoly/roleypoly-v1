@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import Radium from 'radium'
 import Logotype from '../logotype'
 import styles from './styles'
+import './wrapper.css'
 
 class Wrapper extends Component {
   render () {
@@ -11,7 +12,7 @@ class Wrapper extends Component {
       <div style={styles.container}>
         <nav uk-navbar='' style={styles.nav} className='uk-navbar-transparent'>
           <div className='uk-navbar-left'>
-            <Logotype style={{ height: '2rem' }} />
+            <Logotype style={{ height: '2rem' }} className='wrapper__logotype' />
           </div>
           <div class='uk-navbar-right'>
             <ul class='uk-navbar-nav'>

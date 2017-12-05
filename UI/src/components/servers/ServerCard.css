@@ -1,8 +1,10 @@
 .server-list__item {
   display: flex;
-  border-bottom: 1px solid var(--c-3);
+  /* border-bottom: 1px solid var(--c-3); */
   padding: 25px 15px;
   padding-right: 0;
+  align-items: center;
+  /* justify-content: center; */
 }
 
 a.server-list__item {
@@ -21,6 +23,8 @@ a.server-list__item.active {
 .server-list__item:hover:not(.active) {
   background-color: rgba(0,0,0,0.25) !important;
   cursor: pointer;
+  transform: translateX(1px); 
+  transition: background 0.05s ease-in-out, transform 0.1s ease-in-out;  
 }
 
 .server-list__item:last-of-type {

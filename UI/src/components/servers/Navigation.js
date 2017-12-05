@@ -7,10 +7,11 @@ import UserCard from './UserCard'
 
 class ServersNavigation extends Component {
   render () {
+    console.log(this.props.servers)
     return <Fragment>
       <UserCard user={this.props.user} />
       <div className={this.props.className}>
-        { this.props.servers.map((s, i) => <ServerCard server={s} key={i} />) }
+        { this.props.servers.map((s, i) => <ServerCard server={s} user={this.props.user} key={i} />) }
       </div>
     </Fragment>
   }
