@@ -19,7 +19,19 @@ export const userInit = async dispatch => {
     })
 
     dispatch(fetchServers)
-  } catch(e) {
-    console.log(e)
+  } catch (e) {
+    if (!window.location.pathname.startsWith('/oauth')) {
+      window.location.href = '/oauth/flow'
+    }
   }
+}
+
+export const userLogout = async dispatch => {
+  await superagent.post('/api/auth/logout')
+
+  dispatch({
+    type: Symbol.for('reset user')
+  })
+
+  window.location.href = '/'
 }

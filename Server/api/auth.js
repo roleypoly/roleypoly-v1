@@ -51,6 +51,10 @@ module.exports = (R, $) => {
   })
 
   R.get('/api/auth/redirect', ctx => {
-    ctx.redirect($.discord.getAuthUrl())
+    ctx.body = { url: $.discord.getAuthUrl() }
+  })
+
+  R.post('/api/auth/logout', ctx => {
+    ctx.session = null
   })
 }

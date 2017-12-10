@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import Radium from 'radium'
 import Logotype from '../logotype'
 import styles from './styles'
 import './wrapper.css'
@@ -22,11 +21,13 @@ class Wrapper extends Component {
           </div>
         </nav>
         <main>
-          {this.props.children}
+          {
+            this.props.children
+          }
         </main>
       </div>
     </div>
   }
 }
 
-export default Radium(Wrapper)
+export default Wrapper

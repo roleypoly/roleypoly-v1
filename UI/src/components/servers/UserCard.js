@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { NavLink } from 'react-router-dom'
+import { connect } from 'react-redux'
+import * as Actions from '../../actions'
 import './UserCard.sass'
 
+@connect()
 class UserCard extends Component {
   static propTypes = {
     user: ImmutablePropTypes.map
@@ -33,7 +36,7 @@ class UserCard extends Component {
       </div>
       <div className='user-card__actions'>
         <ul className='uk-iconnav uk-iconnav-vertical'>
-          <li><NavLink uk-tooltip='' title='Sign out' uk-icon='icon: sign-out' to='/auth/signout' activeClassName='uk-active' /></li>
+          <li><a uk-tooltip='' title='Sign out' uk-icon='icon: sign-out' onClick={() => { this.props.dispatch(Actions.userLogout) }} /></li>
           {
             (this.props.user.isRoot === true)
               ? <li><NavLink uk-tooltip='' title='Root' uk-icon='icon: bolt' to='/root/' activeClassName='uk-active' /></li>

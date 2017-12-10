@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
 import { connect } from 'react-redux'
-import superagent from 'superagent'
 import './index.sass'
 
 import Navigation from './Navigation'

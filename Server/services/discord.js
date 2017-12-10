@@ -92,6 +92,10 @@ class DiscordService extends Service {
   async getUser (authToken) {
     const url = 'https://discordapp.com/api/v6/users/@me'
     try {
+      if (authToken == null || authToken === '') {
+        throw new Error('not logged in')
+      }
+
       const rsp =
         await superagent
           .get(url)

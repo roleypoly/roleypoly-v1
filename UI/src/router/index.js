@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom'
 
 import Servers from '../components/servers'
 import OauthCallback from '../components/oauth-callback'
+import OauthFlow from '../components/oauth-flow'
 
 const aaa = (props) => (<div>{ JSON.stringify(props) }</div>)
 
@@ -13,6 +14,7 @@ export default class AppRouter extends Component {
       <Route path='/s' component={Servers} />
       <Route path='/root' component={aaa} />
       <Route path='/oauth/callback' component={OauthCallback} />
+      <Route path='/oauth/flow' component={OauthFlow} />
     </Fragment>
   }
 }
