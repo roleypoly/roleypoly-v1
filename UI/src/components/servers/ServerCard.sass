@@ -7,17 +7,18 @@
     align-items: center
     /* justify-content: center */
     
-    .active
+    &.active
       background-color: var(--c-3)
 
-    &:hover:not(.active)
-      background-color: rgba(0,0,0,0.25) !important
-      cursor: pointer
-      transform: translateX(1px) 
-      transition: background 0.05s ease-in-out, transform 0.1s ease-in-out  
+    &:not(.active)
+      &:hover
+        background-color: rgba(0,0,0,0.25) !important
+        cursor: pointer
+        transform: translateX(1px) 
+        transition: background 0.05s ease-in-out, transform 0.1s ease-in-out  
 
-    &:nth-of-type(even)
-      background-color: rgba(0,0,0,0.1)
+      &:nth-of-type(even)
+        background-color: rgba(0,0,0,0.1)
 
     &:last-of-type
       border: 0
