@@ -1,18 +1,33 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
-import Radium from 'radium'
-import './UserCard.css'
+import './UserCard.sass'
 
 class UserCard extends Component {
+  static propTypes = {
+    user: PropTypes.object.isRequired
+  }
+
+  get avatar () {
+    const { user } = this.props
+    if (user.avatar === '' || user.avatar == null) {
+      return `https://cdn.discordapp.com/embed/avatars/${Math.ceil(Math.random() * 9999) % 4}.png`
+    }
+
+    return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+  }
+
   render () {
     const { user } = this.props
 
+    // console.log(this.props)
+
     return <div className='user-card'>
       <div className='user-card__icon'>
-        <img src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`} />
+        <img src={this.avatar} alt={user.username} />
       </div>
       <div className='user-card__info'>
-      <span className='user-card__info__name'>{user.username}</span><span className='user-card__info__discrim'>#{user.discriminator}</span>
+        <span className='user-card__info__name'>{user.username}</span><span className='user-card__info__discrim'>#{user.discriminator}</span>
       </div>
       <div className='user-card__actions'>
         <ul className='uk-iconnav uk-iconnav-vertical'>
@@ -28,4 +43,4 @@ class UserCard extends Component {
   }
 }
 
-export default Radium(UserCard)
+export default UserCard

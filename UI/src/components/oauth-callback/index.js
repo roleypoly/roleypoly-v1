@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import superagent from 'superagent'
 
@@ -23,14 +23,16 @@ class OauthCallback extends Component {
 
     // pass token to backend, await it to finish it's business.
     try {
-      await superagent.post('/api/auth/token').send({ token })
+      const rsp = await superagent.post('/api/auth/token').send({ token })
+      this.setState({ notReady: false })
+      this.props.onLogin(rsp.body)
     } catch (e) {
       console.error('token pass error', e)
       this.setState({ message: 'g-gomen nasai... i broke it...' })
       return
     } 
     
-    this.setState({ notReady: false })
+
     // update user stuff here
   }
 

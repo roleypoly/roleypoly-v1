@@ -14,8 +14,8 @@ class Wrapper extends Component {
           <div className='uk-navbar-left'>
             <Logotype style={{ height: '2rem' }} className='wrapper__logotype' />
           </div>
-          <div class='uk-navbar-right'>
-            <ul class='uk-navbar-nav'>
+          <div className='uk-navbar-right'>
+            <ul className='uk-navbar-nav'>
               <li><Link to='/start'>Get Started</Link></li>
               <li><a href='https://discord.gg/PWQUVsd'>Support Discord</a></li>
             </ul>

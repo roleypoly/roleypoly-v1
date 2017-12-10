@@ -46,13 +46,15 @@ class DiscordService extends Service {
     })
   }
 
-  presentableRoles (serverId) {
-    return this.client.guilds.get(serverId).roles.map((role) => {
+  presentableRoles (serverId, gm) {
+    return this.client.guilds.get(serverId).roles.filter(r => r.id !== serverId).map((role) => {
       return {
         color: role.hexColor,
-        position: role.calculatedPosition,
+        position: role.position,
+        calculatedPosition: role.calculatedPosition,
         id: role.id,
-
+        name: role.name,
+        selected: gm.roles.has(role.id)
       }
     })
   }
@@ -71,6 +73,7 @@ class DiscordService extends Service {
       const rsp =
         await superagent
           .post(url)
+          .set('Content-Type', 'application/x-www-form-urlencoded')
           .send({
             client_id: this.clientId,
             client_secret: this.clientSecret,
@@ -82,6 +85,20 @@ class DiscordService extends Service {
       return rsp.body
     } catch (e) {
       this.log.error('getAuthToken failed', e)
+      throw e
+    }
+  }
+
+  async getUser (authToken) {
+    const url = 'https://discordapp.com/api/v6/users/@me'
+    try {
+      const rsp =
+        await superagent
+          .get(url)
+          .set('Authorization', `Bearer ${authToken}`)
+      return rsp.body
+    } catch (e) {
+      this.log.error('getUser error', e)
       throw e
     }
   }
@@ -119,7 +136,6 @@ class DiscordService extends Service {
   getBotJoinUrl () {
     return `https://discordapp.com/oauth2/authorize?client_id=${this.clientId}&scope=bot&permissions=268435456&redirect_uri=${this.botCallback}`
   }
-
 }
 
 module.exports = DiscordService

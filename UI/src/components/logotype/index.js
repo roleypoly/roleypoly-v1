@@ -2,8 +2,8 @@ import React from 'react'
 
 const Logotype = ({fill = 'var(--c-7)', width, height, circleFill, typeFill, style, className}) => (
   <svg style={style} className={className} viewBox='0 0 1566 298' version='1.1' xmlns='http://www.w3.org/2000/svg'>
-    <g id='Page-1' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>
-      <text id='Roleypoly' font-family='HelveticaNeue-Medium, Helvetica Neue' font-size='288' font-weight='400' fill={typeFill || fill}>
+    <g id='Page-1' stroke='none' strokeWidth='1' fill='none' fillRule='evenodd'>
+      <text id='Roleypoly' fontFamily='HelveticaNeue-Medium, Helvetica Neue' fontSize='288' fontWeight='400' fill={typeFill || fill}>
         <tspan x='249' y='238'>Roleypoly</tspan>
       </text>
       <defs>

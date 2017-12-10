@@ -10,11 +10,11 @@ body {
 :root {
   --c-white: #efefef;
   --c-9: #EBD6D4;
-  --c-7: #AB9C9A;
-  --c-5: #6B6261;
-  --c-3: #5E5655;
-  --c-1: #453F3E;
-  --c-dark: #5E5655;
+  --c-7: #ab9b9a;
+  --c-5: #756867;
+  --c-3: #5d5352;
+  --c-1: #453e3d;
+  --c-dark: #332d2d;
 }
 
 ::selection {

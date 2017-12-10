@@ -42,6 +42,7 @@ class Roleypoly {
     // })
 
     this.ctx.discord = new (require('./services/discord'))(this.ctx)
+    this.ctx.sessions = new (require('./services/sessions'))(this.ctx)
   }
 
   async mountRoutes () {

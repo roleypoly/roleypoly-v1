@@ -1,0 +1,41 @@
+.server-list
+  &__item
+    display: flex
+    /* border-bottom: 1px solid var(--c-3) */
+    padding: 25px 15px
+    padding-right: 0
+    align-items: center
+    /* justify-content: center */
+    
+    .active
+      background-color: var(--c-3)
+
+    &:hover:not(.active)
+      background-color: rgba(0,0,0,0.25) !important
+      cursor: pointer
+      transform: translateX(1px) 
+      transition: background 0.05s ease-in-out, transform 0.1s ease-in-out  
+
+    &:nth-of-type(even)
+      background-color: rgba(0,0,0,0.1)
+
+    &:last-of-type
+      border: 0
+
+    &__icon img
+      border-radius: 100%
+      width: 50px
+      height: 50px
+      border: 2px solid transparent  
+
+    &__info
+      padding: 0 10px
+
+a.server-list__item
+  color: var(--c-white)
+  text-decoration: none
+  
+  .active
+    cursor: default
+
+

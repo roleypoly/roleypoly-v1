@@ -1,0 +1,56 @@
+.role
+  border: 1px solid var(--role-color-rgba)
+  border-radius: 32px
+  box-sizing: border-box
+  height: 32px
+  margin: 0 6px 6px 0
+  padding: 4px
+  display: inline-flex
+  font-weight: 600
+  align-content: center
+  justify-content: center
+  font-size: 16px
+  vertical-align: baseline
+  transition: border-color 0.2s ease-in-out
+
+  &:hover
+    .role__option
+      transform: translateY(-1px)
+      box-shadow: 0 1px 1px var(--c-dark)
+      border-color: var(--role-color-hover)
+      background-color: transparent 
+      &:active
+        box-shadow: none  
+
+  &__option
+    border-radius: 50%
+    height: 22px
+    margin-right: 6px
+    width: 22px
+    box-sizing: border-box
+    /* display: inline-block */
+    background-color: transparent
+    overflow: hidden
+    border: 1px solid var(--role-color-hex)
+    transition: background-color 0.1s ease-in-out, border-left-width 0.3s ease-in-out, border-right-width 0.5s ease-in-out, border-color 0.1s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.1s ease-out
+                
+    &.selected
+      background-color: var(--role-color-hex)
+    
+      // This **must** be width-1, otherwise blink adds width to the boundaries.
+      border-left-width: 21px 
+
+    &:hover
+      cursor: pointer
+
+
+  &__name
+    margin-right: 6px
+    max-width: 200px
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+    user-select: none
+
+.role__option:active, .role:active .role__option:not(:active)
+  transform: translateY(0) !important  
