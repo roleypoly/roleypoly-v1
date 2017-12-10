@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import { NavLink } from 'react-router-dom'
 import './UserCard.sass'
 
 class UserCard extends Component {
   static propTypes = {
-    user: PropTypes.object.isRequired
+    user: ImmutablePropTypes.map
   }
 
   get avatar () {

@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import PropTypes from 'prop-types'
 import ServerCard from './ServerCard'
 import UserCard from './UserCard'
@@ -6,8 +7,8 @@ import UserCard from './UserCard'
 class ServersNavigation extends Component {
 
   static propTypes = {
-    user: PropTypes.object.isRequired,
-    servers: PropTypes.arrayOf(PropTypes.object).isRequired,
+    user: ImmutablePropTypes.map.isRequired,
+    servers: ImmutablePropTypes.setOf(ImmutablePropTypes.map).isRequired,
     className: PropTypes.string
   }
 

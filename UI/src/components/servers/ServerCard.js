@@ -1,9 +1,15 @@
 import React, { Component } from 'react'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import { NavLink } from 'react-router-dom'
 import Radium from 'radium'
 import './ServerCard.sass'
 
 class ServerCard extends Component {
+  static propTypes = {
+    user: ImmutablePropTypes.map.isRequired,
+    server: ImmutablePropTypes.map.isRequired,
+  }
+
   render () {
     const { server, user } = this.props
 

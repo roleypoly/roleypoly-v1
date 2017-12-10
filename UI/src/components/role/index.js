@@ -1,11 +1,17 @@
 import React, { Component } from 'react'
-import Radium from 'radium'
+import PropTypes from 'prop-types'
 import Color from 'color'
 import './Role.sass'
 
 const whiteColor = Color('#efefef')
 
 class Role extends Component {
+  static propTypes = {
+    role: PropTypes.object.isRequired,
+    onToggle: PropTypes.func,
+    type: PropTypes.string
+  }
+
   render () {
     const { role } = this.props
     let color = Color(role.color)
@@ -34,4 +40,4 @@ class Role extends Component {
   }
 }
 
-export default Radium(Role)
+export default Role
