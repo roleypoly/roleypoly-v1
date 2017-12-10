@@ -5,10 +5,14 @@ import './ServerCard.sass'
 
 class ServerCard extends Component {
   render () {
-    const { server: { server, id, gm, perms }, user } = this.props
+    const { server, user } = this.props
 
     let icon = ''
 
+    
+    const s = server.get('server')
+    const gm = server.get('gm')
+    const perms = server.get('perms')
     if (perms.canManageRoles) {
       icon = <span title='Role Manager' uk-tooltip='' role='img' aria-label='Role Manager'>🔰</span>
     }
@@ -17,13 +21,13 @@ class ServerCard extends Component {
       icon = <span title='Server Admin' uk-tooltip='' role='img' aria-label='Server Admin'>🔰⭐️</span>
     }
 
-    return <NavLink className='server-list__item' activeClassName='active' to={`/s/${id}`}>
+    return <NavLink className='server-list__item' activeClassName='active' to={`/s/${s.id}`}>
       <div className='server-list__item__icon'>
-        <img src={`https://cdn.discordapp.com/icons/${id}/${server.icon}.png`} alt={server.name} />
+        <img src={`https://cdn.discordapp.com/icons/${s.id}/${s.icon}.png`} alt={s.name} />
       </div>
       <div className='server-list__item__info'>
-        <b>{server.name}</b><br />
-        <span style={{ color: gm.color }}>{ gm.nickname || user.username }</span> { icon }
+        <b>{s.name}</b><br />
+        <span style={{ color: gm.color }}>{ gm.nickname || user.get('username') }</span> { icon }
       </div>
     </NavLink>
   }

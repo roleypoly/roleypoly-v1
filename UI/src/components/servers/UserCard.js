@@ -10,11 +10,13 @@ class UserCard extends Component {
 
   get avatar () {
     const { user } = this.props
-    if (user.avatar === '' || user.avatar == null) {
+    const avatar = user.get('avatar')
+
+    if (avatar === '' || avatar == null) {
       return `https://cdn.discordapp.com/embed/avatars/${Math.ceil(Math.random() * 9999) % 4}.png`
     }
 
-    return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+    return `https://cdn.discordapp.com/avatars/${user.get('id')}/${avatar}.png`
   }
 
   render () {
@@ -24,10 +26,10 @@ class UserCard extends Component {
 
     return <div className='user-card'>
       <div className='user-card__icon'>
-        <img src={this.avatar} alt={user.username} />
+        <img src={this.avatar} alt={user.get('username')} />
       </div>
       <div className='user-card__info'>
-        <span className='user-card__info__name'>{user.username}</span><span className='user-card__info__discrim'>#{user.discriminator}</span>
+        <span className='user-card__info__name'>{user.get('username')}</span><span className='user-card__info__discrim'>#{user.get('discriminator')}</span>
       </div>
       <div className='user-card__actions'>
         <ul className='uk-iconnav uk-iconnav-vertical'>

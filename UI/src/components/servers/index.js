@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
-import Radium from 'radium'
+import { connect } from 'react-redux'
 import superagent from 'superagent'
 import './index.sass'
 
@@ -9,16 +9,18 @@ import RolePicker from '../role-picker'
 
 // import mockData from './mockData'
 
-class Servers extends Component {
-  async componentWillMount () {
-    const rsp = await superagent.get(`/api/servers`)
-
-    this.setState({ servers: rsp.body })
+const mapState = ({ servers, user }) => {
+  return {
+    servers,
+    user
   }
+}
 
+@connect(mapState)
+class Servers extends Component {
   render () {
     return <div className="servers">
-      <Navigation className="servers__nav" servers={[]} user={{}} />
+      <Navigation className="servers__nav" servers={this.props.servers} user={this.props.user} />
       <div className="servers__content">
         <Route path='/s/:server' component={RolePicker} />
         <Route path='/s/:server/edit' component={RolePicker} />
@@ -27,4 +29,4 @@ class Servers extends Component {
   }
 }
 
-export default Radium(Servers)
+export default Servers

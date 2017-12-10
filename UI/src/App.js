@@ -6,12 +6,17 @@ import configureStore from './store/configureStore'
 
 import Wrapper from './components/wrapper'
 import AppRouter from './router'
+import { userInit } from './actions'
 
 const store = configureStore()
 
 window.__APP_STORE__ = store
 
 class App extends Component {
+  componentWillMount () {
+    store.dispatch(userInit)
+  }
+
   render () {
     return (
       <Provider store={store}>

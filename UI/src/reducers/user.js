@@ -9,6 +9,10 @@ const initialState = Map({
 
 export default (state = initialState, { type, data }) => {
   switch (type) {
+
+    case Symbol.for('set user'):
+      return Map(data)
+
     default:
       return state
   }

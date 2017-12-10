@@ -33,6 +33,11 @@ module.exports = (R, $) => {
   })
 
   R.get('/api/auth/user', async ctx => {
+    if (ctx.session.accessToken === undefined) {
+      ctx.body = { err: 'not_logged_in' }
+      ctx.status = 401
+    }
+
     const user = await $.discord.getUser(ctx.session.accessToken)
     ctx.session.userId = user.id
     ctx.session.avatarHash = user.avatar
