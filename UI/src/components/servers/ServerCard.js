@@ -15,28 +15,29 @@ class ServerCard extends Component {
 
     let icon = ''
 
+    console.log(__filename, server)
     
     const s = server.get('server')
     const gm = server.get('gm')
     const perms = server.get('perms')
-    if (perms.canManageRoles) {
+    if (perms.get('canManageRoles')) {
       icon = <span title='Role Manager' uk-tooltip='' role='img' aria-label='Role Manager'>🔰</span>
     }
 
-    if (perms.isAdmin) {
+    if (perms.get('isAdmin')) {
       icon = <span title='Server Admin' uk-tooltip='' role='img' aria-label='Server Admin'>🔰⭐️</span>
     }
 
-    return <NavLink className='server-list__item' activeClassName='active' to={`/s/${s.id}`}>
+    return <NavLink className='server-list__item' activeClassName='active' to={`/s/${s.get('id')}`}>
       <div className='server-list__item__icon'>
-        <img src={`https://cdn.discordapp.com/icons/${s.id}/${s.icon}.png`} alt={s.name} />
+        <img src={`https://cdn.discordapp.com/icons/${s.get('id')}/${s.get('icon')}.png`} alt={s.name} />
       </div>
       <div className='server-list__item__info'>
-        <b>{s.name}</b><br />
-        <span style={{ color: gm.color }}>{ gm.nickname || user.get('username') }</span> { icon }
+        <b>{s.get('name')}</b><br />
+        <span style={{ color: gm.get('color') }}>{ gm.get('nickname') || user.get('username') }</span> { icon }
       </div>
     </NavLink>
   }
 }
 
-export default Radium(ServerCard)
+export default ServerCard

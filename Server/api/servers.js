@@ -2,7 +2,9 @@ module.exports = (R, $) => {
   R.get('/api/servers', async (ctx) => {
     const { userId } = ctx.session
     const srv = $.discord.getRelevantServers(userId)
-    ctx.body = $.discord.presentableServers(srv, userId)
+    const presentable = $.discord.presentableServers(srv, userId)
+
+    ctx.body = presentable
   })
 
   R.get('/api/server/:id', async (ctx) => {
@@ -18,8 +20,8 @@ module.exports = (R, $) => {
     }
 
     const gm = srv.members.get(userId)
-    const roles = $.discord.presentableRoles(id, gm)
+    const server = $.discord.presentableRoles(id, gm)
 
-    ctx.body = roles
+    ctx.body = server
   })
 }

@@ -8,7 +8,6 @@
     "eslint": "^4.13.0",
     "immutable": "^3.8.2",
     "prop-types": "^15.6.0",
-    "radium": "^0.19.6",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-immutable-proptypes": "^2.1.0",

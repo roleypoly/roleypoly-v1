@@ -7,6 +7,10 @@ export const fetchServers = async dispatch => {
     type: Symbol.for('update servers'),
     data: rsp.body
   })
+
+  dispatch({
+    type: Symbol.for('app ready')
+  })
 }
 
 export const userInit = async dispatch => {

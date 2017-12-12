@@ -41,22 +41,26 @@ class DiscordService extends Service {
           ownerID: server.ownerID,
           icon: server.icon
         },
+        roles: this.presentableRoles(server.id, gm),
+        message: 'moe moe kyuuuuuuuuun~',
         perms: this.getPermissions(gm)
       }
     })
   }
 
   presentableRoles (serverId, gm) {
-    return this.client.guilds.get(serverId).roles.filter(r => r.id !== serverId).map((role) => {
-      return {
-        color: role.hexColor,
-        position: role.position,
-        calculatedPosition: role.calculatedPosition,
-        id: role.id,
-        name: role.name,
-        selected: gm.roles.has(role.id)
-      }
-    })
+    return this.client.guilds
+    .get(serverId)
+    .roles
+    .filter(r => r.id !== serverId)
+    .map((role) => ({
+      color: role.hexColor,
+      position: role.position,
+      calculatedPosition: role.calculatedPosition,
+      id: role.id,
+      name: role.name,
+      selected: gm.roles.has(role.id)
+    }))
   }
 
   getPermissions (gm) {

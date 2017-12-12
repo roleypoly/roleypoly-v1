@@ -16,7 +16,7 @@ class UserCard extends Component {
     const avatar = user.get('avatar')
 
     if (avatar === '' || avatar == null) {
-      return `https://cdn.discordapp.com/embed/avatars/${Math.ceil(Math.random() * 9999) % 4}.png`
+      return `https://cdn.discordapp.com/embed/avatars/${Math.ceil(Math.random() * 9999) % 5}.png`
     }
 
     return `https://cdn.discordapp.com/avatars/${user.get('id')}/${avatar}.png`

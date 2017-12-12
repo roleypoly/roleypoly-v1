@@ -8,7 +8,7 @@ class ServersNavigation extends Component {
 
   static propTypes = {
     user: ImmutablePropTypes.map.isRequired,
-    servers: ImmutablePropTypes.setOf(ImmutablePropTypes.map).isRequired,
+    servers: ImmutablePropTypes.setOf(ImmutablePropTypes.orderedMap).isRequired,
     className: PropTypes.string
   }
 
@@ -17,7 +17,12 @@ class ServersNavigation extends Component {
     return <Fragment>
       <UserCard user={this.props.user} />
       <div className={this.props.className}>
-        { this.props.servers.map((s, i) => <ServerCard server={s} user={this.props.user} key={i} />) }
+        { 
+          this.props.servers.reduce((acc, s, i) => {
+            acc.push(<ServerCard server={s} user={this.props.user} key={i} />)
+            return acc
+          }, [])
+        }
       </div>
     </Fragment>
   }
