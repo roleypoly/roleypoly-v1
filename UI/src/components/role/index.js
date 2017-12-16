@@ -9,12 +9,14 @@ class Role extends Component {
   static propTypes = {
     role: PropTypes.object.isRequired,
     onToggle: PropTypes.func,
-    type: PropTypes.string
+    type: PropTypes.string,
+    selected: PropTypes.bool.isRequired
   }
 
   render () {
-    const { role } = this.props
-    let color = Color(role.color)
+    let { role, selected } = this.props
+
+    let color = Color(role.get('color'))
 
     if (color.rgbNumber() === 0) {
       color = whiteColor
@@ -24,17 +26,16 @@ class Role extends Component {
     let hc = color.lighten(0.1)
 
     return <div
-      onClick={this.props.onToggle.bind(null, !role.selected, role.selected)}
-      className='role'
+      onClick={this.props.onToggle.bind(null, !selected, selected)}
+      className='role font-sans-serif'
       style={{
         '--role-color-hex': c.string(),
         '--role-color-hover': hc.string(),
         '--role-color-rgba': `rgba(${c.red()}, ${c.green()}, ${c.blue()}, 0.7)`
       }}>
-      {/* circle svg */}
-      <div className={`role__option ${(role.selected) ? 'selected' : ''}`}/>
+      <div className={`role__option ${(selected) ? 'selected' : ''}`}/>
       <div className='role__name'>
-        {role.name}
+        {role.get('name')}
       </div>
     </div>
   }

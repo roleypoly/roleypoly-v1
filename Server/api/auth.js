@@ -36,6 +36,7 @@ module.exports = (R, $) => {
     if (ctx.session.accessToken === undefined) {
       ctx.body = { err: 'not_logged_in' }
       ctx.status = 401
+      return
     }
 
     const user = await $.discord.getUser(ctx.session.accessToken)

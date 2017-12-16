@@ -5,10 +5,9 @@ import ServerCard from './ServerCard'
 import UserCard from './UserCard'
 
 class ServersNavigation extends Component {
-
   static propTypes = {
     user: ImmutablePropTypes.map.isRequired,
-    servers: ImmutablePropTypes.setOf(ImmutablePropTypes.orderedMap).isRequired,
+    servers: ImmutablePropTypes.orderedMapOf(ImmutablePropTypes.map).isRequired,
     className: PropTypes.string
   }
 

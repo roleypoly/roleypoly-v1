@@ -15,6 +15,7 @@ class DiscordService extends Service {
     this.client = new discord.Client()
 
     this.startBot()
+
   }
 
   async startBot () {
@@ -25,42 +26,12 @@ class DiscordService extends Service {
     return this.client.guilds.filter((g) => g.members.has(userId))
   }
 
-  presentableServers (collection, userId) {
-    return collection.map((server) => {
-      const gm = server.members.get(userId)
-
-      return {
-        id: server.id,
-        gm: {
-          nickname: gm.nickname,
-          color: gm.displayHexColor
-        },
-        server: {
-          id: server.id,
-          name: server.name,
-          ownerID: server.ownerID,
-          icon: server.icon
-        },
-        roles: this.presentableRoles(server.id, gm),
-        message: 'moe moe kyuuuuuuuuun~',
-        perms: this.getPermissions(gm)
-      }
-    })
+  gm (serverId, userId) {
+    return this.client.guilds.get(serverId).members.get(userId)
   }
 
-  presentableRoles (serverId, gm) {
-    return this.client.guilds
-    .get(serverId)
-    .roles
-    .filter(r => r.id !== serverId)
-    .map((role) => ({
-      color: role.hexColor,
-      position: role.position,
-      calculatedPosition: role.calculatedPosition,
-      id: role.id,
-      name: role.name,
-      selected: gm.roles.has(role.id)
-    }))
+  getRoles (server) {
+    return this.client.guilds.get(server).roles
   }
 
   getPermissions (gm) {

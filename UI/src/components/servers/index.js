@@ -5,6 +5,7 @@ import './index.sass'
 
 import Navigation from './Navigation'
 import RolePicker from '../role-picker'
+import { withRouter } from 'react-router';
 
 // import mockData from './mockData'
 

@@ -14,19 +14,23 @@ export const fetchServers = async dispatch => {
 }
 
 export const userInit = async dispatch => {
-  try {
-    const rsp = await superagent.get('/api/auth/user')
-    
-    dispatch({
-      type: Symbol.for('set user'),
-      data: rsp.body
-    })
+  if (!window.location.pathname.startsWith('/oauth')) {
+    try {
+      const rsp = await superagent.get('/api/auth/user')
 
-    dispatch(fetchServers)
-  } catch (e) {
-    if (!window.location.pathname.startsWith('/oauth')) {
+      dispatch({
+        type: Symbol.for('set user'),
+        data: rsp.body
+      })
+
+      dispatch(fetchServers)
+    } catch (e) {
       window.location.href = '/oauth/flow'
     }
+  } else {
+    dispatch({
+      type: Symbol.for('app ready')
+    })
   }
 }
 

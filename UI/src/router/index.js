@@ -5,9 +5,11 @@ import { connect } from 'react-redux'
 import Servers from '../components/servers'
 import OauthCallback from '../components/oauth-callback'
 import OauthFlow from '../components/oauth-flow'
+import { withRouter } from 'react-router';
 
 const aaa = (props) => (<div>{ JSON.stringify(props) }</div>)
 
+@withRouter
 @connect(({ appState }) => ({ ready: appState.ready }))
 export default class AppRouter extends Component {
   render () {

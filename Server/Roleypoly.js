@@ -1,4 +1,4 @@
-const log = new (require('./logger'))('World')
+const log = new (require('./logger'))('Roleypoly')
 const Sequelize = require('sequelize')
 const fetchModels = require('./models')
 const fetchApis = require('./api')
@@ -40,9 +40,9 @@ class Roleypoly {
     //   enableReadyCheck: true,
     //   enableOfflineQueue: true
     // })
-
     this.ctx.discord = new (require('./services/discord'))(this.ctx)
     this.ctx.sessions = new (require('./services/sessions'))(this.ctx)
+    this.ctx.P = new (require('./services/presentation'))(this.ctx)
   }
 
   async mountRoutes () {

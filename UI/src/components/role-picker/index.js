@@ -7,7 +7,6 @@ import './RolePicker.sass'
 import Role from '../role'
 
 const mapState = ({ rolePicker, servers }, ownProps) => {
-  console.log(servers)
   return {
     data: rolePicker,
     server: servers.get(ownProps.match.params.server)
@@ -21,8 +20,12 @@ class RolePicker extends Component {
     dispatch(Actions.setup(server))
   }
 
+  isSelected (id) {
+    return this.props.data.getIn([ 'rolesSelected', id ])
+  }
+
   render () {
-    console.log(this.props)
+    console.log(this.constructor.name, this.props)
     if (this.props.server === undefined) {
       return null
     }
@@ -37,11 +40,11 @@ class RolePicker extends Component {
       }
       <section>
         <h3>Roles</h3>
-          {/* {
-            this.props.data.roles.map((r, k) => {
-              return <Role key={k} role={r} onToggle={this.dispatch(Actions.roleUpdate(r.id, r.selected))} />
+          {
+            this.props.server.get('roles').map((r, k) => {
+              return <Role key={k} role={r} selected={this.isSelected(r.get('id'))} onToggle={() => this.props.dispatch(Actions.roleUpdate(r.get('id'), this.isSelected(r.get('id'))))} />
             })
-          } */}
+          }
       </section>
     </div>
   }

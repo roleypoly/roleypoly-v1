@@ -26,6 +26,7 @@
     "koa-passport": "^4.0.1",
     "koa-session": "^5.5.1",
     "ksuid": "^0.4.0",
+    "lru-cache": "^4.1.1",
     "passport-discord": "^0.1.3",
     "passport-oauth2-refresh": "^1.0.0",
     "pg": "^7.4.0",

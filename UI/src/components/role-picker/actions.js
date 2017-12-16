@@ -12,16 +12,16 @@ export const roleUpdate = (id, oldState) => (dispatch, getState) => {
 }
 
 export const setup = id => async dispatch => {
-  const rsp = await superagent.get(`/api/server/${id}`)
-  const data = rsp.body
+  // const rsp = await superagent.get(`/api/server/${id}`)
+  // const data = rsp.body
 
-  dispatch({
-    type: Symbol.for('update server roles'),
-    data: {
-      id,
-      roles: data
-    }
-  })
+  // dispatch({
+  //   type: Symbol.for('update server roles'),
+  //   data: {
+  //     id,
+  //     roles: data
+  //   }
+  // })
 
   dispatch(constructView(id))
 }
@@ -31,9 +31,7 @@ export const constructView = id => (dispatch, getState) => {
   const roles = server.get('roles')
 
   const categories = roles.groupBy(x => x.get('category'))
-  const selected = roles.reduce((acc, r) => {
-    return acc.set(r.id, r.selected)
-  }, Map())
+  const selected = roles.reduce((acc, r) => acc.set(r.get('id'), r.get('selected')), Map())
 
   console.log(categories, selected)
   dispatch({

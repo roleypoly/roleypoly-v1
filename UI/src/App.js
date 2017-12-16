@@ -1,14 +1,17 @@
 import React, { Component } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import './App.css'
+import createHistory from 'history/createBrowserHistory'
+import { ConnectedRouter } from 'react-router-redux'
 import configureStore from './store/configureStore'
+import './App.css'
 
 import Wrapper from './components/wrapper'
 import AppRouter from './router'
 import { userInit } from './actions'
 
-const store = configureStore()
+const history = createHistory()
+const store = configureStore(undefined, history)
 
 window.__APP_STORE__ = store
 
@@ -20,11 +23,11 @@ class App extends Component {
   render () {
     return (
       <Provider store={store}>
-        <BrowserRouter>
+        <ConnectedRouter history={history}>
           <Wrapper>
             <AppRouter />
           </Wrapper>
-        </BrowserRouter>
+        </ConnectedRouter>
       </Provider>
     )
   }

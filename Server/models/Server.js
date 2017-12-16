@@ -7,7 +7,7 @@ module.exports = (sql, DataTypes) => {
     categories: {
       type: DataTypes.JSON
     },
-    note: {
+    message: {
       type: DataTypes.TEXT
     }
   })

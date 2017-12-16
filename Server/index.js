@@ -37,9 +37,9 @@ async function start () {
       await next()
     } catch (e) {
       log.error(e)
-      ctx.status = 500
+      ctx.status = ctx.status || 500
       if (DEVEL) {
-        ctx.body = e.stack
+        ctx.body = ctx.body || e.stack
       } else {
         ctx.body = {
           err: 'something terrible happened.'
