@@ -2,7 +2,7 @@ module.exports = (R, $) => {
   R.get('/api/servers', async (ctx) => {
     const { userId } = ctx.session
     const srv = $.discord.getRelevantServers(userId)
-    const presentable = $.P.oldPresentableServers(srv, userId)
+    const presentable = await $.P.oldPresentableServers(srv, userId)
 
     ctx.body = presentable
   })

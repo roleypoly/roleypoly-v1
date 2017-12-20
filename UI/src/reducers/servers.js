@@ -14,6 +14,7 @@ const blankServer = Map({
     icon: '4fa0c1063649a739f3fe1a0589aa2c03'
   },
   roles: Set([]),
+  categories: OrderedMap(),
   perms: {
     isAdmin: true,
     canManageRoles: true

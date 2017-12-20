@@ -20,31 +20,53 @@ class RolePicker extends Component {
     dispatch(Actions.setup(server))
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (this.props.match.params.server !== nextProps.match.params.server) {
+      const { dispatch } = this.props
+      dispatch(Actions.setup(nextProps.match.params.server))
+    }
+  }
+
   isSelected (id) {
     return this.props.data.getIn([ 'rolesSelected', id ])
   }
 
   render () {
-    console.log(this.constructor.name, this.props)
-    if (this.props.server === undefined) {
+    const { data, server } = this.props
+    const vm = data.get('viewMap') 
+
+    if (server === undefined) {
       return null
     }
 
-    return <div className={`role-picker ${(this.props.data.hidden) ? 'hidden' : ''}`}>
-      { (this.props.server.get('message') !== '')
+    return <div className={`role-picker ${(data.get('hidden')) ? 'hidden' : ''}`}>
+      { (server.get('message') !== '')
         ? <section>
             <h3>Server Message</h3>
-            <p>{this.props.server.get('message')}</p>
+            <p>{server.get('message')}</p>
           </section>
         : null
       }
       <section>
         <h3>Roles</h3>
+        <div className="role-picker__categories">
           {
-            this.props.server.get('roles').map((r, k) => {
-              return <Role key={k} role={r} selected={this.isSelected(r.get('id'))} onToggle={() => this.props.dispatch(Actions.roleUpdate(r.get('id'), this.isSelected(r.get('id'))))} />
-            })
+            vm.map((c, name) => {
+              if (c.get('hidden')) {
+                return null
+              }
+
+              return <div key={name} className="role-picker__category">
+                <h4>{ name }</h4>
+                {
+                  c.get('roles_map').map((r, k) => {
+                    return <Role key={k} role={r} selected={this.isSelected(r.get('id'))} onToggle={() => this.props.dispatch(Actions.roleUpdate(r.get('id'), this.isSelected(r.get('id'))))} />
+                  }).toArray()
+                }
+              </div>
+            }).toArray()
           }
+        </div>
       </section>
     </div>
   }

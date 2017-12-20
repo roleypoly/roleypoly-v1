@@ -20,6 +20,10 @@ class DiscordService extends Service {
 
   async startBot () {
     await this.client.login(this.botToken)
+
+    for (let server of this.client.guilds.array()) {
+      await this.ctx.server.ensure(server)
+    }
   }
 
   getRelevantServers (userId) {

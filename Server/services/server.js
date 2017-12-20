@@ -30,12 +30,12 @@ class ServerService extends Service {
     return srv.update(newData)
   }
 
-  get (id) {
-    return this.Server.findOne({
+  async get (id) {
+    return (await this.Server.findOne({
       where: {
         id
       }
-    })
+    })).get({ plain: true })
   }
 }
 

@@ -10,11 +10,15 @@ class PresentationService extends Service {
     this.cache = LRU({ max: 500, maxAge: 100 * 60 * 5 })
   }
 
-  oldPresentableServers (collection, userId) {
-    return collection.map((server) => {
+  async oldPresentableServers (collection, userId) {
+    let servers = []
+
+    for (let server of collection.array()) {
+      const sd = await this.ctx.server.get(server.id)
+      console.log(sd.categories)
       const gm = server.members.get(userId)
 
-      return {
+      servers.push({
         id: server.id,
         gm: {
           nickname: gm.nickname,
@@ -26,24 +30,26 @@ class PresentationService extends Service {
           ownerID: server.ownerID,
           icon: server.icon
         },
-        roles: server.roles.filter(r => r.id !== server.id).map(r => ({
-          id: r.id,
-          color: r.color,
-          name: r.name,
-          selected: gm.roles.has(r.id),
-          position: r.position
-        })),
-        message: 'moe moe kyuuuuuuuuun~',
+        roles: (await this.rolesByServer(server, sd)).map(r => ({ ...r, selected: gm.roles.has(r.id) })),
+        message: sd.message,
+        categories: sd.categories,
         perms: this.discord.getPermissions(gm)
-      }
-    })
+      })
+    }
+
+    return servers
   }
 
-  rolesByServer (serverId, userId) {
-    // get from discord, merge with server categories
+  async rolesByServer (server) {
+    return server.roles
+    .filter(r => r.id !== server.id) // get rid of @everyone
+    .map(r => ({
+      id: r.id,
+      color: r.color,
+      name: r.name,
+      position: r.position
+    }))
   }
-
-
 }
 
 module.exports = PresentationService

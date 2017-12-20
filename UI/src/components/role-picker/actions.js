@@ -1,4 +1,4 @@
-import { Map, Set } from 'immutable'
+import { Map, Set, fromJS } from 'immutable'
 import superagent from 'superagent'
 
 export const roleUpdate = (id, oldState) => (dispatch, getState) => {
@@ -22,7 +22,6 @@ export const setup = id => async dispatch => {
   //     roles: data
   //   }
   // })
-
   dispatch(constructView(id))
 }
 
@@ -30,16 +29,33 @@ export const constructView = id => (dispatch, getState) => {
   const server = getState().servers.get(id)
   const roles = server.get('roles')
 
-  const categories = roles.groupBy(x => x.get('category'))
+  const categories = server.get('categories')
+
+  const allRoles = server.get('roles').map(r => r.get('id')).toSet()
+  const accountedRoles = categories.map(c => c.get('roles')).toSet().flatten()
+  const unaccountedRoles = allRoles.subtract(accountedRoles)
+
+  // console.log('roles', allRoles.toJS(), accountedRoles.toJS(), unaccountedRoles.toJS())
+
+  const vm = categories.set('Uncategorized', fromJS({
+    roles: unaccountedRoles,
+    hidden: false,
+    type: 'multi'
+  })).map(c => {
+    const roles = c.get('roles').map(r => server.get('roles').find(sr => sr.get('id') === r))
+    return c.set('roles_map', roles)
+  })
+
   const selected = roles.reduce((acc, r) => acc.set(r.get('id'), r.get('selected')), Map())
 
   console.log(categories, selected)
   dispatch({
     type: Symbol.for('setup role picker'),
     data: {
-      viewMap: categories,
+      viewMap: vm,
       rolesSelected: selected,
-      originalRolesSelected: selected
+      originalRolesSelected: selected,
+      hidden: false
     }
   })
 }

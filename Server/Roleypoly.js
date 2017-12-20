@@ -40,6 +40,7 @@ class Roleypoly {
     //   enableReadyCheck: true,
     //   enableOfflineQueue: true
     // })
+    this.ctx.server = new (require('./services/server'))(this.ctx)
     this.ctx.discord = new (require('./services/discord'))(this.ctx)
     this.ctx.sessions = new (require('./services/sessions'))(this.ctx)
     this.ctx.P = new (require('./services/presentation'))(this.ctx)
