@@ -4,7 +4,7 @@ import superagent from 'superagent'
 import * as Actions from './actions'
 import './RolePicker.sass'
 
-import Role from '../role'
+import Category from './Category'
 import { Scrollbars } from 'react-custom-scrollbars';
 
 const mapState = ({ rolePicker, servers }, ownProps) => {
@@ -28,7 +28,7 @@ class RolePicker extends Component {
     }
   }
 
-  isSelected (id) {
+  isSelected = id => {
     return this.props.data.getIn([ 'rolesSelected', id ])
   }
 
@@ -62,27 +62,14 @@ class RolePicker extends Component {
             <button disabled={!this.rolesHaveChanged} onClick={() => dispatch(Actions.resetSelected)} className="uk-button action__button secondary">
               Reset
             </button>
-            <button disabled={!this.rolesHaveChanged} onClick={() => dispatch(Actions.submitSelected(server.id))} className="uk-button action__button primary">
+            <button disabled={!this.rolesHaveChanged} onClick={() => dispatch(Actions.submitSelected(this.props.match.params.server))} className="uk-button action__button primary">
               Save Changes
             </button>
           </div>
         </div>
         <div className="role-picker__categories">
           {
-            vm.map((c, name) => {
-              if (c.get('hidden')) {
-                return null
-              }
-
-              return <div key={name} className="role-picker__category">
-                <h4>{ name }</h4>
-                {
-                  c.get('roles_map').map((r, k) => {
-                    return <Role key={k} role={r} selected={this.isSelected(r.get('id'))} onToggle={() => this.props.dispatch(Actions.roleUpdate(r.get('id'), this.isSelected(r.get('id'))))} />
-                  }).toArray()
-                }
-              </div>
-            }).toArray()
+            vm.map((c, name) => <Category name={name} category={c} isSelected={this.isSelected} onChange={(roles) => dispatch(Actions.updateRoles(roles))} />).toArray()
           }
         </div>
       </section>

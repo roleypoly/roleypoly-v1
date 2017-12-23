@@ -24,4 +24,24 @@ module.exports = (R, $) => {
 
     ctx.body = server
   })
+
+  R.patch('/api/servers/:server/roles', async ctx => {
+    const { userId } = ctx.session
+    const { server } = ctx.params
+    let gm = $.discord.gm(server, userId)
+
+    const { added, removed } = ctx.request.body
+
+    if (added.length > 0) {
+      gm = await gm.addRoles(added)
+    }
+
+    if (removed.length > 0) {
+      gm = await gm.removeRoles(removed)
+    }
+
+    console.log(gm.roles)
+
+    ctx.body = { ok: true }
+  })
 }

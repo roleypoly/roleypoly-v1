@@ -1,15 +1,6 @@
 import { Map, Set, fromJS } from 'immutable'
 import superagent from 'superagent'
 
-export const roleUpdate = (id, oldState) => (dispatch, getState) => {
-  dispatch({
-    type: Symbol.for('update selected roles'),
-    data: {
-      id,
-      state: !oldState
-    }
-  })
-}
 
 export const setup = id => async dispatch => {
   // const rsp = await superagent.get(`/api/server/${id}`)
@@ -89,4 +80,13 @@ export const submitSelected = serverId => async (dispatch, getState) => {
   }, Map({ added: Set(), removed: Set() }))
 
   await superagent.patch(`/api/servers/${serverId}/roles`).send(diff.toJS())
+
+  dispatch({
+    type: Symbol.for('sync selected roles')
+  })
 }
+
+export const updateRoles = roles => ({
+  type: Symbol.for('update selected roles'),
+  data: roles
+})

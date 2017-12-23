@@ -20,7 +20,10 @@ export default (state = initialState, { type, data }) => {
       return state.set('emptyRoles', data)
 
     case Symbol.for('update selected roles'):
-      return state.setIn(['rolesSelected', data.id], data.state)
+      return state.mergeIn(['rolesSelected'], data)
+
+    case Symbol.for('sync selected roles'):
+      return state.set('originalRolesSelected', state.get('rolesSelected'))
 
     case Symbol.for('reset selected'):
       return state.set('rolesSelected', state.get('originalRolesSelected'))
