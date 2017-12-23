@@ -8,7 +8,13 @@ class ServerService extends Service {
   }
 
   async ensure (server) {
-    const srv = await this.get(server.id)
+    let srv
+    try {
+      srv = await this.get(server.id)
+    } catch (e) {
+
+    }
+
     if (srv == null) {
       return this.create({
         id: server.id,

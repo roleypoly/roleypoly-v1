@@ -15,7 +15,7 @@
 
   &:hover
     .role__option
-      transform: translateY(-1px)
+      transform: translateY(-1px) translateZ(0px)
       box-shadow: 0 1px 1px var(--c-dark)
       border-color: var(--role-color-hover)
       background-color: transparent 
@@ -35,11 +35,12 @@
     /* display: inline-block */
     background-color: transparent
     overflow: hidden
+    transform: translateZ(0px)
     border: 1px solid var(--role-color-hex)
-    transition: background-color 0.1s ease-in-out, border-left-width 0.3s ease-in-out, border-right-width 0.5s ease-in-out, border-color 0.1s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.1s ease-out
+    transition: background-color 0.1s ease-in-out, border-left-width 0.3s ease-in-out, border-color 0.1s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.1s ease-out
                 
     &.selected
-      background-color: var(--role-color-hex)
+      // background-color: var(--role-color-hex)
     
       // This **must** be width-1, otherwise blink adds width to the boundaries.
       border-left-width: 21px 
@@ -57,4 +58,4 @@
     user-select: none
 
 .role__option:active, .role:active .role__option:not(:active)
-  transform: translateY(0) !important  
+  transform: translateY(0) translateZ(0px) !important  

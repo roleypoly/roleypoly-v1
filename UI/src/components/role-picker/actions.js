@@ -42,7 +42,11 @@ export const constructView = id => (dispatch, getState) => {
     hidden: false,
     type: 'multi'
   })).map(c => {
-    const roles = c.get('roles').map(r => server.get('roles').find(sr => sr.get('id') === r))
+    const roles = c.get('roles')
+      .map(r =>
+        server.get('roles').find(sr => sr.get('id') === r)
+      )
+      .sort((a, b) => a.position > b.position)
     return c.set('roles_map', roles)
   })
 
@@ -58,4 +62,31 @@ export const constructView = id => (dispatch, getState) => {
       hidden: false
     }
   })
+}
+
+export const resetSelected = (dispatch) => {
+  dispatch({
+    type: Symbol.for('reset selected')
+  })
+}
+
+export const submitSelected = serverId => async (dispatch, getState) => {
+  const { rolePicker } = getState()
+  const original = rolePicker.get('originalRolesSelected')
+  const current = rolePicker.get('rolesSelected')
+
+  const diff = original.reduce((acc, v, k) => {
+    if (current.get(k) !== v) {
+      // if original value is false, then we know we're adding, otherwise removing.
+      if (v !== true) {
+        return acc.set('added', acc.get('added').add(k))
+      } else {
+        return acc.set('removed', acc.get('removed').add(k))
+      }
+    }
+
+    return acc
+  }, Map({ added: Set(), removed: Set() }))
+
+  await superagent.patch(`/api/servers/${serverId}/roles`).send(diff.toJS())
 }

@@ -10,13 +10,17 @@
 
   &__nav
     grid-area: listing
-    overflow-y: scroll
-    height: $fullH
-
-
+    overflow: hidden
+    // height: $fullH
+  
   &__content
-    grid-area: content
     background-color: var(--c-3)
-    padding: 15px
-    overflow-y: scroll
+    // padding: 15px
+    grid-area: content
+    position: relative
+    // height: $fullH 
+    overflow: hidden
     box-sizing: border-box
+
+    .inner
+      padding: 15px

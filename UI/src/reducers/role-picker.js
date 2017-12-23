@@ -14,19 +14,16 @@ export default (state = initialState, { type, data }) => {
       return Map(data)
 
     case Symbol.for('hide role picker ui'):
-      return {
-        ...state,
-        hidden: data
-      }
+      return state.set('hidden', data)
 
     case Symbol.for('reset role picker ui'):
-      return {
-        ...state,
-        emptyRoles: data
-      }
+      return state.set('emptyRoles', data)
 
     case Symbol.for('update selected roles'):
       return state.setIn(['rolesSelected', data.id], data.state)
+
+    case Symbol.for('reset selected'):
+      return state.set('rolesSelected', state.get('originalRolesSelected'))
 
     // case Symbol.for('zero role picker'):
       // return initialState
