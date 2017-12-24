@@ -1,10 +1,14 @@
 module.exports = (R, $) => {
   R.get('/api/servers', async (ctx) => {
-    const { userId } = ctx.session
-    const srv = $.discord.getRelevantServers(userId)
-    const presentable = await $.P.oldPresentableServers(srv, userId)
+    try {
+      const { userId } = ctx.session
+      const srv = $.discord.getRelevantServers(userId)
+      const presentable = await $.P.oldPresentableServers(srv, userId)
 
-    ctx.body = presentable
+      ctx.body = presentable
+    } catch (e) {
+      console.error(e.trace)
+    }
   })
 
   R.get('/api/server/:id', async (ctx) => {
@@ -33,14 +37,12 @@ module.exports = (R, $) => {
     const { added, removed } = ctx.request.body
 
     if (added.length > 0) {
-      gm = await gm.addRoles(added)
+      gm = await gm.addRoles(added.filter(r => $.discord.safeRole(server, r)))
     }
 
     if (removed.length > 0) {
-      gm = await gm.removeRoles(removed)
+      gm = await gm.removeRoles(removed.filter(r => $.discord.safeRole(server, r)))
     }
-
-    console.log(gm.roles)
 
     ctx.body = { ok: true }
   })

@@ -51,3 +51,12 @@ h1,h2,h3,h4,h5,h6 {
 .uk-navbar-nav>li>a {
   color: var(--c-7);
 }
+
+.fade-element {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.fade {
+  opacity: 0;
+}

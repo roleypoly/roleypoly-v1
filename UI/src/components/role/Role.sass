@@ -11,20 +11,41 @@
   justify-content: center
   font-size: 16px
   vertical-align: baseline
-  transition: border-color 0.2s ease-in-out
+  transition: background-color 0.15s ease-in-out, transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out
+  transform: translateZ(0)
 
-  &:hover
+  &.role__button
     .role__option
-      transform: translateY(-1px) translateZ(0px)
-      box-shadow: 0 1px 1px var(--c-dark)
-      border-color: var(--role-color-hover)
-      background-color: transparent 
-      &:active
-        box-shadow: none
-  
-  &:active .role__option
-    box-shadow: none
+      &:hover
+        cursor: inherit
 
+    &:hover:not(.disabled)
+      .role__option
+        transform: translateY(-1px) translateZ(0px)
+        box-shadow: 0 1px 1px var(--c-dark)
+        border-color: var(--role-color-hover)
+        background-color: transparent 
+        &:active
+          box-shadow: none
+      &:active .role__option
+        box-shadow: none
+
+    &.disabled
+      .role__option
+        border-color: var(--c-7)
+        transition: none
+        transform: translateZ(0)
+        &:hover
+          cursor: default
+
+
+  &__name
+    margin-right: 6px
+    max-width: 200px
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+    user-select: none
 
   &__option
     border-radius: 50%
@@ -35,27 +56,24 @@
     /* display: inline-block */
     background-color: transparent
     overflow: hidden
-    transform: translateZ(0px)
+    transform: translateZ(0)
     border: 1px solid var(--role-color-hex)
     transition: background-color 0.1s ease-in-out, border-left-width 0.3s ease-in-out, border-color 0.1s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.1s ease-out
-                
-    &.selected
-      // background-color: var(--role-color-hex)
-    
+    &.selected        
       // This **must** be width-1, otherwise blink adds width to the boundaries.
       border-left-width: 21px 
 
+
+
+  &.role__drag
+    box-shadow: none
     &:hover
-      cursor: pointer
-
-
-  &__name
-    margin-right: 6px
-    max-width: 200px
-    overflow: hidden
-    text-overflow: ellipsis
-    white-space: nowrap
-    user-select: none
+      transform: translateZ(0) translateY(-1px)
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3)
+      background-color: rgba(#ccc,0.03)
+      cursor: grab
+    &:active
+      cursor: grabbing
 
 .role__option:active, .role:active .role__option:not(:active)
   transform: translateY(0) translateZ(0px) !important  

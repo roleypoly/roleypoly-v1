@@ -42,13 +42,14 @@ class PresentationService extends Service {
 
   async rolesByServer (server) {
     return server.roles
-    .filter(r => r.id !== server.id) // get rid of @everyone
-    .map(r => ({
-      id: r.id,
-      color: r.color,
-      name: r.name,
-      position: r.position
-    }))
+      .filter(r => r.id !== server.id) // get rid of @everyone
+      .map(r => ({
+        id: r.id,
+        color: r.color,
+        name: r.name,
+        position: r.position,
+        safe: this.discord.safeRole(server.id, r.id)
+      }))
   }
 }
 

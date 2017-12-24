@@ -10,11 +10,13 @@ class Role extends Component {
     role: PropTypes.object.isRequired,
     onToggle: PropTypes.func,
     type: PropTypes.string,
-    selected: PropTypes.bool.isRequired
+    selected: PropTypes.bool,
+    disabled: PropTypes.bool
   }
 
   render () {
-    let { role, selected } = this.props
+    let { role, selected, disabled, type, provided } = this.props
+    type = type || 'button'
 
     let color = Color(role.get('color'))
 
@@ -26,8 +28,13 @@ class Role extends Component {
     let hc = color.lighten(0.1)
 
     return <div
-      onClick={this.props.onToggle.bind(null, !selected, selected)}
-      className='role font-sans-serif'
+      onClick={() => {
+        if (!disabled && this.props.onToggle != null) {
+          this.props.onToggle(!selected, selected) }
+        }
+      }
+      {...((disabled) ? { 'uk-tooltip': '', title: "I don't have permissions to grant this." } : {})}
+      className={`role font-sans-serif ${(disabled) ? 'disabled' : ''} role__${type}`}
       style={{
         '--role-color-hex': c.string(),
         '--role-color-hover': hc.string(),

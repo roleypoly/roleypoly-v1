@@ -1,6 +1,6 @@
 import { Map, Set, fromJS } from 'immutable'
 import superagent from 'superagent'
-
+import * as UIActions from '../../actions/ui'
 
 export const setup = id => async dispatch => {
   // const rsp = await superagent.get(`/api/server/${id}`)
@@ -22,7 +22,7 @@ export const constructView = id => (dispatch, getState) => {
 
   const categories = server.get('categories')
 
-  const allRoles = server.get('roles').map(r => r.get('id')).toSet()
+  const allRoles = server.get('roles').filter(v => v.get('safe')).map(r => r.get('id')).toSet()
   const accountedRoles = categories.map(c => c.get('roles')).toSet().flatten()
   const unaccountedRoles = allRoles.subtract(accountedRoles)
 
@@ -53,6 +53,8 @@ export const constructView = id => (dispatch, getState) => {
       hidden: false
     }
   })
+
+  dispatch(UIActions.fadeIn)
 }
 
 export const resetSelected = (dispatch) => {

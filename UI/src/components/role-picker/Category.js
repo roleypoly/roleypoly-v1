@@ -32,10 +32,14 @@ class Category extends Component {
     return <div key={name} className="role-picker__category">
       <h4>{ name }</h4>
       {
-        category.get('roles_map').map((r, k) => {
+        category.get('roles_map')
+        .sortBy(r => r.get('position'))
+        .reverse()
+        .map((r, k) => {
           const id = r.get('id')
-          return <Role key={k} role={r} selected={isSelected(id)} onToggle={this.onRoleToggle(id)}/>
-        }).toArray()
+          return <Role key={k} role={r} disabled={!r.get('safe')} selected={isSelected(id)} onToggle={this.onRoleToggle(id)}/>
+        })
+        .toArray()
       }
     </div>
   }

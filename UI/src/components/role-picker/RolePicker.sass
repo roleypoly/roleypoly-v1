@@ -17,10 +17,25 @@
     background-color: var(--c-1)
     padding: 15px
     margin: 10px
-    width: 220px - 30px
+    min-width: 220px - 30px
 
-  &__roles-header
+  &__header
     display: flex
+    align-items: center
+    justify-content: left
+
+    color: var(--c-7)
+
+    svg
+      transition: transform 0.05s ease-in-out
+      transform: translateZ(0)
+      &:hover
+        transform: translateZ(0) scale(1.1)
+        color: var(--c-9)
+
+    h3 
+      margin: 0
+      margin-right: 10px
 
   &__spacer
     flex: 1

@@ -15,7 +15,10 @@ class DiscordService extends Service {
     this.client = new discord.Client()
 
     this.startBot()
+  }
 
+  ownGm (server) {
+    return this.gm(server, this.client.user.id)
   }
 
   async startBot () {
@@ -43,6 +46,11 @@ class DiscordService extends Service {
       isAdmin: gm.permissions.hasPermission('ADMINISTRATOR'),
       canManageRoles: gm.permissions.hasPermission('MANAGE_ROLES', false, true)
     }
+  }
+
+  safeRole (server, role) {
+    const r = this.getRoles(server).get(role)
+    return r.editable && !r.hasPermission('MANAGE_ROLES', false, true)
   }
 
   // oauth step 2 flow, grab the auth token via code
