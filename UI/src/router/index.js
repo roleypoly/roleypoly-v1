@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import { Route } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 
 import Servers from '../components/servers'
 import OauthCallback from '../components/oauth-callback'
 import OauthFlow from '../components/oauth-flow'
-import { withRouter } from 'react-router';
 
 const aaa = (props) => (<div>{ JSON.stringify(props) }</div>)
 

@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import createHistory from 'history/createBrowserHistory'
 import { ConnectedRouter } from 'react-router-redux'
+import { DragDropContext } from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
+import createHistory from 'history/createBrowserHistory'
 import configureStore from './store/configureStore'
 import './App.css'
+import './generic.sass'
 
 import Wrapper from './components/wrapper'
 import AppRouter from './router'
@@ -15,6 +17,7 @@ const store = configureStore(undefined, history)
 
 window.__APP_STORE__ = store
 
+@DragDropContext(HTML5Backend)
 class App extends Component {
   componentWillMount () {
     store.dispatch(userInit)

@@ -16,8 +16,7 @@ export const setup = id => async dispatch => {
   dispatch(constructView(id))
 }
 
-export const constructView = id => (dispatch, getState) => {
-  const server = getState().servers.get(id)
+export const getViewMap = server => {
   const roles = server.get('roles')
 
   const categories = server.get('categories')
@@ -28,7 +27,7 @@ export const constructView = id => (dispatch, getState) => {
 
   // console.log('roles', allRoles.toJS(), accountedRoles.toJS(), unaccountedRoles.toJS())
 
-  const vm = categories.set('Uncategorized', fromJS({
+  const viewMap = categories.set('Uncategorized', fromJS({
     roles: unaccountedRoles,
     hidden: false,
     type: 'multi'
@@ -43,11 +42,21 @@ export const constructView = id => (dispatch, getState) => {
 
   const selected = roles.reduce((acc, r) => acc.set(r.get('id'), r.get('selected')), Map())
 
-  console.log(categories, selected)
+  return {
+    viewMap,
+    selected
+  }
+}
+
+export const constructView = id => (dispatch, getState) => {
+  const server = getState().servers.get(id)
+
+  const { viewMap, selected } = getViewMap(server)
+
   dispatch({
     type: Symbol.for('setup role picker'),
     data: {
-      viewMap: vm,
+      viewMap: viewMap,
       rolesSelected: selected,
       originalRolesSelected: selected,
       hidden: false

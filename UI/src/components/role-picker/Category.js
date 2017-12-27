@@ -29,6 +29,10 @@ class Category extends Component {
       return null
     }
 
+    if (category.get('roles').count() === 0) {
+      return null
+    }
+
     return <div key={name} className="role-picker__category">
       <h4>{ name }</h4>
       {

@@ -77,10 +77,10 @@ class RolePicker extends Component {
           <h3>Roles</h3>
           <div className="role-picker__spacer"></div>
           <div className={`role-picker__actions ${(!this.rolesHaveChanged) ? 'hidden' : ''}`}>
-            <button disabled={!this.rolesHaveChanged} onClick={() => dispatch(Actions.resetSelected)} className="uk-button action__button secondary">
+            <button disabled={!this.rolesHaveChanged} onClick={() => dispatch(Actions.resetSelected)} className="uk-button rp-button secondary">
               Reset
             </button>
-            <button disabled={!this.rolesHaveChanged} onClick={() => dispatch(Actions.submitSelected(this.props.match.params.server))} className="uk-button action__button primary">
+            <button disabled={!this.rolesHaveChanged} onClick={() => dispatch(Actions.submitSelected(this.props.match.params.server))} className="uk-button rp-button primary">
               Save Changes
             </button>
           </div>

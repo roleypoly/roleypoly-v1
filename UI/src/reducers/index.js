@@ -3,6 +3,7 @@ import { combineReducers } from 'redux'
 import servers from './servers'
 import user from './user'
 import rolePicker from './role-picker'
+import roleEditor from './role-editor'
 import { routerMiddleware } from 'react-router-redux'
 // import roles from './roles'
 
@@ -15,6 +16,7 @@ const appState = (state = initialState, { type, data }) => {
   switch (type) {
     case Symbol.for('app ready'):
       return {
+        ...state,
         ready: true,
         fade: false
       }
@@ -36,7 +38,8 @@ const rootReducer = combineReducers({
   user,
   router: routerMiddleware,
   // roles,
-  rolePicker
+  rolePicker,
+  roleEditor
 })
 
 export default rootReducer

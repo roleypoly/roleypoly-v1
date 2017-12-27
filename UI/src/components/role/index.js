@@ -15,8 +15,10 @@ class Role extends Component {
   }
 
   render () {
-    let { role, selected, disabled, type, provided } = this.props
+    let { role, selected, disabled, type, isDragging } = this.props
     type = type || 'button'
+
+    // console.log(this.props)
 
     let color = Color(role.get('color'))
 
@@ -27,14 +29,14 @@ class Role extends Component {
     const c = color
     let hc = color.lighten(0.1)
 
-    return <div
+    const out = <div
       onClick={() => {
         if (!disabled && this.props.onToggle != null) {
           this.props.onToggle(!selected, selected) }
         }
       }
       {...((disabled) ? { 'uk-tooltip': '', title: "I don't have permissions to grant this." } : {})}
-      className={`role font-sans-serif ${(disabled) ? 'disabled' : ''} role__${type}`}
+      className={`role font-sans-serif ${(disabled) ? 'disabled' : ''} ${(isDragging) ? 'is-dragging' : ''} role__${type}`}
       style={{
         '--role-color-hex': c.string(),
         '--role-color-hover': hc.string(),
@@ -45,6 +47,12 @@ class Role extends Component {
         {role.get('name')}
       </div>
     </div>
+
+    if (type === 'drag' && this.props.connectDragSource != null) {
+      return this.props.connectDragSource(out)
+    }
+
+    return out
   }
 }
 
