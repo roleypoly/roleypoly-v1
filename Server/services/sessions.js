@@ -29,9 +29,12 @@ class SessionsService extends Service {
   }
 
   async destroy (id) {
-    return (await this.Session.findOne({ where: { id } })).destroy()
-  }
+    const sess = await this.Session.findOne({ where: { id } })
 
+    if (sess != null) {
+      return sess.destroy()
+    }
+  }
 }
 
 module.exports = SessionsService

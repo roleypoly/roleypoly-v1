@@ -19,16 +19,11 @@ app.keys = [ process.env.APP_KEY ]
 const DEVEL = process.env.NODE_ENV === 'development'
 
 async function start () {
+  await M.awaitServices()
+
   // body parser
   const bodyParser = require('koa-bodyparser')
   app.use(bodyParser({ types: ['json'] }))
-
-  const session = require('koa-session')
-  app.use(session({
-    key: 'roleypoly:sess',
-    maxAge: 'session',
-    store: M.sessions
-  }, app))
 
   // Request logger
   app.use(async (ctx, next) => {
@@ -52,11 +47,15 @@ async function start () {
     return null
   })
 
-  // Construct the Roleypoly!
+  const session = require('koa-session')
+  app.use(session({
+    key: 'roleypoly:sess',
+    maxAge: 'session',
+    store: M.ctx.sessions
+  }, app))
+
   await M.mountRoutes()
 
-  // Start it!
-  await M.awaitServices()
   log.info(`starting HTTP server on ${process.env.APP_PORT || 6769}`)
   server.listen(process.env.APP_PORT || 6769)
 }
