@@ -1,18 +1,28 @@
 import React, { Component } from 'react'
 
 export default class CategoryEditor extends Component {
+  
+  onKeyPress = (e) => {
+    const { onSave } = this.props
+
+    switch (e.key) {
+      case 'Enter':
+      case 'Escape':
+        return onSave()
+    }
+  }
+
   render () {
     const {
-      name,
       category
     } = this.props
 
-    return <div className="role-editor__category editor">
-      <form onSubmit={(e) => e.preventDefault()} className="uk-form-stacked uk-light">
+    return <div className="role-editor__category editor" onKeyDown={this.onKeyPress}>
+      <div className="uk-form-stacked uk-light">
         <div>
           <label className="uk-form-label">Category Name</label>
           <div className="uk-form-controls">
-            <input type="text" className="uk-input" placeholder='' value={name} onChange={this.props.onEdit('name', Symbol.for('edit: text'))} />
+            <input type="text" className="uk-input" placeholder='' value={category.get('name')} onChange={this.props.onEdit('name', Symbol.for('edit: text'))} />
           </div>
         </div>
         <div style={{ marginTop: 10 }}>
@@ -21,12 +31,25 @@ export default class CategoryEditor extends Component {
               <input
                 style={{ marginRight: 5 }}
                 type="checkbox"
-                className="uk-checkbox"
+                className="uk-checkbox uk-light"
                 checked={category.get('hidden')}
                 onChange={this.props.onEdit('hidden', Symbol.for('edit: bool'))}
               />
               Hidden
             </label>
+          </div>
+        </div>
+        <div style={{ marginTop: 10 }}>
+          <div className="uk-form-label">Type <i uk-icon="icon: info; ratio: 0.7" uk-tooltip="" title="Single mode only lets a user pick one role in this category." /></div>
+          <div className="uk-form-controls">
+              <select 
+                className="uk-select" 
+                value={category.get('type')} 
+                onChange={this.props.onEdit('type', Symbol.for('edit: select'))}
+              >
+                  <option value='multi'>Multiple</option>
+                  <option value='single'>Single</option>
+              </select>
           </div>
         </div>
         <div className='role-editor__actions'>
@@ -35,7 +58,7 @@ export default class CategoryEditor extends Component {
           </button>
           <button className="uk-button rp-button primary role-editor__actions_save" onClick={this.props.onSave}>Save</button>
         </div>
-      </form>
+      </div>
     </div>
   }
 }

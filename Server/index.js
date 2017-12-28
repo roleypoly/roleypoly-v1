@@ -8,6 +8,15 @@ const _io = require('socket.io')
 const router = require('koa-better-router')().loadMethods()
 const Roleypoly = require('./Roleypoly')
 
+// monkey patch async-reduce because F U T U R E
+Array.prototype.areduce = async function (predicate, acc = []) { // eslint-disable-line
+  for (let i of this) {
+    acc = await predicate(acc, i)
+  }
+
+  return acc
+}
+
 // Create the server and socket.io server
 const server = http.createServer(app.callback())
 const io = _io(server, { transports: ['websocket'], path: '/api/socket.io', wsEngine: 'uws' })

@@ -39,9 +39,28 @@ class RolePicker extends Component {
     return !data.get('rolesSelected').equals(data.get('originalRolesSelected'))
   }
 
+  editServerMessage = (e) => {
+    const { dispatch } = this.props
+    dispatch(Actions.editServerMessage(this.props.server.get('id'), e.target.value))
+  }
+
+  saveServerMessage = (e) => {
+    const { dispatch } = this.props
+    dispatch(Actions.saveServerMessage(this.props.server.get('id')))
+  }
+
+  openMessageEditor = () => {
+    const { dispatch } = this.props
+    dispatch(Actions.openMessageEditor)
+  }
+
   renderServerMessage (server) {
+    const isEditing = this.props.data.get('isEditingMessage')
     const roleManager = server.getIn(['perms', 'canManageRoles'])
     const msg = server.get('message')
+
+    console.log(msg, roleManager, isEditing, this.props.data.toJS())
+
     if (!roleManager && msg !== '') {
       return <section>
         <h3>Server Message</h3>
@@ -49,13 +68,23 @@ class RolePicker extends Component {
       </section>
     }
 
-    if (roleManager) {
+    if (roleManager && !isEditing) {
       return <section>
         <div className="role-picker__header">
           <h3>Server Message</h3>
-            <Link to={`/s/${server.get('id')}/edit`} uk-tooltip='' title='Edit' uk-icon="icon: file-edit"></Link>
+          <div uk-tooltip='' title='Edit Server Message' uk-icon="icon: pencil" onClick={this.openMessageEditor} />
         </div>
         <p>{msg || <i>no server message</i>}</p>
+      </section>
+    }
+
+    if (roleManager && isEditing) {
+      return <section>
+        <div className="role-picker__header">
+          <h3>Server Message</h3>
+          <div uk-tooltip='' title='Save Server Message' onClick={this.saveServerMessage} style={{color: 'var(--c-green)'}} uk-icon="icon: check; scale: 1.1" />
+        </div>
+        <textarea className="uk-width-1-2 uk-textarea role-picker__msg-editor" rows="3" onChange={this.editServerMessage} value={msg} />
       </section>
     }
 
@@ -75,6 +104,7 @@ class RolePicker extends Component {
       <section>
         <div className="role-picker__header">
           <h3>Roles</h3>
+          <Link to={`/s/${server.get('id')}/edit`} uk-tooltip='' title='Edit Categories' uk-icon="icon: file-edit"></Link>          
           <div className="role-picker__spacer"></div>
           <div className={`role-picker__actions ${(!this.rolesHaveChanged) ? 'hidden' : ''}`}>
             <button disabled={!this.rolesHaveChanged} onClick={() => dispatch(Actions.resetSelected)} className="uk-button rp-button secondary">

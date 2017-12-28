@@ -21,12 +21,13 @@ class ServerCard extends Component {
     const s = server.get('server')
     const gm = server.get('gm')
     const perms = server.get('perms')
+
     if (perms.get('canManageRoles')) {
-      icon = <span title='Role Manager' uk-tooltip='' role='img' aria-label='Role Manager'>🔰</span>
+      icon = <span title='Role Manager' uk-tooltip='' role='img' aria-label='Role Manager' className="server-list__item__tag" uk-icon="icon: bolt; ratio: 0.7" />
     }
 
     if (perms.get('isAdmin')) {
-      icon = <span title='Server Admin' uk-tooltip='' role='img' aria-label='Server Admin'>🔰⭐️</span>
+      icon = <span title='Server Admin' uk-tooltip='' role='img' aria-label='Server Admin' className="server-list__item__tag" uk-icon="icon: star; ratio: 0.7" />
     }
 
     return <NavLink className='server-list__item' activeClassName='active' to={`/s/${s.get('id')}`}>

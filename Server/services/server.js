@@ -30,18 +30,36 @@ class ServerService extends Service {
     return srv.save()
   }
 
-  update (id, newData) {
-    const srv = this.get(id)
+  async update (id, newData) {
+    const srv = await this.get(id, false)
 
     return srv.update(newData)
   }
 
-  async get (id) {
-    return (await this.Server.findOne({
+  async get (id, plain = true) {
+    const s = await this.Server.findOne({
       where: {
         id
       }
-    })).get({ plain: true })
+    })
+
+    if (!plain) {
+      return s
+    }
+
+    return s.get({ plain: true })
+  }
+
+  async getAllowedRoles (id) {
+    const server = await this.get(id)
+
+    return Object.values(server.categories).reduce((acc, c) => {
+      if (c.hidden !== true) {
+        return acc.concat(c.roles)
+      }
+
+      return acc
+    }, [])
   }
 }
 

@@ -3,16 +3,18 @@ import superagent from 'superagent'
 import * as UIActions from '../../actions/ui'
 
 export const setup = id => async dispatch => {
-  // const rsp = await superagent.get(`/api/server/${id}`)
-  // const data = rsp.body
+  const rsp = await superagent.get(`/api/server/${id}`)
+  const data = rsp.body
 
-  // dispatch({
-  //   type: Symbol.for('update server roles'),
-  //   data: {
-  //     id,
-  //     roles: data
-  //   }
-  // })
+  console.log(data)
+
+  dispatch({
+    type: Symbol.for('server: set'),
+    data: {
+      id,
+      ...data
+    }
+  })
   dispatch(constructView(id))
 }
 
@@ -29,15 +31,19 @@ export const getViewMap = server => {
 
   const viewMap = categories.set('Uncategorized', fromJS({
     roles: unaccountedRoles,
-    hidden: false,
-    type: 'multi'
+    hidden: true,
+    type: 'multi',
+    name: 'Uncategorized'
   })).map(c => {
     const roles = c.get('roles')
+      // fill in roles_map
       .map(r =>
         server.get('roles').find(sr => sr.get('id') === r)
       )
+      // sort by server position, backwards.
       .sort((a, b) => a.position > b.position)
-    return c.set('roles_map', roles)
+    // force data to sets
+    return c.set('roles_map', Set(roles)).set('roles', Set(c.get('roles')))
   })
 
   const selected = roles.reduce((acc, r) => acc.set(r.get('id'), r.get('selected')), Map())
@@ -54,12 +60,13 @@ export const constructView = id => (dispatch, getState) => {
   const { viewMap, selected } = getViewMap(server)
 
   dispatch({
-    type: Symbol.for('setup role picker'),
+    type: Symbol.for('rp: setup role picker'),
     data: {
       viewMap: viewMap,
       rolesSelected: selected,
       originalRolesSelected: selected,
-      hidden: false
+      hidden: false,
+      isEditingMessage: false
     }
   })
 
@@ -68,7 +75,7 @@ export const constructView = id => (dispatch, getState) => {
 
 export const resetSelected = (dispatch) => {
   dispatch({
-    type: Symbol.for('reset selected')
+    type: Symbol.for('rp: reset selected')
   })
 }
 
@@ -93,11 +100,35 @@ export const submitSelected = serverId => async (dispatch, getState) => {
   await superagent.patch(`/api/servers/${serverId}/roles`).send(diff.toJS())
 
   dispatch({
-    type: Symbol.for('sync selected roles')
+    type: Symbol.for('rp: sync selected roles')
   })
 }
 
 export const updateRoles = roles => ({
-  type: Symbol.for('update selected roles'),
+  type: Symbol.for('rp: update selected roles'),
   data: roles
+})
+
+export const openMessageEditor = ({
+  type: Symbol.for('rp: set message editor state'),
+  data: true
+})
+
+export const saveServerMessage = id => async (dispatch, getState) => {
+  const message = getState().servers.getIn([id, 'message'])
+
+  await superagent.patch(`/api/server/${id}`).send({ message })
+
+  dispatch({
+    type: Symbol.for('rp: set message editor state'),
+    data: false
+  })
+}
+
+export const editServerMessage = (id, message) => ({
+  type: Symbol.for('server: edit message'),
+  data: {
+    id,
+    message
+  }
 })

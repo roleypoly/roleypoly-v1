@@ -7,7 +7,7 @@
 
   &__actions
     display: flex
-    margin-top: 10px
+    margin: 10px 0
     
     button
       padding: 0
@@ -19,12 +19,16 @@
     &_save
       flex: 4
 
+  &__uncat-zone
+    padding: 10px
+
   .role-editor__category
     box-sizing: border-box
     background-color: var(--c-1)
     padding: 15px
     margin: 10px
     min-width: 220px - 30px
+    position: relative
 
     &.add-button
       height: 100px
@@ -43,4 +47,44 @@
           transform: scale(1.1)
           color: var(--c-7)
 
+    &-header
+      display: flex
+      align-items: center
+      justify-content: left
+      margin-bottom: 10px
+
+      color: var(--c-7)
+
+      svg
+        transition: transform 0.05s ease-in-out
+        transform: translateZ(0)
+        &:hover
+          transform: translateZ(0) scale(1.1)
+          color: var(--c-9)
+
+      h4 
+        margin: 0
+        flex: 1
+        margin-right: 10px
   
+  .drop-zone
+    position: relative
+    &::after
+      content: ""
+      background-color: var(--c-7)
+      box-sizing: border-box
+      position: absolute
+      top: 0
+      right: 0
+      left: 0
+      bottom: 0
+      border: 5px dashed var(--c-3)
+      transition: opacity 0.15s ease-in-out
+      opacity: 0
+      pointer-events: none
+    
+    &.is-over::after
+      opacity: 0.5
+
+    &.can-drop::after
+      opacity: 0.2

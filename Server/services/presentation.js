@@ -14,30 +14,42 @@ class PresentationService extends Service {
     let servers = []
 
     for (let server of collection.array()) {
-      const sd = await this.ctx.server.get(server.id)
-      console.log(sd.categories)
       const gm = server.members.get(userId)
 
-      servers.push({
-        id: server.id,
-        gm: {
-          nickname: gm.nickname,
-          color: gm.displayHexColor
-        },
-        server: {
-          id: server.id,
-          name: server.name,
-          ownerID: server.ownerID,
-          icon: server.icon
-        },
-        roles: (await this.rolesByServer(server, sd)).map(r => ({ ...r, selected: gm.roles.has(r.id) })),
-        message: sd.message,
-        categories: sd.categories,
-        perms: this.discord.getPermissions(gm)
-      })
+      servers.push(await this.presentableServer(server, gm))
     }
 
     return servers
+  }
+
+  async presentableServers (collection, userId) {
+    return collection.array().areduce(async (acc, server) => {
+      const gm = server.members.get(userId)
+      acc.push(await this.presentableServer(server, gm))
+      return acc
+    })
+  }
+
+  async presentableServer (server, gm) {
+    const sd = await this.ctx.server.get(server.id)
+
+    return {
+      id: server.id,
+      gm: {
+        nickname: gm.nickname,
+        color: gm.displayHexColor
+      },
+      server: {
+        id: server.id,
+        name: server.name,
+        ownerID: server.ownerID,
+        icon: server.icon
+      },
+      roles: (await this.rolesByServer(server, sd)).map(r => ({ ...r, selected: gm.roles.has(r.id) })),
+      message: sd.message,
+      categories: sd.categories,
+      perms: this.discord.getPermissions(gm)
+    }
   }
 
   async rolesByServer (server) {

@@ -11,6 +11,7 @@ class DiscordService extends Service {
     this.clientSecret = process.env.DISCORD_CLIENT_SECRET
     this.oauthCallback = process.env.OAUTH_AUTH_CALLBACK
     this.botCallback = `${ctx.config.appUrl}/api/oauth/bot/callback`
+    this.appUrl = process.env.APP_URL
 
     this.client = new discord.Client()
 
@@ -23,6 +24,8 @@ class DiscordService extends Service {
 
   async startBot () {
     await this.client.login(this.botToken)
+
+    this.client.on('message', this.handleMessage.bind(this))
 
     for (let server of this.client.guilds.array()) {
       await this.ctx.server.ensure(server)
@@ -126,6 +129,20 @@ class DiscordService extends Service {
   // MANAGE_ROLES is the only permission we really need.
   getBotJoinUrl () {
     return `https://discordapp.com/oauth2/authorize?client_id=${this.clientId}&scope=bot&permissions=268435456&redirect_uri=${this.botCallback}`
+  }
+
+  mentionResponse (message) {
+    message.channel.send(`🔰 Assign your roles here! <${this.appUrl}/s/${message.guild.id}>`, { disableEveryone: true })
+  }
+
+  handleMessage (message) {
+    if (message.author.bot && message.channel.type !== 'text') { // drop bot messages and dms
+      return
+    }
+
+    if (message.mentions.users.has(this.client.user.id)) {
+      this.mentionResponse(message)
+    }
   }
 }
 

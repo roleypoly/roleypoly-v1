@@ -17,9 +17,11 @@ class Category extends Component {
     const type = this.props.category.get('type')
 
     switch (type) {
-      case 'multi': return this.toggleRoleMulti(id, next)
       case 'single': return this.toggleRoleSingle(id, next)
-      default: console.warn('NOT SURE')
+      case 'multi': return this.toggleRoleMulti(id, next)
+      default: 
+        console.warn('DEFAULTING TO MULTI', id, next, old)
+        return this.toggleRoleMulti(id, next)
     }
   }
 
@@ -34,7 +36,7 @@ class Category extends Component {
     }
 
     return <div key={name} className="role-picker__category">
-      <h4>{ name }</h4>
+      <h4>{ category.get('name') }</h4>
       {
         category.get('roles_map')
         .sortBy(r => r.get('position'))

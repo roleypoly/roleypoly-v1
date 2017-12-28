@@ -3,7 +3,7 @@ module.exports = (R, $) => {
     try {
       const { userId } = ctx.session
       const srv = $.discord.getRelevantServers(userId)
-      const presentable = await $.P.oldPresentableServers(srv, userId)
+      const presentable = await $.P.presentableServers(srv, userId)
 
       ctx.body = presentable
     } catch (e) {
@@ -23,10 +23,33 @@ module.exports = (R, $) => {
       return
     }
 
-    const gm = srv.members.get(userId)
-    const server = $.discord.presentableRoles(id, gm)
+    const gm = $.discord.gm(id, userId)
+    const server = await $.P.presentableServer(srv, gm)
 
     ctx.body = server
+  })
+
+  R.patch('/api/server/:id', async (ctx) => {
+    const { userId } = ctx.session
+    const { id } = ctx.params
+    let gm = $.discord.gm(id, userId)
+
+    // check perms
+    if (!$.discord.getPermissions(gm).canManageRoles) {
+      ctx.status = 403
+      ctx.body = { err: 'cannot_manage_roles' }
+      return
+    }
+
+    const { message = null, categories = null } = ctx.request.body
+
+    // todo make less nasty
+    await $.server.update(id, {
+      ...((message != null) ? { message } : {}),
+      ...((categories != null) ? { categories } : {})
+    })
+
+    ctx.body = { ok: true }
   })
 
   R.patch('/api/servers/:server/roles', async ctx => {
@@ -36,12 +59,16 @@ module.exports = (R, $) => {
 
     const { added, removed } = ctx.request.body
 
+    const allowedRoles = await $.server.getAllowedRoles(server)
+
+    const pred = r => $.discord.safeRole(server, r) && allowedRoles.indexOf(r) !== -1
+
     if (added.length > 0) {
-      gm = await gm.addRoles(added.filter(r => $.discord.safeRole(server, r)))
+      gm = await gm.addRoles(added.filter(pred))
     }
 
     if (removed.length > 0) {
-      gm = await gm.removeRoles(removed.filter(r => $.discord.safeRole(server, r)))
+      gm = await gm.removeRoles(removed.filter(pred))
     }
 
     ctx.body = { ok: true }

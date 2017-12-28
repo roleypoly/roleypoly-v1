@@ -1,6 +1,8 @@
 import { Set } from 'immutable'
 import * as UIActions from '../../actions/ui'
 import { getViewMap } from '../role-picker/actions'
+import ksuid from 'ksuid'
+import superagent from 'superagent'
 
 export const constructView = id => (dispatch, getState) => {
   const server = getState().servers.get(id)
@@ -11,78 +13,133 @@ export const constructView = id => (dispatch, getState) => {
   dispatch({
     type: Symbol.for('re: setup'),
     data: {
-      viewMap: viewMap
+      viewMap: viewMap,
+      originalSnapshot: viewMap
     }
   })
 
   dispatch(UIActions.fadeIn)
 }
 
-export const addRoleToCategory = (name, oldName, role, flip = true) => (dispatch) => {
+export const addRoleToCategory = (id, oldId, role, flip = true) => (dispatch) => {
   dispatch({
     type: Symbol.for('re: add role to category'),
     data: {
-      name,
+      id,
       role
     }
   })
 
   if (flip) {
-    dispatch(removeRoleFromCategory(oldName, name, role, false))
+    dispatch(removeRoleFromCategory(oldId, id, role, false))
   }
 }
 
-export const removeRoleFromCategory = (name, oldName, role, flip = true) => (dispatch) => {
+export const removeRoleFromCategory = (id, oldId, role, flip = true) => (dispatch) => {
   dispatch({
     type: Symbol.for('re: remove role from category'),
     data: {
-      name,
+      id,
       role
     }
   })
-  
+
   if (flip) {
-    dispatch(addRoleToCategory(oldName, name, role, false))
+    dispatch(addRoleToCategory(oldId, id, role, false))
   }
 }
 
+export const editCategory = ({ id, key, value }) => dispatch => {
+  dispatch({
+    type: Symbol.for('re: edit category'),
+    data: {
+      id,
+      key,
+      value
+    }
+  })
+}
 
-export const editCategory = (stuff) => dispatch => {
+export const saveCategory = (id, category) => (dispatch) => {
+  if (category.get('name') === '') {
+    return
+  }
+
+  dispatch({
+    type: Symbol.for('re: switch category mode'),
+    data: {
+      id,
+      mode: Symbol.for('drop')
+    }
+  })
 
 }
 
-export const saveCategory = (name) => ({
+export const openEditor = (id) => ({
   type: Symbol.for('re: switch category mode'),
   data: {
-    name,
-    mode: Symbol.for('drop')
+    id,
+    mode: Symbol.for('edit')
   }
 })
 
-export const deleteCategory = (name) => ({
-  type: Symbol.for('re: delete category'),
-  data: name
-})
+export const deleteCategory = (id, category) => (dispatch, getState) => {
+  const roles = category.get('roles')
+  const rolesMap = category.get('roles_map')
 
-export const createCategory = (dispatch, getState) => {
+  let uncategorized = getState().roleEditor.getIn(['viewMap', 'Uncategorized'])
+
+  dispatch({
+    type: Symbol.for('re: set category'),
+    data: {
+      id: 'Uncategorized',
+      name: '',
+      roles: uncategorized.get('roles').union(roles),
+      roles_map: uncategorized.get('roles_map').union(rolesMap),
+      hidden: true,
+      type: 'multi',
+      mode: null
+    }
+  })
+
+  dispatch({
+    type: Symbol.for('re: delete category'),
+    data: id
+  })
+}
+
+export const createCategory = async (dispatch, getState) => {
   const { roleEditor } = getState()
   const vm = roleEditor.get('viewMap')
 
   let name = 'New Category'
   let idx = 1
-  while (vm.has(name)) {
+  while (vm.find(c => c.get('name') === name) !== undefined) {
     idx++
     name = `New Category ${idx}`
   }
 
+  const id = (await ksuid.random()).string
+
   dispatch({
     type: Symbol.for('re: set category'),
     data: {
+      id,
       name,
       roles: Set([]),
       roles_map: Set([]),
       hidden: true,
+      type: 'multi',
       mode: Symbol.for('edit')
     }
   })
+}
+
+export const saveServer = id => async (dispatch, getState) => {
+  const viewMap = getState().roleEditor.get('viewMap')
+    .filterNot((_, k) => k === 'Uncategorized')
+    .map(v => v.delete('roles_map').delete('mode').delete('id'))
+
+  await superagent.patch(`/api/server/${id}`).send({ categories: viewMap.toJS() })
+  dispatch({ type: Symbol.for('re: swap original state') })
 }

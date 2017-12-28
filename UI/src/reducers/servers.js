@@ -32,6 +32,12 @@ export default (state = initialState, { type, data }) => {
     //   return state.set(data.id,
     //     state.get(data.id).set('roles', Set(data.roles))
     //   )
+
+    case Symbol.for('server: set'):
+      return state.set(data.id, fromJS(data))
+  
+    case Symbol.for('server: edit message'):
+      return state.setIn([data.id, 'message'], data.message)
       
     case Symbol.for('add debug server'):
       return state.set('0', blankServer)
