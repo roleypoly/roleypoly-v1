@@ -12,8 +12,13 @@ class DiscordService extends Service {
     this.oauthCallback = process.env.OAUTH_AUTH_CALLBACK
     this.botCallback = `${ctx.config.appUrl}/api/oauth/bot/callback`
     this.appUrl = process.env.APP_URL
+    this.isBot = process.env.IS_BOT === 'true' || false
+    this.rootUsers = new Set((process.env.ROOT_USERS||'').split(','))
 
     this.client = new discord.Client()
+    this.client.options.disableEveryone = true
+
+    this.cmds = this._cmds()
 
     this.startBot()
   }
@@ -25,7 +30,11 @@ class DiscordService extends Service {
   async startBot () {
     await this.client.login(this.botToken)
 
-    this.client.on('message', this.handleMessage.bind(this))
+    // not all roleypolys are bots.
+    if (this.isBot) {
+      this.log.info('this roleypoly is a bot')
+      this.client.on('message', this.handleMessage.bind(this))
+    }
 
     for (let server of this.client.guilds.array()) {
       await this.ctx.server.ensure(server)
@@ -135,15 +144,77 @@ class DiscordService extends Service {
     message.channel.send(`🔰 Assign your roles here! <${this.appUrl}/s/${message.guild.id}>`, { disableEveryone: true })
   }
 
+  _cmds () {
+    const cmds = [
+      {
+        regex: /say (.*)/,
+        handler (message, matches, r) {
+          r(matches[0])
+        }
+      },
+      {
+        regex: /set username (.*)/,
+        async handler (message, matches) {
+          const { username } = this.client.user
+          await this.client.user.setUsername(matches[0])
+          message.channel.send(`Username changed from ${username} to ${matches[0]}`)
+        }
+      },
+      {
+        regex: /stats/,
+        async handler (message, matches) {
+          const t = [
+            `**Stats** 📈`,
+            '',
+            `👩‍❤️‍👩 **Users Served:** ${this.client.guilds.reduce((acc, g) => acc + g.memberCount, 0)}`,
+            `🔰 **Servers:** ${this.client.guilds.array().length}`
+          ]
+          message.channel.send(t.join('\n'))
+        }
+      }
+    ]
+    // prefix regex with ^ for ease of code
+    .map(({regex, ...rest}) => ({ regex: new RegExp(`^${regex.source}`, regex.flags), ...rest }))
+
+    return cmds
+  }
+
+  async handleCommand (message) {
+    const cmd = message.content.replace(`<@${this.client.user.id}> `, '')
+    this.log.debug(`got command from ${message.author.username}`, cmd)
+    for (let { regex, handler } of this.cmds) {
+      const match = regex.exec(cmd)
+      if (match !== null) {
+        this.log.debug('command accepted', { cmd, match })
+        try {
+          await handler.call(this, message, match.slice(1))
+          return
+        } catch (e) {
+          this.log.error('command errored', { e, cmd, message })
+          message.channel.send(`❌ **An error occured.** ${e}`)
+          return
+        }
+      }
+    }
+
+    // nothing matched?
+    this.mentionResponse(message)
+  }
+
   handleMessage (message) {
     if (message.author.bot && message.channel.type !== 'text') { // drop bot messages and dms
       return
     }
 
     if (message.mentions.users.has(this.client.user.id)) {
-      this.mentionResponse(message)
+      if (this.rootUsers.has(message.author.id)) {
+        this.handleCommand.call(this, message)
+      } else {
+        this.mentionResponse.call(this, message)
+      }
     }
   }
 }
+
 
 module.exports = DiscordService

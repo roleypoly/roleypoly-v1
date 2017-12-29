@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
-import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'

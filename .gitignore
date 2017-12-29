@@ -1,2 +1,4 @@
 
 Server/\.env
+
+/docker-compose.test.yml

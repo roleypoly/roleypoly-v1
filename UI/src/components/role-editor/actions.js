@@ -1,7 +1,7 @@
 import { Set } from 'immutable'
 import * as UIActions from '../../actions/ui'
 import { getViewMap } from '../role-picker/actions'
-import ksuid from 'ksuid'
+import uuidv4 from 'uuid/v4'
 import superagent from 'superagent'
 
 export const constructView = id => (dispatch, getState) => {
@@ -72,7 +72,6 @@ export const saveCategory = (id, category) => (dispatch) => {
       mode: Symbol.for('drop')
     }
   })
-
 }
 
 export const openEditor = (id) => ({
@@ -108,7 +107,7 @@ export const deleteCategory = (id, category) => (dispatch, getState) => {
   })
 }
 
-export const createCategory = async (dispatch, getState) => {
+export const createCategory = (dispatch, getState) => {
   const { roleEditor } = getState()
   const vm = roleEditor.get('viewMap')
 
@@ -119,7 +118,7 @@ export const createCategory = async (dispatch, getState) => {
     name = `New Category ${idx}`
   }
 
-  const id = (await ksuid.random()).string
+  const id = uuidv4()
 
   dispatch({
     type: Symbol.for('re: set category'),

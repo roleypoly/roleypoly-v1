@@ -1,12 +1,14 @@
 const log = new (require('../logger'))('api/index')
 const glob = require('glob')
 
+const PROD = process.env.NODE_ENV === 'production'
+
 module.exports = async (router, ctx) => {
-  const apis = glob.sync('./api/**/!(index).js')
+  const apis = glob.sync(`./api/**/!(index).js`)
   log.debug('found apis', apis)
 
   for (let a of apis) {
-    if (a.endsWith('_test.js') !== null && process.env.NODE_ENV !== 'development') {
+    if (a.endsWith('_test.js') && PROD) {
       log.debug(`skipping ${a}`)
       continue
     }

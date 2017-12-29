@@ -15,6 +15,8 @@ class Logger {
 
     if (typeof data[data.length - 1] === 'number') {
       process.exit(data[data.length - 1])
+    } else {
+      process.exit(1)
     }
 
     throw text

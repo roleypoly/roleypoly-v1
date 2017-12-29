@@ -5,6 +5,7 @@ const http = require('http')
 const Koa = require('koa')
 const app = new Koa()
 const _io = require('socket.io')
+const path = require('path')
 const router = require('koa-better-router')().loadMethods()
 const Roleypoly = require('./Roleypoly')
 
@@ -34,6 +35,28 @@ async function start () {
   const bodyParser = require('koa-bodyparser')
   app.use(bodyParser({ types: ['json'] }))
 
+  // Compress
+  const compress = require('koa-compress')
+  app.use(compress())
+
+  // SPA + Static
+  if (process.env.NODE_ENV === 'production') {
+    const pub = path.join(__dirname, 'public')
+
+    const staticFiles = require('koa-static')
+    app.use(staticFiles(pub, { defer: true }))
+
+    const send = require('koa-send')
+    app.use(async (ctx, next) => {
+      if (ctx.path.startsWith('/api')) {
+        return next()
+      }
+
+      await next()
+      send(ctx, 'index.html', { root: pub })
+    })
+  }
+
   // Request logger
   app.use(async (ctx, next) => {
     let timeStart = new Date()
@@ -60,15 +83,18 @@ async function start () {
   app.use(session({
     key: 'roleypoly:sess',
     maxAge: 'session',
+    siteOnly: true,
     store: M.ctx.sessions
   }, app))
 
   await M.mountRoutes()
+
+  // SPA server
 
   log.info(`starting HTTP server on ${process.env.APP_PORT || 6769}`)
   server.listen(process.env.APP_PORT || 6769)
 }
 
 start().catch(e => {
-  console.error(e)
+  log.fatal('app failed to start', e)
 })
