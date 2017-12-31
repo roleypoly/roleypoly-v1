@@ -7,13 +7,14 @@ import superagent from 'superagent'
 export const constructView = id => (dispatch, getState) => {
   const server = getState().servers.get(id)
 
-  let { viewMap } = getViewMap(server)
+  let { viewMap, hasSafeRoles } = getViewMap(server)
   viewMap = viewMap.map(c => c.set('mode', Symbol.for('drop')))
 
   dispatch({
     type: Symbol.for('re: setup'),
     data: {
-      viewMap: viewMap,
+      hasSafeRoles,
+      viewMap,
       originalSnapshot: viewMap
     }
   })

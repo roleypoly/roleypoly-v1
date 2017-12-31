@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Set } from 'immutable'
 import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
+import { Link, Prompt } from 'react-router-dom'
+import { Scrollbars } from 'react-custom-scrollbars'
 import * as Actions from './actions'
 import * as PickerActions from '../role-picker/actions'
 import * as UIActions from '../../actions/ui'
@@ -10,7 +12,6 @@ import './RoleEditor.sass'
 import Category from './Category'
 import CategoryEditor from './CategoryEditor'
 import Role from '../role/draggable'
-import { Scrollbars } from 'react-custom-scrollbars';
 
 const mapState = ({ rolePicker, roleEditor, servers }, ownProps) => ({
   rp: rolePicker,
@@ -113,6 +114,7 @@ class RoleEditor extends Component {
   render () {
     const vm = this.props.editor.get('viewMap')
     return <div className="inner role-editor">
+      <Prompt when={this.hasChanged} message="Are you sure you want to leave? You have unsaved changes that will be lost." />
       <div className="role-picker__header" style={{ marginBottom: 10 }}>
         <h3>{this.props.server.getIn(['server','name'])}</h3>
         <div className="role-picker__spacer"></div>
@@ -160,6 +162,13 @@ class RoleEditor extends Component {
                   .reverse()
                   .map((r, k) => <Role key={k} categoryId='Uncategorized' role={r} />)
                   .toArray()
+              }
+              {
+                (!this.props.editor.hasSafeRoles)
+                ? <div className="role-editor__alert">
+                    <Link to="/help/why-no-roles">Why are there no roles here? <i uk-icon="icon: info" /></Link>
+                  </div>
+                : null
               }
               </div>
             </Scrollbars>

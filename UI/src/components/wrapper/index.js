@@ -11,7 +11,9 @@ class Wrapper extends Component {
       <div style={styles.container}>
         <nav uk-navbar='' style={styles.nav} className='uk-navbar-transparent'>
           <div className='uk-navbar-left'>
-            <Logotype style={{ height: '2rem' }} className='wrapper__logotype' />
+            <Link to="/">
+              <Logotype style={{ height: '2rem' }} className='wrapper__logotype' />
+            </Link>
           </div>
           <div className='uk-navbar-right'>
             <ul className='uk-navbar-nav'>

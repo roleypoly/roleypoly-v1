@@ -20,6 +20,8 @@ body {
   --c-1: #453e3d;
   --c-dark: #332d2d;
   --c-green: #46b646;
+  --c-red: #e95353;
+  --c-discord: #7289da;
 }
 
 ::selection {

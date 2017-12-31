@@ -48,9 +48,12 @@ export const getViewMap = server => {
 
   const selected = roles.reduce((acc, r) => acc.set(r.get('id'), r.get('selected')), Map())
 
+  const hasSafeRoles = allRoles.size > 0
+
   return {
     viewMap,
-    selected
+    selected,
+    hasSafeRoles
   }
 }
 

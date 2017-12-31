@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
+import { Prompt } from 'react-router-dom'
 import superagent from 'superagent'
 import * as Actions from './actions'
 import * as UIActions from '../../actions/ui'
@@ -100,6 +101,7 @@ class RolePicker extends Component {
     }
 
     return <div className={`inner role-picker ${(data.get('hidden')) ? 'hidden' : ''}`}>
+      <Prompt when={this.rolesHaveChanged} message="Are you sure you want to leave? You have unsaved changes that will be lost." />
       { this.renderServerMessage(server) }
       <section>
         <div className="role-picker__header">

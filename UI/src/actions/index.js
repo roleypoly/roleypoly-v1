@@ -25,7 +25,7 @@ export const userInit = async dispatch => {
 
       dispatch(fetchServers)
     } catch (e) {
-      window.location.href = '/oauth/flow'
+      // window.location.href = '/oauth/flow'
     }
   } else {
     dispatch({

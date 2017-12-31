@@ -2,14 +2,15 @@ import { Map, OrderedMap, fromJS } from 'immutable'
 
 const initialState = Map({
   viewMap: OrderedMap({}),
-  originalSnapshot: OrderedMap({})
+  originalSnapshot: OrderedMap({}),
+  hasAvailableRoles: true
 })
 
 const reducer = (state = initialState, { type, data }) => {
   switch (type) {
     case Symbol.for('re: setup'):
       const { viewMap, originalSnapshot, ...rest } = data
-      return Map({ viewMap: OrderedMap(viewMap), originalSnapshot: OrderedMap(originalSnapshot), ...rest })
+      return state.merge({ viewMap: OrderedMap(viewMap), originalSnapshot: OrderedMap(originalSnapshot), ...rest })
 
     case Symbol.for('re: set category'):
       return state.setIn(['viewMap', data.id], Map(data))
