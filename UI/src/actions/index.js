@@ -22,9 +22,12 @@ export const userInit = async dispatch => {
         type: Symbol.for('set user'),
         data: rsp.body
       })
-
+      
       dispatch(fetchServers)
     } catch (e) {
+      dispatch({
+        type: Symbol.for('app ready')
+      })
       // window.location.href = '/oauth/flow'
     }
   } else {
