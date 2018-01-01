@@ -164,7 +164,7 @@ class RoleEditor extends Component {
                   .toArray()
               }
               {
-                (!this.props.editor.hasSafeRoles)
+                (this.props.editor.get('hasSafeRoles') !== true)
                 ? <div className="role-editor__alert">
                     <Link to="/help/why-no-roles">Why are there no roles here? <i uk-icon="icon: info" /></Link>
                   </div>
