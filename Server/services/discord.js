@@ -167,7 +167,8 @@ class DiscordService extends Service {
             `**Stats** 📈`,
             '',
             `👩‍❤️‍👩 **Users Served:** ${this.client.guilds.reduce((acc, g) => acc + g.memberCount, 0)}`,
-            `🔰 **Servers:** ${this.client.guilds.array().length}`
+            `🔰 **Servers:** ${this.client.guilds.size}`,
+            `💮 **Roles Seen:** ${this.client.guilds.reduce((acc, g) => acc + g.roles.size, 0)}`
           ]
           message.channel.send(t.join('\n'))
         }
