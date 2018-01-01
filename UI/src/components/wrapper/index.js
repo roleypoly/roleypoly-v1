@@ -1,33 +1,35 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import Scrollbars from 'react-custom-scrollbars'
 import Logotype from '../logotype'
-import styles from './styles'
-import './wrapper.css'
+import './wrapper.sass'
 
 class Wrapper extends Component {
   render () {
-    return <div style={styles.root}>
-      <div style={styles.background} />
-      <div style={styles.container}>
-        <nav uk-navbar='' style={styles.nav} className='uk-navbar-transparent'>
-          <div className='uk-navbar-left'>
-            <Link to="/">
-              <Logotype style={{ height: '2rem' }} className='wrapper__logotype' />
-            </Link>
-          </div>
-          <div className='uk-navbar-right'>
-            <ul className='uk-navbar-nav'>
-              <li><Link to='/start'>Get Started</Link></li>
-              <li><a href='https://discord.gg/PWQUVsd'>Support Discord</a></li>
-            </ul>
-          </div>
-        </nav>
-        <main>
-          {
-            this.props.children
-          }
-        </main>
-      </div>
+    return <div className='wrapper'>
+      <Scrollbars autoHeight autoHeightMax='100vh'>
+        <div className='wrapper__background' />
+        <div className='wrapper__container'>
+          <nav uk-navbar='' className='wrapper__nav' className='uk-navbar-transparent'>
+            <div className='uk-navbar-left'>
+              <Link to="/">
+                <Logotype style={{ height: '2rem' }} className='wrapper__logotype' />
+              </Link>
+            </div>
+            <div className='uk-navbar-right'>
+              <ul className='uk-navbar-nav'>
+                <li><Link to='/start'>Get Started</Link></li>
+                <li><a href='https://discord.gg/PWQUVsd'>Support Discord</a></li>
+              </ul>
+            </div>
+          </nav>
+          <main className="wrapper__content">
+            {
+              this.props.children
+            }
+          </main>
+        </div>
+      </Scrollbars>
     </div>
   }
 }
