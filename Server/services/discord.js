@@ -174,8 +174,8 @@ class DiscordService extends Service {
         }
       }
     ]
-    // prefix regex with ^ for ease of code
-    .map(({regex, ...rest}) => ({ regex: new RegExp(`^${regex.source}`, regex.flags), ...rest }))
+      // prefix regex with ^ for ease of code
+      .map(({regex, ...rest}) => ({ regex: new RegExp(`^${regex.source}`, regex.flags), ...rest }))
 
     return cmds
   }
@@ -209,13 +209,12 @@ class DiscordService extends Service {
 
     if (message.mentions.users.has(this.client.user.id)) {
       if (this.rootUsers.has(message.author.id)) {
-        this.handleCommand.call(this, message)
+        this.handleCommand(message)
       } else {
-        this.mentionResponse.call(this, message)
+        this.mentionResponse(message)
       }
     }
   }
 }
-
 
 module.exports = DiscordService

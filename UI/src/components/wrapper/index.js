@@ -10,7 +10,7 @@ class Wrapper extends Component {
       <Scrollbars autoHeight autoHeightMax='100vh'>
         <div className='wrapper__background' />
         <div className='wrapper__container'>
-          <nav uk-navbar='' className='wrapper__nav' className='uk-navbar-transparent'>
+          <nav uk-navbar='' className='uk-navbar-transparent wrapper__nav'>
             <div className='uk-navbar-left'>
               <Link to="/">
                 <Logotype style={{ height: '2rem' }} className='wrapper__logotype' />
