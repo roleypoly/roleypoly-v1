@@ -2,3 +2,6 @@
 Server/\.env
 
 /docker-compose.test.yml
+Server/prod\.env
+
+Server/test\.env
