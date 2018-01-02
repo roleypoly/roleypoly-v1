@@ -69,7 +69,8 @@ export const constructView = id => (dispatch, getState) => {
       rolesSelected: selected,
       originalRolesSelected: selected,
       hidden: false,
-      isEditingMessage: false
+      isEditingMessage: false,
+      messageBuffer: ''
     }
   })
 
@@ -112,26 +113,36 @@ export const updateRoles = roles => ({
   data: roles
 })
 
-export const openMessageEditor = ({
-  type: Symbol.for('rp: set message editor state'),
-  data: true
-})
+export const openMessageEditor = id => (dispatch, getState) => {
+  const message = getState().servers.getIn([id, 'message'])
+  dispatch(editServerMessage(id, message))
+  dispatch({
+    type: Symbol.for('rp: set message editor state'),
+    data: true
+  })
+}
 
 export const saveServerMessage = id => async (dispatch, getState) => {
-  const message = getState().servers.getIn([id, 'message'])
+  const message = getState().rolePicker.get('messageBuffer')
 
   await superagent.patch(`/api/server/${id}`).send({ message })
 
+  dispatch(closeMessageEditor)
   dispatch({
-    type: Symbol.for('rp: set message editor state'),
-    data: false
+    type: Symbol.for('server: edit message'),
+    data: {
+      id,
+      message
+    }
   })
 }
 
 export const editServerMessage = (id, message) => ({
-  type: Symbol.for('server: edit message'),
-  data: {
-    id,
-    message
-  }
+  type: Symbol.for('rp: edit message buffer'),
+  data: message
+})
+
+export const closeMessageEditor = ({
+  type: Symbol.for('rp: set message editor state'),
+  data: false
 })

@@ -4,6 +4,7 @@ const initialState = Map({
   hidden: true, // should the view be hidden?
   // emptyRoles: true, // helps derender roles so there's no visible element state change
   isEditingMessage: false,
+  messageBuffer: '',
   viewMap: OrderedMap({}), // roles in categories
   originalRolesSelected: Map({}), // Map<role id, bool> -- original roles for diffing against selected
   rolesSelected: Map({}) // Map<role id, bool> -- new roles for diffing
@@ -30,9 +31,10 @@ export default (state = initialState, { type, data }) => {
       return state.set('rolesSelected', state.get('originalRolesSelected'))
 
     case Symbol.for('rp: set message editor state'):
-      console.log(state.set('isEditingMessage', data))
       return state.set('isEditingMessage', data)
-
+    
+    case Symbol.for('rp: edit message buffer'):
+      return state.set('messageBuffer', data)
     // case Symbol.for('rp: zero role picker'):
       // return initialState
 

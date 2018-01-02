@@ -31,6 +31,10 @@ class RolePicker extends Component {
     }
   }
 
+  get serverId () {
+    return this.props.server.get('id')
+  }
+
   isSelected = id => {
     return this.props.data.getIn([ 'rolesSelected', id ])
   }
@@ -42,23 +46,29 @@ class RolePicker extends Component {
 
   editServerMessage = (e) => {
     const { dispatch } = this.props
-    dispatch(Actions.editServerMessage(this.props.server.get('id'), e.target.value))
+    dispatch(Actions.editServerMessage(this.serverId, e.target.value))
   }
 
   saveServerMessage = (e) => {
     const { dispatch } = this.props
-    dispatch(Actions.saveServerMessage(this.props.server.get('id')))
+    dispatch(Actions.saveServerMessage(this.serverId))
   }
 
   openMessageEditor = () => {
     const { dispatch } = this.props
-    dispatch(Actions.openMessageEditor)
+    dispatch(Actions.openMessageEditor(this.serverId))
+  }
+
+  closeMessageEditor = () => {
+    const { dispatch } = this.props
+    dispatch(Actions.closeMessageEditor) 
   }
 
   renderServerMessage (server) {
     const isEditing = this.props.data.get('isEditingMessage')
     const roleManager = server.getIn(['perms', 'canManageRoles'])
     const msg = server.get('message')
+    const msgBuffer = this.props.data.get('messageBuffer')
 
     console.log(msg, roleManager, isEditing, this.props.data.toJS())
 
@@ -83,9 +93,10 @@ class RolePicker extends Component {
       return <section>
         <div className="role-picker__header">
           <h3>Server Message</h3>
-          <div uk-tooltip='' title='Save Server Message' onClick={this.saveServerMessage} style={{color: 'var(--c-green)'}} uk-icon="icon: check; scale: 1.1" />
+          <div uk-tooltip='' title='Save Server Message' onClick={this.saveServerMessage} style={{cursor: 'pointer', color: 'var(--c-green)'}} uk-icon="icon: check; ratio: 1.4" />
+          <div uk-tooltip='' title='Discard Edits' onClick={this.closeMessageEditor} style={{cursor: 'pointer', color: 'var(--c-red)', marginLeft: 10}} uk-icon="icon: trash; ratio: 0.9" />
         </div>
-        <textarea className="uk-width-1-2 uk-textarea role-picker__msg-editor" rows="3" onChange={this.editServerMessage} value={msg} />
+        <textarea className="uk-width-1-2 uk-textarea role-picker__msg-editor" rows="3" onChange={this.editServerMessage} value={msgBuffer} />
       </section>
     }
 
