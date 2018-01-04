@@ -117,7 +117,10 @@ class RolePicker extends Component {
       <section>
         <div className="role-picker__header">
           <h3>Roles</h3>
-          <Link to={`/s/${server.get('id')}/edit`} uk-tooltip='' title='Edit Categories' uk-icon="icon: file-edit"></Link>          
+          { server.getIn(['perms', 'canManageRoles']) === true
+            ? <Link to={`/s/${server.get('id')}/edit`} uk-tooltip='' title='Edit Categories' uk-icon="icon: file-edit"></Link> 
+            : null
+          }       
           <div className="role-picker__spacer"></div>
           <div className={`role-picker__actions ${(!this.rolesHaveChanged) ? 'hidden' : ''}`}>
             <button disabled={!this.rolesHaveChanged} onClick={() => dispatch(Actions.resetSelected)} className="uk-button rp-button secondary">

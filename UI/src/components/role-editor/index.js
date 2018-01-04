@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Set } from 'immutable'
 import { connect } from 'react-redux'
 import { DropTarget } from 'react-dnd'
-import { Link, Prompt } from 'react-router-dom'
+import { Link, Prompt, Redirect } from 'react-router-dom'
 import { Scrollbars } from 'react-custom-scrollbars'
 import * as Actions from './actions'
 import * as PickerActions from '../role-picker/actions'
@@ -112,6 +112,11 @@ class RoleEditor extends Component {
   }
 
   render () {
+    const { server } = this.props
+    if (server.getIn(['server', 'perms', 'canManageRoles']) !== true) {
+      return <Redirect to={`/s/${server.get('id')}`} />
+    }
+
     const vm = this.props.editor.get('viewMap')
     return <div className="inner role-editor">
       <Prompt when={this.hasChanged} message="Are you sure you want to leave? You have unsaved changes that will be lost." />
