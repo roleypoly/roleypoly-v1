@@ -40,6 +40,7 @@
     "/api/socket.io": {
       "target": "ws://localhost:6769/socket.io",
       "ws": true
+    }
   },
   "devDependencies": {
     "eslint": "^4.14.0",
