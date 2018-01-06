@@ -137,7 +137,7 @@ class DiscordService extends Service {
   // returns the bot join url with MANAGE_ROLES permission
   // MANAGE_ROLES is the only permission we really need.
   getBotJoinUrl () {
-    return `https://discordapp.com/oauth2/authorize?client_id=${this.clientId}&scope=bot&permissions=268435456&redirect_uri=${this.botCallback}`
+    return `https://discordapp.com/oauth2/authorize?client_id=${this.clientId}&scope=bot&permissions=268435456`
   }
 
   mentionResponse (message) {
@@ -215,6 +215,7 @@ class DiscordService extends Service {
       }
     }
   }
+
 }
 
 module.exports = DiscordService

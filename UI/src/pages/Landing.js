@@ -5,7 +5,8 @@ import Typist from 'react-typist'
 import moment from 'moment'
 import './landing.sass'
 import discordLogo from './images/discord-logo.svg'
-import RoleDemo from '../components/role/demo'
+import RoleypolyDemo from '../components/demos/roleypoly'
+import TypingDemo from '../components/demos/typing'
 
 const Landing = ({ root = false }) =>
   <div className="landing uk-width-1-1 uk-text-center">
@@ -20,39 +21,12 @@ const Landing = ({ root = false }) =>
       <section uk-grid="">
         {/* Typist */}
         <div className="uk-width-1-2">
-          <div className="landing__discord rp-discord">
-            <div className="discord__chat">
-              <span className="timestamp">{moment().format('LT')}</span>
-              <span className="username">Kata カタ</span>
-              <span className="text">Hey, I want some roles!</span>
-            </div>
-            <div className="discord__textarea">
-              <Typist cursor={{ blink: true }}>
-                <span>.iam a cute role ♡</span>
-                <Typist.Backspace count={30} delay={1500} />
-                <span>.iam a vanity role ♡</span>
-                <Typist.Backspace count={30} delay={1500} />
-                <span>.iam a brave role ♡</span>
-                <Typist.Backspace count={30} delay={1500} />
-                <span>.iam a proud role ♡</span>
-                <Typist.Backspace count={30} delay={1500} />
-                <span>.iam a wonderful role ♡</span>
-                <Typist.Backspace count={30} delay={1500} />
-                <span>i have too many roles.</span>
-              </Typist>
-            </div>
-          </div>
+          <TypingDemo />
           <p className="subtext">Why are we stuck in the stupid ages?</p>
         </div>
         {/* role side */}
         <div className="uk-width-1-2">
-          <div className="landing__roleypoly">
-            <RoleDemo name="a cute role ♡" color="#3EC1BF" />
-            <RoleDemo name="a vanity role ♡" color="#F7335B" />
-            <RoleDemo name="a brave role ♡" color="#A8D0B8" />
-            <RoleDemo name="a proud role ♡" color="#5C8B88" />
-            <RoleDemo name="a wonderful role ♡" color="#D6B3C7" />
-          </div>
+          <RoleypolyDemo />
           <p className="subtext">It's 2018. We can do better.</p>
         </div>
       </section>

@@ -12,7 +12,7 @@ class OauthCallback extends Component {
   }
 
   async componentDidMount () {
-    const { body: { url } } = await superagent.get('/api/auth/redirect')
+    const { body: { url } } = await superagent.get('/api/auth/redirect?url=✔️')
     try {
       const rsp = await superagent.get('/api/auth/user')
       this.props.dispatch({

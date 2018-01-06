@@ -1,4 +1,5 @@
 import superagent from 'superagent'
+import { push } from 'react-router-redux'
 
 export const fetchServers = async dispatch => {
   const rsp = await superagent.get('/api/servers')
@@ -45,4 +46,39 @@ export const userLogout = async dispatch => {
   })
 
   window.location.href = '/'
+}
+
+export const startServerPolling = dispatch => {
+  return poll(window.__APP_STORE__.dispatch, window.__APP_STORE__.getState) // let's not cheat... :c
+}
+
+const poll = (dispatch, getState) => {
+  const { servers } = getState()
+  let stop = false
+  const stopPolling = () => { stop = true }
+  const pollFunc = async () => {
+    if (stop) {
+      return
+    }
+    try {
+      await fetchServers(dispatch)
+    } catch (e) {
+      console.error(e)
+      setTimeout(pollFunc, 5000)
+    }
+
+    const newServers = getState().servers
+    if (servers.size >= newServers.size) {
+      setTimeout(pollFunc, 5000)
+    } else {
+      const old = servers.keySeq().toSet()
+      const upd = newServers.keySeq().toSet()
+      const newSrv = upd.subtract(old) 
+      stopPolling()
+      dispatch(push(`/s/${newSrv.toJS()[0]}/edit`))
+    }
+  }
+
+  pollFunc()
+  return stopPolling
 }

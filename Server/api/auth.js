@@ -49,10 +49,31 @@ module.exports = (R, $) => {
   })
 
   R.get('/api/auth/redirect', ctx => {
-    ctx.body = { url: $.discord.getAuthUrl() }
+    const url = $.discord.getAuthUrl()
+    if (ctx.query.url === '✔️') {
+      ctx.body = { url }
+      return
+    }
+
+    ctx.redirect(url)
   })
 
   R.post('/api/auth/logout', ctx => {
     ctx.session = null
+  })
+
+  R.get('/api/oauth/bot', ctx => {
+    const url = $.discord.getBotJoinUrl()
+    if (ctx.query.url === '✔️') {
+      ctx.body = { url }
+      return
+    }
+
+    ctx.redirect(url)
+  })
+
+
+  R.get('/api/oauth/bot/callback', ctx => {
+    console.log(ctx.request)
   })
 }

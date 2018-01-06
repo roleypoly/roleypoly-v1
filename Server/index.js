@@ -18,6 +18,10 @@ Array.prototype.areduce = async function (predicate, acc = []) { // eslint-disab
   return acc
 }
 
+Array.prototype.filterNot = Array.prototype.filterNot || function (predicate) {
+  return this.filter(v => !predicate(v))
+}
+
 // Create the server and socket.io server
 const server = http.createServer(app.callback())
 const io = _io(server, { transports: ['websocket'], path: '/api/socket.io', wsEngine: 'uws' })

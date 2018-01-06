@@ -3,6 +3,8 @@
   border-radius: 2px
   transition: transform 0.2s ease-out, box-shadow 0.2s ease-out
   position: relative
+  box-sizing: border-box
+  transform: translateZ(0) 
 
   &::after
     content: ""
@@ -13,17 +15,18 @@
     left: 0
     background-color: rgba(0,0,0,0.1)
     border-radius: 2px  
+    transform: translateZ(0) 
     opacity: 0
     transition: opacity 0.15s ease-in-out
 
   &:hover
-    transform: translateY(-1px)
+    transform: translateZ(0) translateY(-1px)
     box-shadow: 0 1px 2px rgba(0,0,0,0.3)
     &::after
       opacity: 0.7
 
   &:active
-    transform: translateY(0px)
+    transform: translateZ(0) translateY(0px)
     box-shadow: none
     &::after
       opacity: 1
@@ -39,6 +42,14 @@
   &.discord
     background-color: var(--c-discord)
     color: var(--c-white)
+
+  &.discord-alt
+    background-color: transparent
+    color: var(--c-white)
+    border: 1px solid var(--c-discord)
+    &::after
+      background-color: hsla(0,0%,100%,0.05)
+      transition: opacity 0.3s ease-in-out
 
   &-logo
     height: 1.6rem

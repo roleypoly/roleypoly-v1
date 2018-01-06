@@ -25,12 +25,12 @@ class PresentationService extends Service {
   async presentableServers (collection, userId) {
     return collection.array().areduce(async (acc, server) => {
       const gm = server.members.get(userId)
-      acc.push(await this.presentableServer(server, gm))
+      acc.push(await this.presentableServer(server, gm, { incRoles: false }))
       return acc
     })
   }
 
-  async presentableServer (server, gm) {
+  async presentableServer (server, gm, { incRoles = true } = {}) {
     const sd = await this.ctx.server.get(server.id)
 
     return {
@@ -45,7 +45,7 @@ class PresentationService extends Service {
         ownerID: server.ownerID,
         icon: server.icon
       },
-      roles: (await this.rolesByServer(server, sd)).map(r => ({ ...r, selected: gm.roles.has(r.id) })),
+      roles: (incRoles) ? (await this.rolesByServer(server, sd)).map(r => ({ ...r, selected: gm.roles.has(r.id) })) : [],
       message: sd.message,
       categories: sd.categories,
       perms: this.discord.getPermissions(gm)

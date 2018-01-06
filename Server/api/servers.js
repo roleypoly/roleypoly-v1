@@ -67,9 +67,13 @@ module.exports = (R, $) => {
       gm = await gm.addRoles(added.filter(pred))
     }
 
-    if (removed.length > 0) {
-      gm = await gm.removeRoles(removed.filter(pred))
-    }
+    setTimeout(() => {
+      if (removed.length > 0) {
+        gm.removeRoles(removed.filter(pred))
+      }
+    }, 1000)
+
+    // console.log('role patch', { added, removed, allowedRoles, addedFiltered: added.filterNot(pred), removedFiltered: removed.filterNot(pred) })
 
     ctx.body = { ok: true }
   })

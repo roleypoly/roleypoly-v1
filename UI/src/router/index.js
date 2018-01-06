@@ -6,6 +6,7 @@ import { withRouter } from 'react-router'
 import Servers from '../components/servers'
 import OauthCallback from '../components/oauth-callback'
 import OauthFlow from '../components/oauth-flow'
+import OauthBotFlow from '../components/oauth-bot-flow'
 import Pages, { Landing } from '../pages'
 
 const aaa = (props) => (<div>{ JSON.stringify(props) }</div>)
@@ -25,6 +26,7 @@ export default class AppRouter extends Component {
       
       <Route path='/oauth/callback' component={OauthCallback} />
       <Route path='/oauth/flow' component={OauthFlow} />
+      <Route path='/oauth/bot/flow' component={OauthBotFlow} />
       <Route path="/p/landing" exact component={Landing} />
       <Route path='/p' component={Pages} />
       <Route path='/help' component={Pages} />
