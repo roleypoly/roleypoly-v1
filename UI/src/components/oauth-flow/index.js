@@ -3,31 +3,66 @@ import { Redirect } from 'react-router-dom'
 import superagent from 'superagent'
 import { connect } from 'react-redux'
 import { fetchServers } from '../../actions'
+import { URL } from 'url';
 
 @connect()
 class OauthCallback extends Component {
   state = {
     notReady: true,
-    message: 'chotto matte kudasai...'
+    message: 'chotto matte kudasai...',
+    redirect: '/s'
+  }
+
+  async fetchUser () {
+    const rsp = await superagent.get('/api/auth/user')
+    sessionStorage.setItem('user', JSON.stringify(rsp.body))
+    sessionStorage.setItem('user.update', JSON.stringify(Date.now()))
+    this.props.dispatch({
+      type: Symbol.for('set user'),
+      data: rsp.body
+    })
+  }
+
+  setupUser () {
+    const userUpdateTime = sessionStorage.getItem('user.update') || 0
+    if (+userUpdateTime + (1000 * 60 * 10) > Date.now()) {
+      const user = sessionStorage.getItem('user')
+      if (user != null && user !== '') {
+        this.props.dispatch({
+          type: Symbol.for('set user'),
+          data: JSON.parse(user)
+        })
+      }
+    }
+
+    return this.fetchUser()    
   }
 
   async componentDidMount () {
-    const { body: { url } } = await superagent.get('/api/auth/redirect?url=✔️')
+    const oUrl = new URL(window.location.href)
+    if (oUrl.searchParams.has('r')) {
+      this.setState({ redirect: oUrl.searchParams.get('r') })
+    }
+
     try {
-      const rsp = await superagent.get('/api/auth/user')
-      this.props.dispatch({
-        type: Symbol.for('set user'),
-        data: rsp.body
-      })
+      await this.setupUser()
+
       this.props.dispatch(fetchServers)
       this.setState({ notReady: false })
     } catch (e) {
-      window.location.href = url
+      const { body: { url } } = await superagent.get('/api/auth/redirect?url=✔️')
+      const nUrl = new URL(url)
+
+      if (oUrl.searchParams.has('r')) {
+        nUrl.searchParams.set('r', oUrl.searchParams.get('r'))
+      }
+
+      window.location.href = nUrl.toString()
     }
   }
 
   render () {
-    return (this.state.notReady) ? this.state.message : <Redirect to='/s' />
+    return (this.state.notReady) ? this.state.message : <Redirect to={this.state.redirect} />
   }
 }
 

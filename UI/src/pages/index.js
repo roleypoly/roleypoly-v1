@@ -4,10 +4,10 @@ import Scrollbars from 'react-custom-scrollbars'
 import './pages.sass'
 
 import WhyNoRoles from './WhyNoRoles'
-import LandingPage from './Landing'
-export const Landing = LandingPage // re-export
-
-const isDev = process.env.NODE_ENV === 'development'
+import Error404 from './Error404'
+export { default as Landing } from './Landing'
+export { default as ServerLanding } from './ServerLanding'
+export { default as Error404 } from './Error404'
 
 const Pages = (props) => {
   return <div className="pages">
@@ -16,6 +16,7 @@ const Pages = (props) => {
         <Switch>
           <Route path="/help/why-no-roles" component={WhyNoRoles} />
           {/* { isDev ? <Route path="/p/landing" component={Landing} /> : null } */}
+          <Route component={Error404} />
         </Switch>
       </div>
     </Scrollbars>
