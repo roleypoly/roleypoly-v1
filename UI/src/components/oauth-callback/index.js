@@ -35,12 +35,12 @@ class OauthCallback extends Component {
     const retry = async () => {
       try {
         const rsp = await superagent.get('/api/auth/user')
-        this.setState({ notReady: false })
         this.props.dispatch({
           type: Symbol.for('set user'),
           data: rsp.body
         })
         this.props.dispatch(fetchServers)
+        this.setState({ notReady: false })
       } catch (e) {
         counter++
         if (counter > 100) {
@@ -69,7 +69,7 @@ class OauthCallback extends Component {
   }
 
   render () {
-    return (this.state.notReady) ? this.state.message : <Redirect to={this.state.redirect} replace />
+    return (this.state.notReady) ? this.state.message : <Redirect to={this.state.redirect} />
   }
 }
 
