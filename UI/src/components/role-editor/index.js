@@ -113,6 +113,11 @@ class RoleEditor extends Component {
 
   render () {
     const { server } = this.props
+
+    if (server == null) {
+      return null
+    }
+
     if (server.getIn(['perms', 'canManageRoles']) !== true) {
       return <Redirect to={`/s/${server.get('id')}`} />
     }

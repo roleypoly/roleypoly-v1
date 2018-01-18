@@ -1,10 +1,11 @@
 import { Set } from 'immutable'
 import * as UIActions from '../../actions/ui'
-import { getViewMap } from '../role-picker/actions'
+import { getViewMap, setup } from '../role-picker/actions'
 import uuidv4 from 'uuid/v4'
 import superagent from 'superagent'
 
-export const constructView = id => (dispatch, getState) => {
+export const constructView = id => async (dispatch, getState) => {
+  await setup(id)(dispatch)
   const server = getState().servers.get(id)
 
   let { viewMap, hasSafeRoles } = getViewMap(server)

@@ -6,8 +6,6 @@ export const setup = id => async dispatch => {
   const rsp = await superagent.get(`/api/server/${id}`)
   const data = rsp.body
 
-  console.log(data)
-
   dispatch({
     type: Symbol.for('server: set'),
     data: {
@@ -20,7 +18,6 @@ export const setup = id => async dispatch => {
 
 export const getViewMap = server => {
   const roles = server.get('roles')
-
   const categories = server.get('categories')
 
   const allRoles = server.get('roles').filter(v => v.get('safe')).map(r => r.get('id')).toSet()
