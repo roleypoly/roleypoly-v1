@@ -37,6 +37,7 @@ export const getViewMap = server => {
       .map(r =>
         server.get('roles').find(sr => sr.get('id') === r)
       )
+      .filter(r => r != null)
       // sort by server position, backwards.
       .sort((a, b) => a.position > b.position)
     // force data to sets
