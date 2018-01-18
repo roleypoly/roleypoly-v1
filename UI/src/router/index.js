@@ -7,7 +7,8 @@ import Servers from '../components/servers'
 import OauthCallback from '../components/oauth-callback'
 import OauthFlow from '../components/oauth-flow'
 import OauthBotFlow from '../components/oauth-bot-flow'
-import Pages, { Landing, Error404, ServerLanding } from '../pages'
+import Pages, { Landing, Error404 } from '../pages'
+import ServerLanding from '../components/servers/ServerLanding'
 
 const aaa = (props) => (<div>{ JSON.stringify(props) }</div>)
 
@@ -22,18 +23,15 @@ export default class AppRouter extends Component {
     }
 
     return <Switch>
-      { (isLoggedIn) 
+      { (isLoggedIn === true) 
       
           // YES LOGGED IN
-        ? <Fragment>
-            <Route path='/s' component={Servers} />
-            <Route path='/root' component={aaa} />
-          </Fragment>
+        ? <Route path='/s' component={Servers} />
+
 
           // NOT LOGGED IN
-        : <Fragment>
-            <Route path='/s' component={ServerLanding} />
-          </Fragment>
+        : [<Route path='/s/:server' key={1} component={ServerLanding} />, <Route path='/s' key={2} render={() => <Redirect to="/" />} />]
+
       }
       
       {/* GENERAL ROUTES */}

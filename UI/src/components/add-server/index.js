@@ -10,7 +10,9 @@ export default class AddServer extends Component {
   polling = null
   
   componentDidMount () {
-    this.pollingStop = Actions.startServerPolling(this.props.dispatch)
+    if (this.props.match.params.server !== undefined) {
+      this.pollingStop = Actions.startServerPolling(this.props.dispatch)
+    }
   }
 
   componentWillUnmount () {

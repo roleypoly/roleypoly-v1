@@ -33,6 +33,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
+  "homepage": "https://rp.kat.cafe",
   "proxy": {
     "/api": {
       "target": "http://localhost:6769"

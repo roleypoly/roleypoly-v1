@@ -6,7 +6,6 @@ import './pages.sass'
 import WhyNoRoles from './WhyNoRoles'
 import Error404 from './Error404'
 export { default as Landing } from './Landing'
-export { default as ServerLanding } from './ServerLanding'
 export { default as Error404 } from './Error404'
 
 const Pages = (props) => {

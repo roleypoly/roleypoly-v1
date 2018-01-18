@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import superagent from 'superagent'
 import { connect } from 'react-redux'
+import uuidv4 from 'uuid/v4'
 import { fetchServers } from '../../actions'
-import { URL } from 'url';
+
 
 @connect()
 class OauthCallback extends Component {
@@ -39,10 +40,14 @@ class OauthCallback extends Component {
   }
 
   async componentDidMount () {
+    const state = uuidv4()
+
     const oUrl = new URL(window.location.href)
     if (oUrl.searchParams.has('r')) {
       this.setState({ redirect: oUrl.searchParams.get('r') })
     }
+
+    window.sessionStorage.setItem('state', JSON.stringify({ state, redirect: oUrl.searchParams.get('r') }))
 
     try {
       await this.setupUser()
@@ -53,9 +58,7 @@ class OauthCallback extends Component {
       const { body: { url } } = await superagent.get('/api/auth/redirect?url=✔️')
       const nUrl = new URL(url)
 
-      if (oUrl.searchParams.has('r')) {
-        nUrl.searchParams.set('r', oUrl.searchParams.get('r'))
-      }
+      nUrl.searchParams.set('state', state)
 
       window.location.href = nUrl.toString()
     }

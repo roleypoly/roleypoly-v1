@@ -39,7 +39,10 @@ export const userInit = async dispatch => {
 }
 
 export const userLogout = async dispatch => {
-  await superagent.post('/api/auth/logout')
+  try {
+    await superagent.post('/api/auth/logout')
+  } catch (e) {
+  }
 
   dispatch({
     type: Symbol.for('reset user')

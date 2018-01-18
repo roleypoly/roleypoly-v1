@@ -9,6 +9,7 @@ import Navigation from './Navigation'
 import RolePicker from '../role-picker'
 import RoleEditor from '../role-editor'
 import AddServer from '../add-server'
+import Error404 from '../../pages/Error404'
 
 // import mockData from './mockData'
 
@@ -23,6 +24,8 @@ const mapState = ({ servers, user, appState }) => {
 @connect(mapState)
 class Servers extends Component {
   get defaultPath () {
+    console.log(this.props.servers.toJS())
+
     const first = this.props.servers.first()
     if (first != null) {
       return first.get('id')
@@ -35,18 +38,15 @@ class Servers extends Component {
     return <div className="servers">
       <Navigation className="servers__nav" servers={this.props.servers} user={this.props.user} />
       <div className='servers__content'>
-        <Switch>
-          <Route path='/s/' exact render={() => <Redirect to={`/s/${this.defaultPath}`} />} />
-          <Route path='/s/:server/edit' component={RoleEditor} />
-          <Route path='/s/:server' render={() =>
-            <Scrollbars className={`fade-element ${(this.props.fade) ? 'fade' : ''}`} autoHeight autoHeightMax='calc(100vh - 80px)'>
-              <Switch>
-                <Route path='/s/add' component={AddServer} exact />
-                <Route path='/s/:server' component={RolePicker} exact />
-              </Switch>
-            </Scrollbars>
-          } />
-        </Switch>
+        <Scrollbars className={`fade-element ${(this.props.fade) ? 'fade' : ''}`} autoHeight autoHeightMax='calc(100vh - 80px)'>
+          <Switch>
+            <Route path='/s/add' component={AddServer} exact />
+            <Route path='/s/:server/edit' component={RoleEditor} />
+            <Route path='/s/:server' component={RolePicker} />
+            <Route path='/s' exact render={() => <Redirect to={`/s/${this.defaultPath}`} />} />
+            <Route component={Error404} />
+          </Switch>
+        </Scrollbars>
       </div>
     </div>
   }

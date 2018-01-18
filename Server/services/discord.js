@@ -34,6 +34,7 @@ class DiscordService extends Service {
     if (this.isBot) {
       this.log.info('this roleypoly is a bot')
       this.client.on('message', this.handleMessage.bind(this))
+      this.client.on('guildCreate', this.handleJoin.bind(this))
     }
 
     for (let server of this.client.guilds.array()) {
@@ -214,6 +215,10 @@ class DiscordService extends Service {
         this.mentionResponse(message)
       }
     }
+  }
+
+  async handleJoin (guild) {
+    await this.ctx.server.ensure(guild)
   }
 
 }

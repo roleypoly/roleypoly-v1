@@ -10,6 +10,15 @@ class PresentationService extends Service {
     this.cache = LRU({ max: 500, maxAge: 100 * 60 * 5 })
   }
 
+  serverSlug (server) {
+    return {
+      id: server.id,
+      name: server.name,
+      ownerID: server.ownerID,
+      icon: server.icon
+    }
+  }
+
   async oldPresentableServers (collection, userId) {
     let servers = []
 
@@ -39,12 +48,7 @@ class PresentationService extends Service {
         nickname: gm.nickname,
         color: gm.displayHexColor
       },
-      server: {
-        id: server.id,
-        name: server.name,
-        ownerID: server.ownerID,
-        icon: server.icon
-      },
+      server: this.serverSlug(server),
       roles: (incRoles) ? (await this.rolesByServer(server, sd)).map(r => ({ ...r, selected: gm.roles.has(r.id) })) : [],
       message: sd.message,
       categories: sd.categories,

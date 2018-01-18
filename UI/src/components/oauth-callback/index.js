@@ -8,18 +8,26 @@ import { fetchServers } from '../../actions'
 class OauthCallback extends Component {
   state = {
     notReady: true,
-    message: 'chotto matte kudasai...'
+    message: 'chotto matte kudasai...',
+    redirect: '/s'
   }
 
   async componentDidMount () {
     // handle stuff in the url
     const sp = new URLSearchParams(this.props.location.search)
     const token = sp.get('code')
-
+    
     if (token === '' || token == null) {
       this.setState({ message: 'token missing, what are you trying to do?!' })
       return
     } 
+    
+    const stateToken = sp.get('state')
+    const state = JSON.parse(window.sessionStorage.getItem('state') || 'null')
+
+    if (state !== null && state.state === stateToken && state.redirect != undefined) {
+      this.setState({ redirect: state.redirect })
+    }
 
     this.props.history.replace(this.props.location.pathname)
     
@@ -35,7 +43,7 @@ class OauthCallback extends Component {
         this.props.dispatch(fetchServers)
       } catch (e) {
         counter++
-        if (counter > 12) {
+        if (counter > 100) {
           this.setState({ message: "i couldn't log you in. :c" })
         } else {
           setTimeout(() => { retry() }, 250) 
@@ -61,7 +69,7 @@ class OauthCallback extends Component {
   }
 
   render () {
-    return (this.state.notReady) ? this.state.message : <Redirect to='/s' />
+    return (this.state.notReady) ? this.state.message : <Redirect to={this.state.redirect} replace />
   }
 }
 

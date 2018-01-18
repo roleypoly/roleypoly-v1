@@ -7,7 +7,7 @@ module.exports = (R, $) => {
 
       ctx.body = presentable
     } catch (e) {
-      console.error(e.trace)
+      console.error(e.trace || e.stack)
     }
   })
 
@@ -27,6 +27,23 @@ module.exports = (R, $) => {
     const server = await $.P.presentableServer(srv, gm)
 
     ctx.body = server
+  })
+
+  R.get('/api/server/:id/slug', async (ctx) => {
+    const { userId } = ctx.session
+    const { id } = ctx.params
+
+    const srv = $.discord.client.guilds.get(id)
+
+    console.log(srv)
+
+    if (srv == null) {
+      ctx.body = { err: 'not found' }
+      ctx.status = 404
+      return
+    }
+
+    ctx.body = await $.P.serverSlug(srv)
   })
 
   R.patch('/api/server/:id', async (ctx) => {
