@@ -8,6 +8,7 @@ const _io = require('socket.io')
 const path = require('path')
 const router = require('koa-better-router')().loadMethods()
 const Roleypoly = require('./Roleypoly')
+const ksuid = require('ksuid')
 
 // monkey patch async-reduce because F U T U R E
 Array.prototype.areduce = async function (predicate, acc = []) { // eslint-disable-line
@@ -88,7 +89,8 @@ async function start () {
     key: 'roleypoly:sess',
     maxAge: 'session',
     siteOnly: true,
-    store: M.ctx.sessions
+    store: M.ctx.sessions,
+    genid: () => { return ksuid.randomSync().string }
   }, app))
 
   await M.mountRoutes()

@@ -2,12 +2,13 @@
 
 docker-compose up -d 
 
-cd Server
+pushd Server
 yarn
 yarn dev
 
-cd ..
+popd
 
-cd UI
+pushd UI
 yarn
 yarn start
+popd

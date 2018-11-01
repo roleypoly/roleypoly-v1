@@ -12,9 +12,10 @@ import ServerLanding from '../components/servers/ServerLanding'
 
 const aaa = (props) => (<div>{ JSON.stringify(props) }</div>)
 
-@withRouter
-@connect(({ appState, user }) => ({ ready: appState.ready, user }))
-export default class AppRouter extends Component {
+export default 
+  @withRouter 
+  @connect(({ appState, user }) => ({ ready: appState.ready, user })) 
+class AppRouter extends Component {
   render () {
     const isLoggedIn = this.props.user.get('isLoggedIn')
 

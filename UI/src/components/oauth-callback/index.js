@@ -12,6 +12,12 @@ class OauthCallback extends Component {
     redirect: '/s'
   }
 
+  stopped = false
+
+  componentDidUnmount () {
+    this.stopped = true
+  }
+
   async componentDidMount () {
     // handle stuff in the url
     const sp = new URLSearchParams(this.props.location.search)
@@ -25,14 +31,15 @@ class OauthCallback extends Component {
     const stateToken = sp.get('state')
     const state = JSON.parse(window.sessionStorage.getItem('state') || 'null')
 
-    if (state !== null && state.state === stateToken && state.redirect != undefined) {
+    if (state !== null && state.state === stateToken && state.redirect != null) {
       this.setState({ redirect: state.redirect })
     }
 
     this.props.history.replace(this.props.location.pathname)
     
-    let counter = 0    
+    let counter = 0
     const retry = async () => {
+      if (this.stopped) return
       try {
         const rsp = await superagent.get('/api/auth/user')
         this.props.dispatch({
@@ -43,7 +50,7 @@ class OauthCallback extends Component {
         this.setState({ notReady: false })
       } catch (e) {
         counter++
-        if (counter > 100) {
+        if (counter > 10) {
           this.setState({ message: "i couldn't log you in. :c" })
         } else {
           setTimeout(() => { retry() }, 250) 
