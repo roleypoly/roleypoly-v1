@@ -37,6 +37,7 @@ class Role extends Component {
       }
       {...((disabled) ? { 'uk-tooltip': '', title: "I don't have permissions to grant this." } : {})}
       className={`role font-sans-serif ${(disabled) ? 'disabled' : ''} ${(isDragging) ? 'is-dragging' : ''} role__${type}`}
+      title={role.get('name')}
       style={{
         '--role-color-hex': c.string(),
         '--role-color-hover': hc.string(),
