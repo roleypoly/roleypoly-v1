@@ -5,6 +5,7 @@ const http = require('http')
 const Koa = require('koa')
 const app = new Koa()
 const _io = require('socket.io')
+const fs = require('fs')
 const path = require('path')
 const router = require('koa-better-router')().loadMethods()
 const Roleypoly = require('./Roleypoly')
@@ -50,17 +51,72 @@ async function start () {
     log.info('public path', pub)
 
     const staticFiles = require('koa-static')
+    // app.use(staticFiles(pub, { defer: true, gzip: true, br: true }))
 
-    // const send = require('koa-send')
+    const send = require('koa-send')
+    app.use(async (ctx, next) => {
+      if (ctx.path.startsWith('/api')) {
+        log.info('api breakout')
+        return next()
+      }
+
+      const chkPath = path.resolve(path.join(pub, ctx.path))
+      log.info('chkPath', chkPath)
+      if (!chkPath.startsWith(pub)) {
+        return next()
+      }
+
+      try {
+        fs.statSync(chkPath)
+        log.info('sync pass')
+        ctx.body = fs.readFileSync(chkPath, { encoding: 'utf-8' })
+        ctx.type = path.extname(ctx.path)
+        log.info('body sent')
+        ctx.status = 200
+        return next()
+      } catch (e) {
+        log.warn('failed')
+        if (ctx.path.startsWith('/static/')) {
+          return next()
+        }
+        try {
+          ctx.body = fs.readFileSync(path.join(pub, 'index.html'), { encoding: 'utf-8' })
+        } catch (e) {
+          ctx.body = e.stack || e.trace
+          ctx.status = 500
+        }
+        log.info('index sent')
+        ctx.status = 200
+        return next()
+      }
+
+      // try {
+      //   await next()
+      // } catch (e) {
+      //   send(ctx, 'index.html', { root: pub })
+      // }
+
+    })
+    // const sendOpts = {root: pub, index: 'index.html'}
+    // // const sendOpts = {}
     // app.use(async (ctx, next) => {
     //   if (ctx.path.startsWith('/api')) {
-    //     return next()
+    //     return await next()
     //   }
 
-    //   // await next()
-    //   // send(ctx, 'index.html', { root: pub })
+    //   try {
+    //     log.info('pass 1', ctx.path, __dirname+'/public'+ctx.path)
+    //     await send(ctx, __dirname+'/public'+ctx.path, sendOpts)
+    //   } catch (error) {
+    //     try {
+    //       log.info('pass 2 /', ctx.path, __dirname+'/public/index.html')
+    //       await send(ctx, __dirname+'/public/index.html', sendOpts)
+    //     } catch (error) {
+    //       log.info('exit to next', ctx.path)
+    //       await next()
+    //     }
+    //   }
     // })
-    app.use(staticFiles(pub, { defer: true, gzip: true, br: true }))
   }
 
   // Request logger
@@ -82,7 +138,7 @@ async function start () {
     let timeElapsed = new Date() - timeStart
 
     log.request(`${ctx.status} ${ctx.method} ${ctx.url} - ${ctx.ip} - took ${timeElapsed}ms`)
-    return null
+    // return null
   })
 
   const session = require('koa-session')
