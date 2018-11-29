@@ -23,7 +23,16 @@ module.exports = (R, $) => {
       return
     }
 
-    const gm = $.discord.gm(id, userId)
+    let gm
+    if (srv.members.has(userId)) {
+      gm = $.discord.gm(id, userId)
+    } else if ($.discord.isRoot(userId)) {
+      gm = $.discord.fakeGm({ id: userId })
+    } else {
+      ctx.body = { err: 'not_a_member' }
+      ctx.status = 400
+      return
+    }
     const server = await $.P.presentableServer(srv, gm)
 
     ctx.body = server
@@ -49,7 +58,11 @@ module.exports = (R, $) => {
   R.patch('/api/server/:id', async (ctx) => {
     const { userId } = ctx.session
     const { id } = ctx.params
+
     let gm = $.discord.gm(id, userId)
+    if (gm == null && $.discord.isRoot(userId)) {
+      gm = $.discord.fakeGm({ id: userId })
+    }
 
     // check perms
     if (!$.discord.getPermissions(gm).canManageRoles) {
@@ -69,10 +82,30 @@ module.exports = (R, $) => {
     ctx.body = { ok: true }
   })
 
+  R.get('/api/admin/servers', async ctx => {
+    const { userId } = ctx.session
+    if (!$.discord.isRoot(userId)) {
+      return
+    }
+
+    ctx.body = $.discord.client.guilds.map(g => ({ url: `${process.env.APP_URL}/s/${g.id}`, name: g.name, members: g.members.array().length, roles: g.roles.array().length }))
+  })
+
   R.patch('/api/servers/:server/roles', async ctx => {
     const { userId } = ctx.session
     const { server } = ctx.params
+
     let gm = $.discord.gm(server, userId)
+    if (gm == null && $.discord.isRoot(userId)) {
+      gm = $.discord.fakeGm({ id: userId })
+    }
+
+    // check perms
+    // if (!$.discord.getPermissions(gm).canManageRoles) {
+    //   ctx.status = 403
+    //   ctx.body = { err: 'cannot_manage_roles' }
+    //   return
+    // }
 
     const { added, removed } = ctx.request.body
 

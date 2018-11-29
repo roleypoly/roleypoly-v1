@@ -27,6 +27,14 @@ class DiscordService extends Service {
     return this.gm(server, this.client.user.id)
   }
 
+  fakeGm({id = 0, nickname = '[none]', displayHexColor = '#ffffff'}) {
+    return { id, nickname, displayHexColor, __faked: true, roles: { has() {return false} } }
+  }
+
+  isRoot(id) {
+    return this.rootUsers.has(id)
+  }
+
   async startBot () {
     await this.client.login(this.botToken)
 
@@ -55,6 +63,13 @@ class DiscordService extends Service {
   }
 
   getPermissions (gm) {
+    if (this.isRoot(gm.id)) {
+      return {
+        isAdmin: true,
+        canManageRoles: true
+      }
+    }
+
     return {
       isAdmin: gm.permissions.hasPermission('ADMINISTRATOR'),
       canManageRoles: gm.permissions.hasPermission('MANAGE_ROLES', false, true)
