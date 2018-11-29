@@ -1,4 +1,7 @@
-/Server/.env
-/Server/public
-/Server/node_modules
-/UI/node_modules
+Server/.env
+Server/public/
+.git/
+
+*/node_modules/
+UI/node_modules/
+Server/node_modules/

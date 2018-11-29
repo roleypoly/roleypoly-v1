@@ -1,8 +1,13 @@
 FROM node:10 AS builder
-ENV NODE_ENV production
-RUN npm i -g yarn
-COPY . /src
-RUN cd /src/UI && yarn && yarn build && cd /src/Server && yarn && mkdir public && mv /src/UI/build/* public
+# ENV NODE_ENV production
+COPY ./UI /src/UI
+RUN cd /src/UI && yarn && yarn build
+
+COPY ./Server /src/Server
+RUN cd /src/Server && yarn
+
+RUN cp -r /src/UI/build /src/Server/public
+
 
 FROM mhart/alpine-node:10
 ENV NODE_ENV production

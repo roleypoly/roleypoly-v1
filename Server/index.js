@@ -25,7 +25,7 @@ Array.prototype.filterNot = Array.prototype.filterNot || function (predicate) {
 
 // Create the server and socket.io server
 const server = http.createServer(app.callback())
-const io = _io(server, { transports: ['websocket'], path: '/api/socket.io', wsEngine: 'uws' })
+const io = _io(server, { transports: ['websocket'], path: '/api/socket.io' })
 
 const M = new Roleypoly(router, io, app) // eslint-disable-line no-unused-vars
 
@@ -47,19 +47,20 @@ async function start () {
   // SPA + Static
   if (process.env.NODE_ENV === 'production') {
     const pub = path.join(__dirname, 'public')
+    log.info('public path', pub)
 
     const staticFiles = require('koa-static')
-    app.use(staticFiles(pub, { defer: true }))
 
-    const send = require('koa-send')
-    app.use(async (ctx, next) => {
-      if (ctx.path.startsWith('/api')) {
-        return next()
-      }
+    // const send = require('koa-send')
+    // app.use(async (ctx, next) => {
+    //   if (ctx.path.startsWith('/api')) {
+    //     return next()
+    //   }
 
-      await next()
-      send(ctx, 'index.html', { root: pub })
-    })
+    //   // await next()
+    //   // send(ctx, 'index.html', { root: pub })
+    // })
+    app.use(staticFiles(pub, { defer: true, gzip: true, br: true }))
   }
 
   // Request logger

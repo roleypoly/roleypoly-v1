@@ -11,7 +11,8 @@ class OauthCallback extends Component {
   state = {
     notReady: true,
     message: 'chotto matte kudasai...',
-    redirect: '/s'
+    redirect: '/s',
+    url: null
   }
 
   async fetchUser () {
@@ -59,13 +60,13 @@ class OauthCallback extends Component {
       const nUrl = new URL(url)
 
       nUrl.searchParams.set('state', state)
-
+      this.setState({ url: nUrl.toString() })
       window.location.href = nUrl.toString()
     }
   }
 
   render () {
-    return (this.state.notReady) ? this.state.message : <Redirect to={this.state.redirect} />
+    return (this.state.notReady) ? this.state.message : <><Redirect to={this.state.redirect} /><a style={{zIndex: 10000}} href={this.state.url}>Something oopsed, click me to get to where you meant.</a></>
   }
 }
 

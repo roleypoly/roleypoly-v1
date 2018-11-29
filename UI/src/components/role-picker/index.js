@@ -4,6 +4,7 @@ import { Prompt } from 'react-router-dom'
 import superagent from 'superagent'
 import * as Actions from './actions'
 import * as UIActions from '../../actions/ui'
+import { msgToReal } from '../../utils'
 import './RolePicker.sass'
 
 import Category from './Category'
@@ -75,7 +76,7 @@ class RolePicker extends Component {
     if (!roleManager && msg !== '') {
       return <section>
         <h3>Server Message</h3>
-        <p>{msg}</p>
+        <p>{msgToReal(msg)}</p>
       </section>
     }
 
@@ -85,7 +86,7 @@ class RolePicker extends Component {
           <h3>Server Message</h3>
           <div uk-tooltip='' title='Edit Server Message' uk-icon="icon: pencil" onClick={this.openMessageEditor} />
         </div>
-        <p>{msg || <i>no server message</i>}</p>
+        <p dangerouslySetInnerHTML={{__html: msgToReal(msg) || '<i>no server message</i>'}}></p>
       </section>
     }
 
