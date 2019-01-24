@@ -22,7 +22,7 @@ const Landing = ({ root = false }) =>
         {/* Typist */}
         <div className="uk-width-1-2">
           <TypingDemo />
-          <p className="subtext">Why are we stuck in the stupid ages?</p>
+          <p className="subtext">Why are we still using antiques?</p>
         </div>
         {/* role side */}
         <div className="uk-width-1-2">
