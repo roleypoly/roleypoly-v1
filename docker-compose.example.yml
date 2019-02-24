@@ -1,0 +1,28 @@
+version: '2.1'
+services:
+
+    app:
+        image: katie/roleypoly
+        ports:
+            - 6000:6769
+        links:
+            - pg
+        environment:
+            DB_URL: postgres://roleypoly:19216801@pg:5432/roleypoly
+            NODE_ENV: production
+            DISCORD_CLIENT_ID: '396227611649'
+            DISCORD_CLIENT_SECRET: RnX8pcH5FrDcs26su-
+            DISCORD_BOT_TOKEN: Mzk2MjI3MTM0Mjo7ROXbvyW09y0
+            APP_URL: http://localhost:6000
+            OAUTH_AUTH_CALLBACK: http://localhost:6000/oauth/callback
+            APP_KEY: 9vJrVFXHazgDo0RuF
+
+    pg:
+        image: postgres:10-alpine
+        ports:
+            - 5432
+        environment:
+            POSTGRES_PASSWORD: 19216801
+            POSTGRES_DB: roleypoly
+            POSTGRES_USER: roleypoly
+            POSTGRES_INITDB_ARGS: -A trust

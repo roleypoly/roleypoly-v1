@@ -1,8 +1,9 @@
 
-Server/\.env
+.env
+*.env
 
 /docker-compose.test.yml
-Server/prod\.env
 
-Server/test\.env
-UI~
+node_modules
+.vscode
+.data

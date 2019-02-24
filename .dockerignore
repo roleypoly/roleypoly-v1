@@ -1,7 +1,3 @@
-Server/.env
-Server/public/
+.env
 .git/
-
-*/node_modules/
-UI/node_modules/
-Server/node_modules/
+node_modules/
