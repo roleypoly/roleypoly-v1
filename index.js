@@ -1,13 +1,10 @@
-require('dotenv').config({silent: true})
+require('dotenv').config({ silent: true })
 const log = new (require('./logger'))('index')
 
 const http = require('http')
 const Koa = require('koa')
 const app = new Koa()
 const _io = require('socket.io')
-const fs = require('fs')
-const path = require('path')
-const router = require('koa-better-router')().loadMethods()
 const Roleypoly = require('./Roleypoly')
 const ksuid = require('ksuid')
 
@@ -20,7 +17,7 @@ Array.prototype.areduce = async function (predicate, acc = []) { // eslint-disab
   return acc
 }
 
-Array.prototype.filterNot = Array.prototype.filterNot || function (predicate) {
+Array.prototype.filterNot = Array.prototype.filterNot || function (predicate) { // eslint-disable-line
   return this.filter(v => !predicate(v))
 }
 
@@ -28,9 +25,7 @@ Array.prototype.filterNot = Array.prototype.filterNot || function (predicate) {
 const server = http.createServer(app.callback())
 const io = _io(server, { transports: ['websocket'], path: '/api/socket.io' })
 
-
-
-const M = new Roleypoly(router, io, app) // eslint-disable-line no-unused-vars
+const M = new Roleypoly(io, app) // eslint-disable-line no-unused-vars
 
 app.keys = [ process.env.APP_KEY ]
 

@@ -3,16 +3,17 @@ const Sequelize = require('sequelize')
 const fetchModels = require('./models')
 const fetchApis = require('./api')
 const Next = require('next')
-
+const betterRouter = require('koa-better-router')
 
 class Roleypoly {
-  constructor (router, io, app) {
-    this.router = router
+  constructor (io, app) {
     this.io = io
     this.ctx = {}
 
     this.ctx.config = {
-      appUrl: process.env.APP_URL
+      appUrl: process.env.APP_URL,
+      dev: process.env.NODE_ENV !== 'production',
+      hotReload: process.env.NO_HOT_RELOAD !== '1'
     }
 
     this.ctx.io = io
@@ -52,10 +53,11 @@ class Roleypoly {
     this.ctx.P = new (require('./services/presentation'))(this.ctx)
   }
 
-  async mountRoutes () {
+  async loadRoutes (forceClear = false) {
     await this.ctx.ui.prepare()
 
-    fetchApis(this.router, this.ctx)
+    this.router = betterRouter().loadMethods()
+    fetchApis(this.router, this.ctx, { forceClear })
 
     // after routing, add the * for ui handler
     this.router.get('*', async ctx => {
@@ -63,7 +65,31 @@ class Roleypoly {
       ctx.respond = false
     })
 
-    this.__app.use(this.router.middleware())
+    return this.router.middleware()
+  }
+
+  async mountRoutes () {
+    let mw = await this.loadRoutes()
+
+    if (this.ctx.config.dev && this.ctx.config.hotReload) {
+      // hot-reloading system
+      log.info('API hot-reloading is active.')
+      const chokidar = require('chokidar')
+      let hotMiddleware = mw
+
+      this.__apiWatcher = chokidar.watch('api/**')
+      this.__apiWatcher.on('all', async (path) => {
+        log.info('reloading APIs...', path)
+        hotMiddleware = await this.loadRoutes(true)
+      })
+
+      // custom passthrough so we use a specially scoped middleware.
+      mw = (ctx, next) => {
+        return hotMiddleware(ctx, next)
+      }
+    }
+
+    this.__app.use(mw)
   }
 }
 

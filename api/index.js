@@ -3,7 +3,7 @@ const glob = require('glob')
 
 const PROD = process.env.NODE_ENV === 'production'
 
-module.exports = async (router, ctx) => {
+module.exports = async (router, ctx, { forceClear = false } = {}) => {
   const apis = glob.sync(`./api/**/!(index).js`)
   log.debug('found apis', apis)
 
@@ -14,7 +14,11 @@ module.exports = async (router, ctx) => {
     }
     log.debug(`mounting ${a}`)
     try {
-      require(a.replace('api/', ''))(router, ctx)
+      const pathname = a.replace('api/', '')
+      if (forceClear) {
+        delete require.cache[require.resolve(pathname)]
+      }
+      require(pathname)(router, ctx)
     } catch (e) {
       log.error(`couldn't mount ${a}`, e)
     }
