@@ -6,6 +6,8 @@ a discord bot & web ui for managing self-assignable roles.
 
 If you're here to report a bug or develop on Roleypoly, the rest of this document is for you.
 
+Roleypoly is built with node.js, next.js, react/redux, discord.js, and little sprinkles of weird magic goo.
+
 ## developing/running your own
 
 you'll need
@@ -24,6 +26,16 @@ docker-compose up -d
 yarn
 yarn dev
 ```
+
+tooling notes:
+- we use flow-type for UI code, but not on server. this may change, but i doubt it.
+- `./ui` has hot-reloading via next.js  
+- `./api` has hot-reloading built in.
+  - if this isn't ideal for you, set `NO_HOT_RELOADING=1`
+
+this backend framework is one i've been building on for a long time and has a shitload of magic and auto-importing involved. for the most part, unless you make a new Service class, you do not need to define it's import anywhere.
+
+`Roleypoly.js` is the main app, `index.js` in any backend folder is scaffolding up for the app or package.
 
 ### for production
 
