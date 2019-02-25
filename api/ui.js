@@ -4,14 +4,14 @@ module.exports = (R, $) => {
   const processMappings = mapping => {
     for (let p in mapping) {
       R.get(p, ctx => {
-        $.ui.render(ctx.req, ctx.res, mapping[p], {...ctx.params, ...ctx.query})
+        return $.ui.render(ctx.req, ctx.res, mapping[p], { ...ctx.query, ...ctx.params })
       })
     }
   }
 
   processMappings({
-    "/s/add": "/_server_add",
-    "/s/:id": "/_server",
-    "/help/:page": "/_help"
+    '/s/add': '/_internal/_server_add',
+    '/s/:id': '/_internal/_server',
+    '/test': '/test'
   })
 }

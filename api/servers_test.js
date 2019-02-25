@@ -3,7 +3,6 @@ module.exports = (R, $) => {
     // ctx.body = 'ok'
     const srv = $.discord.getRelevantServers(ctx.params.user)
     ctx.body = $.discord.presentableServers(srv, ctx.params.user)
-    return
   })
 
   R.get('/api/~/roles/:id/:userId', (ctx, next) => {

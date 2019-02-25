@@ -13,7 +13,7 @@ class DiscordService extends Service {
     this.botCallback = `${ctx.config.appUrl}/api/oauth/bot/callback`
     this.appUrl = process.env.APP_URL
     this.isBot = process.env.IS_BOT === 'true' || false
-    this.rootUsers = new Set((process.env.ROOT_USERS||'').split(','))
+    this.rootUsers = new Set((process.env.ROOT_USERS || '').split(','))
 
     this.client = new discord.Client()
     this.client.options.disableEveryone = true
@@ -27,11 +27,11 @@ class DiscordService extends Service {
     return this.gm(server, this.client.user.id)
   }
 
-  fakeGm({id = 0, nickname = '[none]', displayHexColor = '#ffffff'}) {
-    return { id, nickname, displayHexColor, __faked: true, roles: { has() {return false} } }
+  fakeGm ({ id = 0, nickname = '[none]', displayHexColor = '#ffffff' }) {
+    return { id, nickname, displayHexColor, __faked: true, roles: { has () { return false } } }
   }
 
-  isRoot(id) {
+  isRoot (id) {
     return this.rootUsers.has(id)
   }
 
@@ -191,7 +191,7 @@ class DiscordService extends Service {
       }
     ]
       // prefix regex with ^ for ease of code
-      .map(({regex, ...rest}) => ({ regex: new RegExp(`^${regex.source}`, regex.flags), ...rest }))
+      .map(({ regex, ...rest }) => ({ regex: new RegExp(`^${regex.source}`, regex.flags), ...rest }))
 
     return cmds
   }
@@ -235,7 +235,6 @@ class DiscordService extends Service {
   async handleJoin (guild) {
     await this.ctx.server.ensure(guild)
   }
-
 }
 
 module.exports = DiscordService

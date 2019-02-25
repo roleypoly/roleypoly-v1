@@ -6,7 +6,7 @@ class SessionsService extends Service {
     this.Session = ctx.M.Session
   }
 
-  async get (id, {rolling}) {
+  async get (id, { rolling }) {
     const user = await this.Session.findOne({ where: { id } })
 
     if (user === null) {
@@ -16,7 +16,7 @@ class SessionsService extends Service {
     return user.data
   }
 
-  async set (id, data, {maxAge, rolling, changed}) {
+  async set (id, data, { maxAge, rolling, changed }) {
     let session = await this.Session.findOne({ where: { id } })
     if (session === null) {
       session = this.Session.build({ id })
