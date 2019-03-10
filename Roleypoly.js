@@ -8,6 +8,7 @@ import logger from './logger'
 import ServerService from './services/server'
 import DiscordService from './services/discord'
 import SessionService from './services/sessions'
+import AuthService from './services/auth'
 import PresentationService from './services/presentation'
 import RPCServer from './rpc'
 import fetchModels, { type Models } from './models'
@@ -43,7 +44,8 @@ export type AppContext = {
   P: PresentationService,
   RPC: RPCServer,
   M: Models,
-  sql: Sequelize
+  sql: Sequelize,
+  auth: AuthService
 }
 
 class Roleypoly {
@@ -112,6 +114,7 @@ class Roleypoly {
     this.ctx.server = new ServerService(this.ctx)
     this.ctx.discord = new DiscordService(this.ctx)
     this.ctx.sessions = new SessionService(this.ctx)
+    this.ctx.auth = new AuthService(this.ctx)
     this.ctx.P = new PresentationService(this.ctx)
     this.ctx.RPC = new RPCServer(this)
   }

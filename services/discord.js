@@ -9,6 +9,7 @@ import {
   type Role,
   type GuildMember,
   type Collection,
+  type User,
   Client
 } from 'discord.js'
 
@@ -172,6 +173,20 @@ class DiscordService extends Service {
     }
   }
 
+  getUserPartial (userId: string): ?UserPartial {
+    const U = this.client.users.get(userId)
+    if (U == null) {
+      return null
+    }
+
+    return {
+      username: U.username,
+      discriminator: U.discriminator,
+      avatar: U.displayAvatarURL,
+      id: U.id
+    }
+  }
+
   // on sign out, we revoke the token we had.
   // async revokeAuthToken (code, state) {
   //   const url = 'https://discordapp.com/api/oauth2/revoke'
@@ -269,9 +284,52 @@ class DiscordService extends Service {
     this.mentionResponse(message)
   }
 
+  async issueChallenge (message: Message) {
+    // Create a challenge
+    const chall = await this.ctx.auth.createDMChallenge(message.author.id)
+
+    const randomLines = [
+      '🐄 A yellow cow is only as bright as it lets itself be. ✨',
+      '‼ **Did you know?** On this day, at least one second ago, you were right here!',
+      '<:AkkoC8:437428070849314816> *Reticulating splines...*',
+      'Also, you look great today <:YumekoWink:439519270376964107>',
+      'btw, ur bright like a <:diamond:544665968631087125>',
+      `🌈 psst! pssssst! I'm an expensive bot, would you please spare some change? <https://patreon.com/kata>`,
+      '📣 have suggestions? wanna help out? join my discord! <https://discord.gg/PWQUVsd>\n*(we\'re nice people, i swear!)*',
+      `🤖 this bot is at least ${Math.random() * 100}% LIT 🔥`,
+      '💖 wanna contribute to these witty lines? <https://discord.gg/PWQUVsd> suggest them on our discord!',
+      '🛠 I am completely open source, check me out!~ <https://github.com/kayteh/roleypoly>'
+    ]
+
+    message.channel.send([
+      '**Hey there!** <a:StockKyaa:435353158462603266>',
+      '',
+      `Use this secret code: **${chall.human}**`,
+      `Or, click here: ${this.ctx.config.appUrl}/magic/${chall.magic}`,
+      '',
+      'This code will self-destruct in 1 hour.',
+      '---',
+      randomLines[Math.floor(Math.random() * randomLines.length)]
+    ].join('\n'))
+  }
+
+  handleDM (message: Message) {
+    switch (message.content.toLowerCase()) {
+      case 'login':
+      case 'auth':
+      case 'log in':
+        this.issueChallenge(message)
+    }
+  }
+
   handleMessage (message: Message) {
-    if (message.author.bot || message.channel.type !== 'text') { // drop bot messages and dms
+    if (message.author.bot) { // drop bot messages
       return
+    }
+
+    if (message.channel.type === 'dm') {
+      // handle dm
+      return this.handleDM(message)
     }
 
     if (message.mentions.users.has(this.client.user.id)) {

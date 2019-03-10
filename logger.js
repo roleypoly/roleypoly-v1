@@ -4,10 +4,12 @@ import chalk from 'chalk'
 export class Logger {
   debugOn: boolean
   name: string
+  quietSql: boolean
 
   constructor (name: string, debugOverride: boolean = false) {
     this.name = name
     this.debugOn = (process.env.DEBUG === 'true' || process.env.DEBUG === '*') || debugOverride
+    this.quietSql = (process.env.DEBUG_SQL !== 'true')
   }
 
   fatal (text: string, ...data: any) {
@@ -52,7 +54,7 @@ export class Logger {
   }
 
   sql (logger: Logger, ...data: any) {
-    if (logger.debugOn) {
+    if (logger.debugOn && !logger.quietSql) {
       console.log(chalk.bold('DEBUG SQL:\n    '), data)
     }
   }

@@ -2,6 +2,8 @@
 import { type Context } from 'koa'
 import { type AppContext, type Router } from '../Roleypoly'
 import ksuid from 'ksuid'
+import logger from '../logger'
+const log = logger(__filename)
 
 export default (R: Router, $: AppContext) => {
   R.post('/api/auth/token', async (ctx: Context) => {
@@ -35,7 +37,7 @@ export default (R: Router, $: AppContext) => {
   })
 
   R.get('/api/auth/user', async (ctx: Context) => {
-    const { accessToken } = (ctx.session: { accessToken?: string })
+    const { accessToken } = ((ctx.session: any): { accessToken?: string })
     if (accessToken === undefined) {
       ctx.body = { err: 'not_logged_in' }
       ctx.status = 401
@@ -80,5 +82,25 @@ export default (R: Router, $: AppContext) => {
 
   R.get('/api/oauth/bot/callback', async (ctx: Context) => {
     // console.log(ctx.request)
+  })
+
+  R.get('/magic/:challenge', async (ctx: Context) => {
+    const { challenge } = ((ctx.params: any): { challenge: string })
+    const chall = await $.auth.fetchDMChallenge({ magic: challenge })
+    if (chall == null) {
+      log.warn('bad magic', challenge)
+      ctx.status = 404
+      return
+    }
+
+    ctx.session = {
+      userId: chall.userId,
+      authType: 'dm',
+      expiresAt: Date.now() + 1000 * 60 * 60 * 24
+    }
+
+    log.info('logged in via magic', chall)
+
+    return ctx.redirect('/')
   })
 }
