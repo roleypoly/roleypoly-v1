@@ -1,14 +1,9 @@
-// flow-typed signature: 32108e9dd6c40b60d7f9e87368b6f966
-// flow-typed version: 5a6a98aaa2/koa_v2.x.x/flow_>=v0.93.x
+// flow-typed signature: 22454723de346388533aa45cab75d46c
+// flow-typed version: 5a6a98aaa2/koa_v2.0.x/flow_>=v0.93.x
 
 /*
  * Type def from from source code of koa.
- * this: https://github.com/koajs/koa/commit/08eb1a20c3975230aa1fe1c693b0cd1ac7a0752b
- * previous: https://github.com/koajs/koa/commit/fabf5864c6a5dca0782b867a263b1b0825a05bf9
- *
- * Changelog
- * breaking: remove unused app.name
- * breaking: ctx.throw([status], [msg], [properties]) (caused by http-errors (#957) )
+ * this: https://github.com/koajs/koa/commit/fabf5864c6a5dca0782b867a263b1b0825a05bf9
 **/
 declare module 'koa' {
   // Currently, import type doesn't work well ?
@@ -145,7 +140,7 @@ declare module 'koa' {
     request: Request,
 
     // docs/api/response.md#L113.
-    body: string | Buffer | stream$Stream | JSONObject | JSONArray | null, // JSON contains null
+    body: string | Buffer | stream$Stream | JSONObject | null, // JSON contains null
     etag: string,
     header: SimpleHeader,
     headers: SimpleHeader, // alias as header
@@ -232,8 +227,10 @@ declare module 'koa' {
     // context.js#L107
     // if (!(err instanceof Error)) err = new Error(`non-error thrown: ${err}`);
     onerror: (err?: mixed) => void,
-    // context.md#L88
-    throw: ( status: number, msg?: string, opts?: {} ) => void,
+    // context.js#L70
+    throw: (( statusOrErr: string|number|Error, errOrStatus?: string|number|Error,
+      opts?: {}) => void) &
+      (( statusOrErr: string|number|Error, opts?: Object) => void),
     toJSON(): ContextJSON,
     inspect(): ContextJSON,
 
@@ -286,7 +283,7 @@ declare module 'koa' {
     ips: $PropertyType<Request, 'ips'>,
     ip: $PropertyType<Request, 'ip'>,
 
-    [key: string]: any, // props added by middlewares.
+    [key: string]: mixed, // props added by middlewares.
   }
 
   declare type Middleware =
@@ -303,6 +300,7 @@ declare module 'koa' {
     env: string,
     keys?: Array<string>|Object, // https://github.com/crypto-utils/keygrip
     middleware: Array<Middleware>,
+    name?: string, // optionally give your application a name
     proxy: boolean, // when true proxy header fields will be trusted
     request: Request,
     response: Response,
