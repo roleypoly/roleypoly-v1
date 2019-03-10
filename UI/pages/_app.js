@@ -24,7 +24,7 @@ class RoleypolyApp extends App {
   loadTypekit (d) {
     var config = {
       kitId: 'bck0pci',
-      scriptTimeout: 3000,
+      scriptTimeout: 1500,
       async: true
     }
     const h = d.documentElement
@@ -50,7 +50,7 @@ class RoleypolyApp extends App {
   waitForFOUC () {
     setTimeout(() => {
       document.documentElement.className += ' force-active'//
-    }, 2000)
+    }, 1500)
   }
 
   render () {
@@ -58,6 +58,7 @@ class RoleypolyApp extends App {
 
     return (
       <Container>
+        <noscript>Hey there. Unfortunately, we require JS for this app to work. Please take this rose as retribution. 🌹</noscript>
         <Head>
           <meta charSet='utf-8' />
           <title key='title'>Roleypoly</title>
