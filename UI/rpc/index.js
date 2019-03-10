@@ -22,6 +22,7 @@ export default class RPCClient {
   baseUrl: string
   firstKnownHash: string
   recentHash: string
+  cookieHeader: string
 
   rpc: {
     [fn: string]: (...args: any[]) => Promise<mixed> | string
@@ -52,6 +53,11 @@ export default class RPCClient {
     }
   }
 
+  withCookies = (h: string) => {
+    this.cookieHeader = h
+    return this.rpc
+  }
+
   async updateCalls () {
     // this is for development only. doing in prod is probably dumb.
     const rsp = await superagent.get(this.baseUrl)
@@ -78,7 +84,11 @@ export default class RPCClient {
 
   async call (fn: string, ...args: any[]): mixed {
     const req: RPCRequest = { fn, args }
-    const rsp = await superagent.post(this.baseUrl).send(req).ok(() => true)
+    const rq = superagent.post(this.baseUrl)
+    if (this.cookieHeader != null) {
+      rq.cookies = this.cookieHeader
+    }
+    const rsp = await rq.send(req).ok(() => true)
     const body: RPCResponse = rsp.body
     if (body.error === true) {
       throw RPCError.fromResponse(body, rsp.status)

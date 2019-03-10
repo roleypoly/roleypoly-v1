@@ -32,7 +32,7 @@ export default class RPCServer {
     this.mapHash = fnv.hash(Object.keys(this.rpcMap)).str()
 
     // call map for the client.
-    this.rpcCalls = Object.keys(this.rpcMap).map(fn => ({ name: this.rpcMap[fn].name, args: this.rpcMap[fn].length - 1 }))
+    this.rpcCalls = Object.keys(this.rpcMap).map(fn => ({ name: this.rpcMap[fn].name, args: 0 }))
   }
 
   hookRoutes (router: betterRouter) {
@@ -68,9 +68,9 @@ export default class RPCServer {
 
     // if call.length (which is the solid args list)
     // is longer than args, we have too little to call the function.
-    if (args.length < call.length) {
-      return this.rpcError(ctx, null, new RPCError(`RPC call ${fn}() with ${args.length} arguments does not exist.`, 400))
-    }
+    // if (args.length < call.length) {
+    //   return this.rpcError(ctx, null, new RPCError(`RPC call ${fn}() with ${args.length} arguments does not exist.`, 400))
+    // }
 
     try {
       const response = await call(ctx, ...args)

@@ -1,14 +1,16 @@
 import * as React from 'react'
-import RPC from '../config/rpc'
+import RPC, { withCookies } from '../config/rpc'
 
 export default class TestRPC extends React.Component {
   static async getInitialProps (ctx) {
+    const user = await withCookies(ctx).getCurrentUser()
+    console.log(user)
     return {
-      // hello: await RPC.hello('world')
+      user
     }
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     window.$RPC = RPC
   }
 
@@ -19,6 +21,11 @@ export default class TestRPC extends React.Component {
   }
 
   render () {
-    return <div>hello, { this.props.hello }</div>
+    if (this.props.user == null) {
+      return <div>hello stranger OwO</div>
+    }
+
+    const { username, avatar, discriminator } = this.props.user
+    return <div>hello, {username}#{discriminator} <img src={avatar} width={50} height={50} /></div>
   }
 }
