@@ -1,17 +1,36 @@
-// note, this file only contains stuff for complicated routes.
-// next.js will handle anything beyond this.
-module.exports = (R, $) => {
-  const processMappings = mapping => {
+// @flow
+import { type Context } from 'koa'
+import { type AppContext, type Router } from '../Roleypoly'
+export default (R: Router, $: AppContext) => {
+  // note, this file only contains stuff for complicated routes.
+  // next.js will handle anything beyond this.
+  const processMappings = (mapping: { [path: string]: { path: string, noAutoFix?: boolean } }) => {
     for (let p in mapping) {
-      R.get(p, ctx => {
-        return $.ui.render(ctx.req, ctx.res, mapping[p], { ...ctx.query, ...ctx.params })
+      R.get(p, (ctx: Context) => {
+        return $.ui.render(ctx.req, ctx.res, mapping[p].path || mapping[p], { ...ctx.query, ...ctx.params })
       })
+
+      const { path } = mapping[p]
+      if (!mapping[p].noAutoFix) {
+        R.get(path, ctx => ctx.redirect(p))
+      }
     }
   }
 
   processMappings({
-    '/s/add': '/_internal/_server_add',
-    '/s/:id': '/_internal/_server',
-    '/test': '/test'
+    '/s/add': { path: '/_internal/_server_add' },
+    '/s/:id': { path: '/_internal/_server', noAutoFix: true },
+    '/test': { path: '/test_wwsw' }
   })
+
+  // edge cases
+  R.get('/_internal/_server', (ctx: Context) => {
+    if (ctx.query.id) {
+      return ctx.redirect(`/s/${ctx.query.id}`)
+    }
+
+    return ctx.redirect('/s/add')
+  })
+
+  R.get('/s/', (ctx: Context) => ctx.redirect('/s/add'))
 }

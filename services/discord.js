@@ -1,37 +1,71 @@
-const Service = require('./Service')
-const discord = require('discord.js')
-const superagent = require('superagent')
+// @flow
+import Service from './Service'
+import superagent from 'superagent'
+// import invariant from 'invariant'
+import { type AppContext } from '../Roleypoly'
+import {
+  type Message,
+  type Guild,
+  type Role,
+  type GuildMember,
+  type Collection,
+  Client
+} from 'discord.js'
+
+export type UserPartial = {
+  id: string,
+  username: string,
+  discriminator: string,
+  avatar: string
+}
+
+export type Permissions = {
+  isAdmin: boolean,
+  canManageRoles: boolean
+}
+
+type ChatCommandHandler = (message: Message, matches: string[], reply: (text: string) => Promise<Message>) => Promise<void>|void
+type ChatCommand = {
+  regex: RegExp,
+  handler: ChatCommandHandler
+}
 
 class DiscordService extends Service {
-  constructor (ctx) {
-    super(ctx)
+  botToken: string = process.env.DISCORD_BOT_TOKEN || ''
+  clientId: string = process.env.DISCORD_CLIENT_ID || ''
+  clientSecret: string = process.env.DISCORD_CLIENT_SECRET || ''
+  oauthCallback: string = process.env.OAUTH_AUTH_CALLBACK || ''
+  isBot: boolean = process.env.IS_BOT === 'true'
 
-    this.botToken = process.env.DISCORD_BOT_TOKEN
-    this.clientId = process.env.DISCORD_CLIENT_ID
-    this.clientSecret = process.env.DISCORD_CLIENT_SECRET
-    this.oauthCallback = process.env.OAUTH_AUTH_CALLBACK
-    this.botCallback = `${ctx.config.appUrl}/api/oauth/bot/callback`
-    this.appUrl = process.env.APP_URL
-    this.isBot = process.env.IS_BOT === 'true' || false
+  appUrl: string
+  botCallback: string
+  rootUsers: Set<string>
+  client: Client
+  cmds: ChatCommand[]
+  constructor (ctx: AppContext) {
+    super(ctx)
+    this.appUrl = ctx.config.appUrl
+
+    this.botCallback = `${this.appUrl}/api/oauth/bot/callback`
     this.rootUsers = new Set((process.env.ROOT_USERS || '').split(','))
 
-    this.client = new discord.Client()
+    this.client = new Client()
     this.client.options.disableEveryone = true
 
-    this.cmds = this._cmds()
+    this._cmds()
 
     this.startBot()
   }
 
-  ownGm (server) {
+  ownGm (server: string) {
     return this.gm(server, this.client.user.id)
   }
 
-  fakeGm ({ id = 0, nickname = '[none]', displayHexColor = '#ffffff' }) {
+  fakeGm ({ id = '0', nickname = '[none]', displayHexColor = '#ffffff' }: $Shape<{ id: string, nickname: string, displayHexColor: string }>) { // eslint-disable-line no-undef
     return { id, nickname, displayHexColor, __faked: true, roles: { has () { return false } } }
   }
 
-  isRoot (id) {
+  isRoot (id: string): boolean {
     return this.rootUsers.has(id)
   }
 
@@ -50,19 +84,27 @@ class DiscordService extends Service {
     }
   }
 
-  getRelevantServers (userId) {
+  getRelevantServers (userId: string): Collection<string, Guild> {
     return this.client.guilds.filter((g) => g.members.has(userId))
   }
 
-  gm (serverId, userId) {
-    return this.client.guilds.get(serverId).members.get(userId)
+  gm (serverId: string, userId: string): ?GuildMember {
+    const s = this.client.guilds.get(serverId)
+    if (s == null) {
+      return null
+    }
+    return s.members.get(userId)
   }
 
-  getRoles (server) {
-    return this.client.guilds.get(server).roles
+  getRoles (server: string) {
+    const s = this.client.guilds.get(server)
+    if (s == null) {
+      return null
+    }
+    return s.roles
   }
 
-  getPermissions (gm) {
+  getPermissions (gm: GuildMember): Permissions {
     if (this.isRoot(gm.id)) {
       return {
         isAdmin: true,
@@ -71,18 +113,26 @@ class DiscordService extends Service {
     }
 
     return {
-      isAdmin: gm.permissions.hasPermission('ADMINISTRATOR'),
-      canManageRoles: gm.permissions.hasPermission('MANAGE_ROLES', false, true)
+      isAdmin: gm.permissions.has('ADMINISTRATOR'),
+      canManageRoles: gm.permissions.has('MANAGE_ROLES', true)
     }
   }
 
-  safeRole (server, role) {
-    const r = this.getRoles(server).get(role)
+  safeRole (server: string, role: string) {
+    const rl = this.getRoles(server)
+    if (rl == null) {
+      throw new Error(`safeRole can't see ${server}`)
+    }
+    const r: ?Role = rl.get(role)
+    if (r == null) {
+      throw new Error(`safeRole can't find ${role} in ${server}`)
+    }
+
     return r.editable && !r.hasPermission('MANAGE_ROLES', false, true)
   }
 
   // oauth step 2 flow, grab the auth token via code
-  async getAuthToken (code) {
+  async getAuthToken (code: string) {
     const url = 'https://discordapp.com/api/oauth2/token'
     try {
       const rsp =
@@ -104,7 +154,7 @@ class DiscordService extends Service {
     }
   }
 
-  async getUser (authToken) {
+  async getUser (authToken?: string): Promise<UserPartial> {
     const url = 'https://discordapp.com/api/v6/users/@me'
     try {
       if (authToken == null || authToken === '') {
@@ -146,17 +196,17 @@ class DiscordService extends Service {
 
   // returns oauth authorize url with IDENTIFY permission
   // we only need IDENTIFY because we only use it for matching IDs from the bot
-  getAuthUrl (state) {
+  getAuthUrl (state: string): string {
     return `https://discordapp.com/oauth2/authorize?client_id=${this.clientId}&redirect_uri=${this.oauthCallback}&response_type=code&scope=identify&state=${state}`
   }
 
   // returns the bot join url with MANAGE_ROLES permission
   // MANAGE_ROLES is the only permission we really need.
-  getBotJoinUrl () {
+  getBotJoinUrl (): string {
     return `https://discordapp.com/oauth2/authorize?client_id=${this.clientId}&scope=bot&permissions=268435456`
   }
 
-  mentionResponse (message) {
+  mentionResponse (message: Message) {
     message.channel.send(`🔰 Assign your roles here! <${this.appUrl}/s/${message.guild.id}>`, { disableEveryone: true })
   }
 
@@ -193,10 +243,11 @@ class DiscordService extends Service {
       // prefix regex with ^ for ease of code
       .map(({ regex, ...rest }) => ({ regex: new RegExp(`^${regex.source}`, regex.flags), ...rest }))
 
+    this.cmds = cmds
     return cmds
   }
 
-  async handleCommand (message) {
+  async handleCommand (message: Message) {
     const cmd = message.content.replace(`<@${this.client.user.id}> `, '')
     this.log.debug(`got command from ${message.author.username}`, cmd)
     for (let { regex, handler } of this.cmds) {
@@ -218,8 +269,8 @@ class DiscordService extends Service {
     this.mentionResponse(message)
   }
 
-  handleMessage (message) {
-    if (message.author.bot && message.channel.type !== 'text') { // drop bot messages and dms
+  handleMessage (message: Message) {
+    if (message.author.bot || message.channel.type !== 'text') { // drop bot messages and dms
       return
     }
 
@@ -232,7 +283,7 @@ class DiscordService extends Service {
     }
   }
 
-  async handleJoin (guild) {
+  async handleJoin (guild: Guild) {
     await this.ctx.server.ensure(guild)
   }
 }

@@ -10,4 +10,4 @@ FROM mhart/alpine-node:10
 ENV NODE_ENV production
 WORKDIR /dist
 COPY --from=builder /src /dist
-CMD node index.js
+CMD npm start

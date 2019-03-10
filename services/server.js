@@ -1,13 +1,22 @@
-const Service = require('./Service')
+// @flow
+import Service from './Service'
+import { type AppContext } from '../Roleypoly'
+import type PresentationService from './presentation'
+import {
+  type Guild
+} from 'discord.js'
+import { type ServerModel, type Category } from '../models/Server'
 
-class ServerService extends Service {
-  constructor (ctx) {
+export default class ServerService extends Service {
+  Server: any // Model<ServerModel> but flowtype is bugged
+  P: PresentationService
+  constructor (ctx: AppContext) {
     super(ctx)
     this.Server = ctx.M.Server
     this.P = ctx.P
   }
 
-  async ensure (server) {
+  async ensure (server: Guild) {
     let srv
     try {
       srv = await this.get(server.id)
@@ -24,19 +33,19 @@ class ServerService extends Service {
     }
   }
 
-  create ({ id, message, categories }) {
+  create ({ id, message, categories }: ServerModel) {
     const srv = this.Server.build({ id, message, categories })
 
     return srv.save()
   }
 
-  async update (id, newData) {
+  async update (id: string, newData: $Shape<ServerModel>) { // eslint-disable-line no-undef
     const srv = await this.get(id, false)
 
     return srv.update(newData)
   }
 
-  async get (id, plain = true) {
+  async get (id: string, plain: boolean = true) {
     const s = await this.Server.findOne({
       where: {
         id
@@ -50,17 +59,17 @@ class ServerService extends Service {
     return s.get({ plain: true })
   }
 
-  async getAllowedRoles (id) {
-    const server = await this.get(id)
+  async getAllowedRoles (id: string) {
+    const server: ServerModel = await this.get(id)
+    const categories: Category[] = (Object.values(server.categories): any)
+    const allowed: string[] = []
 
-    return Object.values(server.categories).reduce((acc, c) => {
+    for (const c of categories) {
       if (c.hidden !== true) {
-        return acc.concat(c.roles)
+        allowed.concat(c.roles)
       }
+    }
 
-      return acc
-    }, [])
+    return allowed
   }
 }
-
-module.exports = ServerService

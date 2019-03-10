@@ -1,10 +1,20 @@
-const log = new (require('../logger'))('models/index')
-const glob = require('glob')
-const path = require('path')
-// const util = require('../util/model-methods')
+// @flow
+import logger from '../logger'
+import glob from 'glob'
+import path from 'path'
+import type Sequelize, { Model } from 'sequelize'
 
-module.exports = (sql) => {
-  const models = {}
+const log = logger(__filename)
+
+export type Models = {
+  [modelName: string]: Model<any> & {
+    __associations: (models: Models) => void,
+    __instanceMethods: (model: Model<any>) => void,
+  }
+}
+
+export default (sql: Sequelize): Models => {
+  const models: Models = {}
   const modelFiles = glob.sync('./models/**/!(index).js')
   log.debug('found models', modelFiles)
 

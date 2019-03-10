@@ -1,3 +1,6 @@
+// @flow
+import * as React from 'react'
+
 export const colors = {
   white: '#efefef',
   c9: '#EBD6D4',
@@ -12,7 +15,7 @@ export const colors = {
 }
 
 const getColors = () => {
-  Object.keys(colors).map(key => {
+  return Object.keys(colors).map(key => {
     const nk = key.replace(/c([0-9])/, '$1')
     return `--c-${nk}: ${colors[key]};`
   }).join('  \n')
@@ -26,6 +29,18 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* prevent FOUC */
+  transition: opacity 0.2s ease-in-out;
+  opacity: 0;
+}
+
+.wf-active body {
+  opacity: 1;
+}
+
+// FOUC guard if we take too long
+.force-active body {
+  opacity: 1;
 }
 
 .font-sans-serif {

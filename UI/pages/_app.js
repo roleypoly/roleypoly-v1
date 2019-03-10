@@ -1,6 +1,9 @@
+import * as React from 'react'
 import App, { Container } from 'next/app'
 import Head from 'next/head'
 import GlobalColors from '../components/global-colors'
+import SocialCards from '../components/social-cards'
+// import RPCClient from '../rpc'
 
 class RoleypolyApp extends App {
   static async getInitialProps ({ Component, ctx }) {
@@ -15,6 +18,7 @@ class RoleypolyApp extends App {
 
   componentDidMount () {
     this.loadTypekit(document)
+    this.waitForFOUC()
   }
 
   loadTypekit (d) {
@@ -42,14 +46,26 @@ class RoleypolyApp extends App {
     s.parentNode.insertBefore(tk, s)
   }
 
+  // wait one second, add FOUC de-protection.
+  waitForFOUC () {
+    setTimeout(() => {
+      document.documentElement.className += ' force-active'//
+    }, 2000)
+  }
+
   render () {
-    const { Component, pageProps, router } = this.props
+    const { Component, pageProps, router, rpc } = this.props
 
     return (
       <Container>
-        <Head />
+        <Head>
+          <meta charSet='utf-8' />
+          <title key='title'>Roleypoly</title>
+          <meta name='viewport' content='width=device-width, initial-scale=1' />
+        </Head>
         <GlobalColors />
-        <Component {...pageProps} router={router} />
+        <SocialCards />
+        <Component {...pageProps} router={router} rpc={rpc} />
       </Container>
     )
   }

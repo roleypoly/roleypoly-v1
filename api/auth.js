@@ -1,6 +1,11 @@
-module.exports = (R, $) => {
-  R.post('/api/auth/token', async (ctx) => {
-    const { token } = ctx.request.body
+// @flow
+import { type Context } from 'koa'
+import { type AppContext, type Router } from '../Roleypoly'
+import ksuid from 'ksuid'
+
+export default (R: Router, $: AppContext) => {
+  R.post('/api/auth/token', async (ctx: Context) => {
+    const { token } = ((ctx.request.body: any): { token: string })
 
     if (token == null || token === '') {
       ctx.body = { err: 'token_missing' }
@@ -29,14 +34,15 @@ module.exports = (R, $) => {
     }
   })
 
-  R.get('/api/auth/user', async ctx => {
-    if (ctx.session.accessToken === undefined) {
+  R.get('/api/auth/user', async (ctx: Context) => {
+    const { accessToken } = (ctx.session: { accessToken?: string })
+    if (accessToken === undefined) {
       ctx.body = { err: 'not_logged_in' }
       ctx.status = 401
       return
     }
 
-    const user = await $.discord.getUser(ctx.session.accessToken)
+    const user = await $.discord.getUser(accessToken)
     ctx.session.userId = user.id
     ctx.session.avatarHash = user.avatar
 
@@ -48,8 +54,8 @@ module.exports = (R, $) => {
     }
   })
 
-  R.get('/api/auth/redirect', ctx => {
-    const url = $.discord.getAuthUrl()
+  R.get('/api/auth/redirect', async (ctx: Context) => {
+    const url = $.discord.getAuthUrl(ksuid.randomSync().string)
     if (ctx.query.url === '✔️') {
       ctx.body = { url }
       return
@@ -58,11 +64,11 @@ module.exports = (R, $) => {
     ctx.redirect(url)
   })
 
-  R.post('/api/auth/logout', ctx => {
+  R.post('/api/auth/logout', async (ctx: Context) => {
     ctx.session = null
   })
 
-  R.get('/api/oauth/bot', ctx => {
+  R.get('/api/oauth/bot', async (ctx: Context) => {
     const url = $.discord.getBotJoinUrl()
     if (ctx.query.url === '✔️') {
       ctx.body = { url }
@@ -72,7 +78,7 @@ module.exports = (R, $) => {
     ctx.redirect(url)
   })
 
-  R.get('/api/oauth/bot/callback', ctx => {
-    console.log(ctx.request)
+  R.get('/api/oauth/bot/callback', async (ctx: Context) => {
+    // console.log(ctx.request)
   })
 }

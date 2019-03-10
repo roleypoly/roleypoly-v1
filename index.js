@@ -1,33 +1,33 @@
-require('dotenv').config({ silent: true })
-const log = new (require('./logger'))('index')
+// @flow
+import 'dotenv/config'
+import logger from './logger'
+import http from 'http'
+import Koa from 'koa'
+import SocketIO from 'socket.io'
+import Roleypoly from './Roleypoly'
+import ksuid from 'ksuid'
+import bodyParser from 'koa-bodyparser'
+import compress from 'kompression'
+import session from 'koa-session'
+import invariant from 'invariant'
+import Keygrip from 'keygrip'
 
-const http = require('http')
-const Koa = require('koa')
+const log = logger(__filename)
 const app = new Koa()
-const _io = require('socket.io')
-const Roleypoly = require('./Roleypoly')
-const ksuid = require('ksuid')
 
 // monkey patch async-reduce because F U T U R E
-Array.prototype.areduce = async function (predicate, acc = []) { // eslint-disable-line
-  for (let i of this) {
-    acc = await predicate(acc, i)
-  }
-
-  return acc
-}
-
-Array.prototype.filterNot = Array.prototype.filterNot || function (predicate) { // eslint-disable-line
-  return this.filter(v => !predicate(v))
-}
 
 // Create the server and socket.io server
 const server = http.createServer(app.callback())
-const io = _io(server, { transports: ['websocket'], path: '/api/socket.io' })
+const io = SocketIO(server, { transports: ['websocket'], path: '/api/socket.io' })
 
 const M = new Roleypoly(io, app) // eslint-disable-line no-unused-vars
 
-app.keys = [ process.env.APP_KEY ]
+const appKey = process.env.APP_KEY
+if (appKey == null) {
+  throw invariant(false, '')
+}
+app.keys = new Keygrip([ appKey ])
 
 const DEVEL = process.env.NODE_ENV === 'development'
 
@@ -35,11 +35,9 @@ async function start () {
   await M.awaitServices()
 
   // body parser
-  const bodyParser = require('koa-bodyparser')
-  app.use(bodyParser({ types: ['json'] }))
+  app.use(bodyParser())
 
   // Compress
-  const compress = require('koa-compress')
   app.use(compress())
 
   // Request logger
@@ -64,7 +62,6 @@ async function start () {
     // return null
   })
 
-  const session = require('koa-session')
   app.use(session({
     key: 'roleypoly:sess',
     maxAge: 'session',

@@ -1,8 +1,14 @@
 {
-  "presets": [
-      "next/babel"
-  ],
+  "presets": [ ["@babel/preset-env", {
+    "targets": {
+      "node": true
+    }
+  }], "@babel/preset-flow" ],
   "plugins": [
-      "transform-flow-strip-types"
-  ]
+    "@babel/plugin-syntax-dynamic-import",
+    "@babel/plugin-proposal-class-properties",
+    ["@babel/plugin-transform-runtime",
+      { "helpers": false }]
+  ],
+  "ignore": ["ui/**/*"]
 }
