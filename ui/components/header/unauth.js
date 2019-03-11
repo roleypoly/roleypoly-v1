@@ -1,12 +1,13 @@
 // @flow
 import * as React from 'react'
-import HeaderBarCommon from './common'
+import HeaderBarCommon, { Logotype } from './common'
 
 const HeaderBarUnauth: React.StatelessFunctionalComponent<{}> = () => (
   <HeaderBarCommon>
-    <div>
+    <>
+      <Logotype />
       Hey stranger.
-    </div>
+    </>
   </HeaderBarCommon>
 )
 
