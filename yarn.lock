@@ -3096,9 +3096,9 @@ enhanced-resolve@^4.1.0:
     memory-fs "^0.4.0"
     tapable "^1.0.0"
 
-"erlpack@github:discordapp/erlpack":
+erlpack@hammerandchisel/erlpack:
   version "0.1.0"
-  resolved "https://codeload.github.com/discordapp/erlpack/tar.gz/674ebfd3439ba4b7ce616709821d27630f7cdc61"
+  resolved "https://codeload.github.com/hammerandchisel/erlpack/tar.gz/674ebfd3439ba4b7ce616709821d27630f7cdc61"
   dependencies:
     bindings "^1.2.1"
     nan "^2.1.0"

@@ -9,7 +9,6 @@ import {
   type Role,
   type GuildMember,
   type Collection,
-  type User,
   Client
 } from 'discord.js'
 

@@ -16,7 +16,7 @@
     "chalk": "^2.4.2",
     "discord.js": "^11.4.2",
     "dotenv": "^6.2.0",
-    "erlpack": "github:discordapp/erlpack",
+    "erlpack": "hammerandchisel/erlpack",
     "fast-redux": "^0.7.1",
     "fnv-plus": "^1.2.12",
     "glob": "^7.1.3",

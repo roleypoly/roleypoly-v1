@@ -4,7 +4,9 @@ import HeaderBarCommon from './common'
 
 const HeaderBarUnauth: React.StatelessFunctionalComponent<{}> = () => (
   <HeaderBarCommon>
-    hi
+    <div>
+      Hey stranger.
+    </div>
   </HeaderBarCommon>
 )
 
