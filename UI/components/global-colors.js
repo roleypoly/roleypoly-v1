@@ -1,5 +1,6 @@
 // @flow
-import * as React from 'react'
+// import * as React from 'react'
+import { createGlobalStyle } from 'styled-components'
 
 export const colors = {
   white: '#efefef',
@@ -21,7 +22,7 @@ const getColors = () => {
   }).join('  \n')
 }
 
-const Colors = () => <style global jsx>{`
+export default createGlobalStyle`
 body {
   margin: 0;
   padding: 0;
@@ -48,7 +49,7 @@ body {
 }
 
 :root {
-  ${getColors()}
+  ${() => getColors()}
 }
 
 ::selection {
@@ -87,6 +88,4 @@ h1,h2,h3,h4,h5,h6 {
   opacity: 0;
 }
 
-`}</style>
-
-export default Colors
+`

@@ -1,19 +1,19 @@
 import * as React from 'react'
 import App, { Container } from 'next/app'
 import Head from 'next/head'
-import GlobalColors from '../components/global-colors'
-import SocialCards from '../components/social-cards'
-// import RPCClient from '../rpc'
+import Layout from '../components/layout'
+import { withCookies } from '../config/rpc'
 
 class RoleypolyApp extends App {
   static async getInitialProps ({ Component, ctx }) {
     let pageProps = {}
+    const rpc = withCookies(ctx)
 
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx)
     }
 
-    return { pageProps }
+    return { pageProps, user: await rpc.getCurrentUser() }
   }
 
   componentDidMount () {
@@ -54,7 +54,7 @@ class RoleypolyApp extends App {
   }
 
   render () {
-    const { Component, pageProps, router, rpc } = this.props
+    const { Component, pageProps, router, user } = this.props
 
     return (
       <Container>
@@ -64,9 +64,10 @@ class RoleypolyApp extends App {
           <title key='title'>Roleypoly</title>
           <meta name='viewport' content='width=device-width, initial-scale=1' />
         </Head>
-        <GlobalColors />
-        <SocialCards />
-        <Component {...pageProps} router={router} rpc={rpc} />
+
+        <Layout user={user}>
+          <Component {...pageProps} router={router} />
+        </Layout>
       </Container>
     )
   }
