@@ -1,11 +1,25 @@
 // @flow
 import * as React from 'react'
-import HeaderBarCommon, { Logotype } from './common'
+import HeaderBarCommon, { Logotype, type CommonProps } from './common'
+import styled from 'styled-components'
+import Link from 'next/link'
 
-const HeaderBarUnauth: React.StatelessFunctionalComponent<{}> = () => (
-  <HeaderBarCommon>
+const LogoBox = styled.a`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+`
+
+const HeaderBarUnauth: React.StatelessFunctionalComponent<CommonProps> = (props) => (
+  <HeaderBarCommon {...props}>
     <>
-      <Logotype />
+      <Link href='/' prefetch>
+        <LogoBox>
+          <Logotype />
+        </LogoBox>
+      </Link>
       Hey stranger.
     </>
   </HeaderBarCommon>

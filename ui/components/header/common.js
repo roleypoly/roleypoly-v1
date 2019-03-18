@@ -5,12 +5,14 @@ import styled from 'styled-components'
 import * as logo from '../logo'
 
 export type CommonProps = {
-  children: React.Element<any>
+  children: React.Element<any>,
+  noBackground: boolean
 }
 
 const Header = styled.div`
-  background-color: var(--c-dark);
-
+  ${({ noBackground }: any) => noBackground === false ? 'background-color: var(--c-dark);' : ''}
+  position: relative;
+  transition: background-color 0.3s ease-in-out;
 `
 
 const HeaderInner = styled.div`
@@ -21,6 +23,13 @@ const HeaderInner = styled.div`
   width: 100vw;
   margin: 0 auto;
   height: 50px;
+  padding: 3px 5px;
+  position: relative;
+  top: -1px;
+
+  & > div {
+    margin: 0 0.5em;
+  }
 `
 
 export const Logotype = styled(logo.Logotype)`
@@ -28,16 +37,16 @@ export const Logotype = styled(logo.Logotype)`
 `
 
 export const Logomark = styled(logo.Logomark)`
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
 `
-
+//
 const DebugBreakpoints = dynamic(() => import('../../kit/debug-breakpoints'))
 
-const HeaderBarCommon = ({ children }: CommonProps) => (
-  <Header>
+const HeaderBarCommon = ({ children, noBackground }: CommonProps) => (
+  <Header noBackground={noBackground}>
+    { (process.env.NODE_ENV === 'development') && <DebugBreakpoints />}
     <HeaderInner>
-      { (process.env.NODE_ENV === 'development') && <DebugBreakpoints />}
       { children }
     </HeaderInner>
   </Header>
