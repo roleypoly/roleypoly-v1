@@ -26,7 +26,7 @@ export default createGlobalStyle`
 body {
   margin: 0;
   padding: 0;
-  font-family: "source-han-sans-japanese", "Source Sans Pro", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: "source-han-sans-japanese", "Source Sans Pro", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -35,12 +35,12 @@ body {
   opacity: 0;
 }
 
-.wf-active body {
-  opacity: 1;
+* {
+  box-sizing: border-box;
 }
 
-// FOUC guard if we take too long
-.force-active body {
+
+.wf-active body, .force-active body {
   opacity: 1;
 }
 
