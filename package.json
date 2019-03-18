@@ -8,12 +8,14 @@
     "build": "npm-run-all build:*",
     "build:ui": "NODE_ENV=production next build ui",
     "build:server": "NODE_ENV=production babel --delete-dir-on-start -d dist .",
-    "build:move": "mkdir dist/ui; cp -R ui/.next dist/ui/.next"
+    "build:move": "mkdir dist/ui; cp -R ui/.next dist/ui/.next",
+    "remotedebug": "remotedebug_ios_webkit_adapter --port=9000 > /dev/null &"
   },
   "dependencies": {
     "@discordjs/uws": "^11.149.1",
     "@primer/components": "^11.0.0",
     "chalk": "^2.4.2",
+    "color": "^3.1.0",
     "discord.js": "^11.4.2",
     "dotenv": "^6.2.0",
     "erlpack": "hammerandchisel/erlpack",
@@ -30,6 +32,7 @@
     "kompression": "^1.0.0",
     "ksuid": "^1.1.3",
     "lru-cache": "^5.1.1",
+    "moment": "^2.24.0",
     "moniker": "^0.1.2",
     "nanoid": "^2.0.1",
     "next": "^8.0.3",
@@ -41,6 +44,7 @@
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-redux": "^6.0.1",
+    "react-typist": "^2.0.5",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
