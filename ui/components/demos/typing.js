@@ -2,6 +2,7 @@ import * as React from 'react'
 import moment from 'moment'
 import Typist from 'react-typist'
 import styled from 'styled-components'
+import MediaQuery from '../../kit/media'
 
 const Outer = styled.div`
   --not-quite-black: #23272A;
@@ -17,6 +18,8 @@ const Outer = styled.div`
 
 const Chat = styled.div`
   padding: 10px 0;
+  font-size: 0.8em;
+  ${() => MediaQuery({ sm: 'font-size: 1em;' })}
   & span {
     display: inline-block;
     margin-left: 5px;
@@ -27,6 +30,8 @@ const TextArea = styled.div`
   background-color: hsla(218,5%,47%,.3);
   border-radius: 5px;
   padding: 10px;
+  font-size: 0.8em;
+  ${() => MediaQuery({ sm: 'font-size: 1em;' })}
 
   & .Typist .Cursor {
 

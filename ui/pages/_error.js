@@ -2,11 +2,11 @@ import * as React from 'react'
 import styled from 'styled-components'
 import MediaQuery from '../kit/media'
 
-const Overlay = styled.div`
+export const Overlay = styled.div`
   opacity: 0.6;
   pointer-events: none;
   position: fixed;
-  top: 50px;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;

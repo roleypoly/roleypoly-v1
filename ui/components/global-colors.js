@@ -32,16 +32,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   /* prevent FOUC */
   transition: opacity 0.2s ease-in-out;
-  opacity: 0;
 }
 
 * {
   box-sizing: border-box;
-}
-
-
-.wf-active body, .force-active body {
-  opacity: 1;
 }
 
 .font-sans-serif {
@@ -68,11 +62,13 @@ html {
 }
 
 body {
+  margin: 0;
+  padding: 0;
   height: 100%;
   overflow: auto;
   color: var(--c-white);
   background-color: var(--c-1);
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
 }
 
 h1,h2,h3,h4,h5,h6 {
