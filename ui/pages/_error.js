@@ -127,6 +127,23 @@ export default class CustomErrorPage extends React.Component {
     </div>
   }
 
+  renderServer () {
+    return <div>
+      <Overlay />
+      <ResponsiveSplitter>
+        <div>
+          <Code>Oops.</Code>
+        </div>
+        <div>
+          <section>
+            Server was unhappy about this render. Try reloading or changing page.
+          </section>
+          <JapaneseFlair>クッキーを送ってください〜</JapaneseFlair>
+        </div>
+      </ResponsiveSplitter>
+    </div>
+  }
+
   handlers = {
     403: this.render403,
     404: this.render404,
@@ -134,10 +151,14 @@ export default class CustomErrorPage extends React.Component {
   }
 
   render () {
+    if (this.props.originalName === 'ErrorPage') {
+      return this.renderServer()
+    }
+
     if (this.props.statusCode in this.handlers) {
       return this.handlers[this.props.statusCode]()
-    } else {
-      return this.renderDefault()
     }
+
+    return this.renderDefault()
   }
 }

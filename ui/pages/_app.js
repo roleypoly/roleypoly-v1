@@ -83,7 +83,7 @@ class RoleypolyApp extends App {
           ` }} />
       </Head>
       <Layout user={user} {...layout}>
-        <ErrorCaughtComponent {...pageProps} router={router} />
+        <ErrorCaughtComponent {...pageProps} router={router} originalName={Component.displayName || Component.constructor.name} />
       </Layout>
     </Container>
   }
