@@ -15,8 +15,6 @@ import Keygrip from 'keygrip'
 const log = logger(__filename)
 const app = new Koa()
 
-// monkey patch async-reduce because F U T U R E
-
 // Create the server and socket.io server
 const server = http.createServer(app.callback())
 const io = SocketIO(server, { transports: ['websocket'], path: '/api/socket.io' })
