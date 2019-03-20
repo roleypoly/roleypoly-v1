@@ -10,12 +10,13 @@ export const Overlay = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: -1;
+  z-index: -10;
   background-image: radial-gradient(circle, var(--c-dark), var(--c-dark) 1px, transparent 1px, transparent);
   background-size: 27px 27px;
 `
 
 const ResponsiveSplitter = styled.div`
+  z-index: -1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,86 +60,25 @@ export default class CustomErrorPage extends React.Component {
     return { statusCode }
   }
 
-  render404 () {
-    return <div>
-      <Overlay />
-      <ResponsiveSplitter>
-        <div>
-          <Code>404</Code>
-        </div>
-        <div>
-          <section>
-            This page is in another castle.
-          </section>
-          <JapaneseFlair>お探しのページは見つかりませんでした</JapaneseFlair>
-        </div>
-      </ResponsiveSplitter>
-    </div>
-  }
+  render403 = () => this.out('403', `You weren't allowed to access this.`, 'あなたはこの点に合格しないかもしれません')
+  render404 = () => this.out('404', 'This page is in another castle.', 'お探しのページは見つかりませんでした')
+  render500 = () => this.out('500', `The server doesn't like you right now. Feed it a cookie.`, 'クッキーを送ってください〜  クッキーを送ってください〜')
+  renderDefault = () => this.out('Oops', 'Something went bad. How could this happen?', 'おねがい？')
+  renderServer = () => this.out('Oops.', 'Server was unhappy about this render. Try reloading or changing page.', 'クッキーを送ってください〜')
+  renderAuthExpired = () => this.out('Woah.', 'That magic login link was expired.', 'What are you trying to do?')
 
-  render403 () {
+  out (code, description, flair) {
     return <div>
       <Overlay />
       <ResponsiveSplitter>
         <div>
-          <Code>403</Code>
+          <Code>{code}</Code>
         </div>
         <div>
           <section>
-            You weren't allowed to access this.
+            {description}
           </section>
-          <JapaneseFlair>あなたはこの点に合格しないかもしれません</JapaneseFlair>
-        </div>
-      </ResponsiveSplitter>
-    </div>
-  }
-
-  render500 () {
-    return <div>
-      <Overlay />
-      <ResponsiveSplitter>
-        <div>
-          <Code>500</Code>
-        </div>
-        <div>
-          <section>
-            The server doesn't like you right now. Feed it a cookie.
-          </section>
-          <JapaneseFlair>クッキーを送ってください〜  クッキーを送ってください〜</JapaneseFlair>
-        </div>
-      </ResponsiveSplitter>
-    </div>
-  }
-
-  renderDefault () {
-    return <div>
-      <Overlay />
-      <ResponsiveSplitter>
-        <div>
-          <Code>Oops.</Code>
-        </div>
-        <div>
-          <section>
-            Something went bad. How could this happen?
-          </section>
-          <JapaneseFlair>おねがい？</JapaneseFlair>
-        </div>
-      </ResponsiveSplitter>
-    </div>
-  }
-
-  renderServer () {
-    return <div>
-      <Overlay />
-      <ResponsiveSplitter>
-        <div>
-          <Code>Oops.</Code>
-        </div>
-        <div>
-          <section>
-            Server was unhappy about this render. Try reloading or changing page.
-          </section>
-          <JapaneseFlair>クッキーを送ってください〜</JapaneseFlair>
+          <JapaneseFlair>{flair}</JapaneseFlair>
         </div>
       </ResponsiveSplitter>
     </div>
@@ -147,7 +87,8 @@ export default class CustomErrorPage extends React.Component {
   handlers = {
     403: this.render403,
     404: this.render404,
-    500: this.render500
+    500: this.render500,
+    1001: this.renderAuthExpired
   }
 
   render () {

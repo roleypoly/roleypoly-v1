@@ -1,7 +1,7 @@
 import Router from 'next/router'
 
 export default (context, target) => {
-  if (context.res) {
+  if (context && context.res) {
     // server
     // 303: "See other"
     context.res.writeHead(303, { Location: target })
