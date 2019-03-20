@@ -47,7 +47,7 @@ async function start () {
 
   // SPA + Static
   if (process.env.NODE_ENV === 'production') {
-    const pub = path.join(__dirname, 'public')
+    const pub = path.resolve(path.join(__dirname, 'public'))
     log.info('public path', pub)
 
     const staticFiles = require('koa-static')
@@ -69,7 +69,7 @@ async function start () {
       try {
         fs.statSync(chkPath)
         log.info('sync pass')
-        ctx.body = fs.readFileSync(chkPath, { encoding: 'utf-8' })
+        ctx.body = fs.readFileSync(chkPath)
         ctx.type = path.extname(ctx.path)
         log.info('body sent')
         ctx.status = 200

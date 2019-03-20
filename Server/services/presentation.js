@@ -7,7 +7,7 @@ class PresentationService extends Service {
     this.M = ctx.M
     this.discord = ctx.discord
 
-    this.cache = LRU({ max: 500, maxAge: 100 * 60 * 5 })
+    this.cache = new LRU({ max: 500, maxAge: 100 * 60 * 5 })
   }
 
   serverSlug (server) {
