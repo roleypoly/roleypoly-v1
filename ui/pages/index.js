@@ -110,6 +110,7 @@ export default class Home extends React.Component {
         © {new Date().getFullYear()}<br />
         Made with ♡&nbsp;
         <img src='/static/flags.svg' style={{ height: '1em', opacity: 0.5 }} /><br />
+        <FooterLink target='_blank' href='https://ko-fi.com/roleypoly'>Ko-Fi</FooterLink>&nbsp;-&nbsp;
         <FooterLink target='_blank' href='https://github.com/kayteh/roleypoly'>GitHub</FooterLink>&nbsp;-&nbsp;
         <FooterLink target='_blank' href='https://discord.gg/PWQUVsd'>Discord</FooterLink>
       </Footer>
