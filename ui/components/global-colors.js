@@ -44,6 +44,10 @@ body {
 
 :root {
   ${() => getColors()}
+  --not-quite-black: #23272A;
+  --dark-but-not-black: #2C2F33;
+  --greyple: #99AAB5;
+  --blurple: var(--c-discord);
 }
 
 ::selection {

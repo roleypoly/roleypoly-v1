@@ -5,11 +5,6 @@ import styled from 'styled-components'
 import MediaQuery from '../../kit/media'
 
 const Outer = styled.div`
-  --not-quite-black: #23272A;
-  --dark-but-not-black: #2C2F33;
-  --greyple: #99AAB5;
-  --blurple: var(--c-discord);
-
   background-color: var(--dark-but-not-black);
   padding: 10px;
   text-align: left;
