@@ -23,7 +23,8 @@ const LogoBox = styled.a`
 
 const StyledServerPic = styled(DiscordIcon)`
   border-radius: 100%;
-  box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+  box-shadow: 0 0 1px rgba(0,0,0,0.1);
+  border: 1px solid rgba(0,0,0,0.25);
   height: 35px;
   width: 35px;
   margin-right: 10px;

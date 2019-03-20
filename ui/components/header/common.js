@@ -47,7 +47,7 @@ export const Logomark = styled(logo.Logomark)`
 //
 const DebugBreakpoints = dynamic(() => import('../../kit/debug-breakpoints'))
 
-const HeaderBarCommon = ({ children, noBackground }: CommonProps) => (
+const HeaderBarCommon = ({ children, noBackground = false }: CommonProps) => (
   <Header noBackground={noBackground}>
     { (process.env.NODE_ENV === 'development') && <DebugBreakpoints />}
     <HeaderInner>
