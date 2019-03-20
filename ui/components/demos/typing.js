@@ -3,6 +3,7 @@ import moment from 'moment'
 import Typist from 'react-typist'
 import styled from 'styled-components'
 import MediaQuery from '../../kit/media'
+import demoRoles from '../../config/demo'
 
 const Outer = styled.div`
   background-color: var(--dark-but-not-black);
@@ -72,18 +73,10 @@ const Typing = () => <Outer>
   </Chat>
   <TextArea>
     <Typist cursor={{ blink: true }}>
-      <span>.iam a cute role ♡</span>
-      <Typist.Backspace count={30} delay={1500} />
-      <span>.iam a vanity role ♡</span>
-      <Typist.Backspace count={30} delay={1500} />
-      <span>.iam a brave role ♡</span>
-      <Typist.Backspace count={30} delay={1500} />
-      <span>.iam a proud role ♡</span>
-      <Typist.Backspace count={30} delay={1500} />
-      <span>.iam a wonderful role ♡</span>
-      <Typist.Backspace count={30} delay={1500} />
-      <span>.iam a 日本語 role ♡</span>
-      <Typist.Backspace count={30} delay={1500} />
+      { demoRoles.map(({ name }) => [
+        <span>.iam {name}</span>,
+        <Typist.Backspace count={30} delay={1500} />
+      ]) }
       <span>i have too many roles.</span>
     </Typist>
   </TextArea>
