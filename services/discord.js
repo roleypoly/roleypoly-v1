@@ -232,27 +232,6 @@ class DiscordService extends Service {
     }
   }
 
-  // on sign out, we revoke the token we had.
-  // async revokeAuthToken (code, state) {
-  //   const url = 'https://discordapp.com/api/oauth2/revoke'
-  //   try {
-  //     const rsp =
-  //       await superagent
-  //         .post(url)
-  //         .send({
-  //           client_id: this.clientId,
-  //           client_secret: this.clientSecret,
-  //           grant_type: 'authorization_code',
-  //           code: code,
-  //           redirect_uri: this.oauthCallback
-  //         })
-
-  //     return rsp.body
-  //   } catch (e) {
-  //     this.log.error('getAuthToken failed', e)
-  //     throw e
-  //   }
-  // }
 
   // returns oauth authorize url with IDENTIFY permission
   // we only need IDENTIFY because we only use it for matching IDs from the bot
