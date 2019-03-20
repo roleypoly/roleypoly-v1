@@ -93,7 +93,7 @@ class PresentationService extends Service {
     return {
       id: server.id,
       gm: {
-        nickname: gm.nickname,
+        nickname: gm.nickname || gm.user.username,
         color: gm.displayHexColor
       },
       server: this.serverSlug(server),

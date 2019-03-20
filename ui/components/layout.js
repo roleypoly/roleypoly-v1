@@ -3,7 +3,7 @@ import * as React from 'react'
 import GlobalColors from './global-colors'
 import SocialCards from './social-cards'
 import HeaderBar from '../containers/header-bar'
-import { type User } from '../containers/user'
+import { type User } from '../stores/user'
 import styled from 'styled-components'
 
 const LayoutWrapper = styled.div`

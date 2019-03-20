@@ -1,11 +1,12 @@
 // @flow
 import * as React from 'react'
 import HeaderBarCommon, { Logomark } from './common'
-import { type User } from '../../containers/user'
+import { type User } from '../../stores/user'
 import DiscordIcon from '../discord-guild-pic'
 import styled from 'styled-components'
 import { Hide } from '../../kit/media'
 import Link from 'next/link'
+import { connect } from 'react-redux'
 
 const temporaryServer = {
   id: '423497622876061707',
@@ -86,4 +87,8 @@ const HeaderBarAuth: React.StatelessFunctionalComponent<{ user: User }> = ({ use
   </HeaderBarCommon>
 )
 
-export default HeaderBarAuth
+const mapStateToProps = state => {
+
+}
+
+export default connect(mapStateToProps)(HeaderBarAuth)

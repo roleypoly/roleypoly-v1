@@ -12,4 +12,6 @@ export const initStore = (initialState = {}) => {
   )
 }
 
-export const withRedux = (comp) => withNextRedux(initStore)(comp)
+export const withRedux = (comp) => withNextRedux(initStore, {
+  debug: process.env.NODE_ENV === 'development'
+})(comp)

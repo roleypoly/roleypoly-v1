@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import dynamic from 'next/dynamic'
-import { type User } from './user'
+import { type User } from '../stores/user'
 
 type Props = {
   user: ?User

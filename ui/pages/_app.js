@@ -4,8 +4,10 @@ import App, { Container } from 'next/app'
 import Head from 'next/head'
 import Layout from '../components/layout'
 import { withCookies } from '../config/rpc'
+import { Provider } from 'react-redux'
 import ErrorP, { Overlay } from './_error'
 import styled from 'styled-components'
+import { withRedux } from '../config/redux'
 
 type NextPage = React.Component<any> & React.StatelessFunctionalComponent<any> & {
   getInitialProps: (ctx: any, ...args: any) => any
@@ -58,7 +60,7 @@ class RoleypolyApp extends App {
   }
 
   render () {
-    const { Component, pageProps, router, user, layout, robots } = this.props
+    const { Component, pageProps, router, user, layout, robots, store } = this.props
     // Fix for next/error rendering instead of our error page.
     // Who knows why this would ever happen.
     const ErrorCaughtComponent = (Component.displayName === 'ErrorPage' || Component.constructor.name === 'ErrorPage') ? ErrorP : Component
@@ -84,11 +86,13 @@ class RoleypolyApp extends App {
             })(document);//
           ` }} />
       </Head>
-      <Layout user={user} {...layout}>
-        <ErrorCaughtComponent {...pageProps} router={router} originalName={Component.displayName || Component.constructor.name} />
-      </Layout>
+      <Provider store={store}>
+        <Layout user={user} {...layout}>
+          <ErrorCaughtComponent {...pageProps} router={router} originalName={Component.displayName || Component.constructor.name} />
+        </Layout>
+      </Provider>
     </Container>
   }
 }
 
-export default RoleypolyApp
+export default withRedux(RoleypolyApp)

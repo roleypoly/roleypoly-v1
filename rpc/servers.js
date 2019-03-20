@@ -20,5 +20,28 @@ export default ($: AppContext) => ({
     }
 
     return $.P.serverSlug(srv)
+  },
+
+  getServer (ctx: Context, id: string) {
+    const { userId } = (ctx.session: { userId: string })
+
+    const srv = $.discord.client.guilds.get(id)
+
+    if (srv == null) {
+      return { err: 'not_found' }
+    }
+
+    let gm
+    if (srv.members.has(userId)) {
+      gm = $.discord.gm(id, userId)
+    } else if ($.discord.isRoot(userId)) {
+      // gm = $.discord.fakeGm({ id: userId })
+    }
+
+    if (gm == null) {
+      return { err: 'not_found' }
+    }
+
+    return $.P.presentableServer(srv, gm)
   }
 })
