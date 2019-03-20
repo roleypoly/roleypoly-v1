@@ -232,7 +232,6 @@ class DiscordService extends Service {
     }
   }
 
-
   // returns oauth authorize url with IDENTIFY permission
   // we only need IDENTIFY because we only use it for matching IDs from the bot
   getAuthUrl (state: string): string {
