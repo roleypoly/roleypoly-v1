@@ -4,7 +4,7 @@ import { type Context } from 'koa'
 
 export default ($: AppContext) => ({
   async checkAuthChallenge (ctx: Context, text: string): Promise<boolean> {
-    const chall = await $.auth.fetchDMChallenge({ human: text })
+    const chall = await $.auth.fetchDMChallenge({ human: text.toLowerCase() })
     if (chall == null) {
       return false
     }
