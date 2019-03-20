@@ -2,7 +2,7 @@
 
 a discord bot & web ui for managing self-assignable roles.
 
-**Most likely, you'll want to go here: https://rp.kat.cafe**. This app is already hosted, you don't need to deal with deploying it or anything, I've already done it for you.
+**Most likely, you'll want to go here: https://roleypoly.com**. This app is already hosted, you don't need to deal with deploying it or anything, I've already done it for you.
 
 If you're here to report a bug or develop on Roleypoly, the rest of this document is for you.
 
