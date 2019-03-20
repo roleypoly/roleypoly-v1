@@ -73,7 +73,7 @@ const StyledUserSection = styled(UserSection)`
 `
 
 const HeaderBarAuth: React.StatelessFunctionalComponent<{ user: User }> = ({ user }) => (
-  <HeaderBarCommon>
+  <HeaderBarCommon noBackground={false}>
     <>
       <Link href='/s/add' prefetch>
         <LogoBox>
