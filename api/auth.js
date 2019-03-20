@@ -57,11 +57,13 @@ export default (R: Router, $: AppContext) => {
   })
 
   R.get('/api/auth/redirect', async (ctx: Context) => {
+    const { r } = ctx.query
     // check if already authed
     if (await $.auth.isLoggedIn(ctx, { refresh: true })) {
-      return ctx.redirect('/')
+      return ctx.redirect(r || '/')
     }
 
+    ctx.session.oauthRedirect = r
     const url = $.discord.getAuthUrl(ksuid.randomSync().string)
     if (ctx.query.url === '✔️') {
       ctx.body = { url }
@@ -72,11 +74,13 @@ export default (R: Router, $: AppContext) => {
   })
 
   R.get('/api/oauth/callback', async (ctx: Context) => {
+    const { code, state } = ctx.query
+    const { oauthRedirect: r } = ctx.session
+    delete ctx.session.oauthRedirect
     if (await $.auth.isLoggedIn(ctx)) {
-      return ctx.redirect('/')
+      return ctx.redirect(r || '/')
     }
 
-    const { code, state } = ctx.query
     if (code == null) {
       ctx.status = 400
       return
@@ -95,7 +99,7 @@ export default (R: Router, $: AppContext) => {
       const tokens = await $.discord.getAuthToken(code)
       const user = await $.discord.getUserFromToken(tokens.access_token)
       $.auth.injectSessionFromOAuth(ctx, tokens, user.id)
-      return ctx.redirect('/')
+      return ctx.redirect(r || '/')
     } catch (e) {
       log.error('token and auth fetch failure', e)
       ctx.status = 400

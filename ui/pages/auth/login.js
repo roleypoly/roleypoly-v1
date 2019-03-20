@@ -5,16 +5,27 @@ import MediaQuery from '../../kit/media'
 import DiscordButton from '../../components/discord-button'
 import RPC from '../../config/rpc'
 import redirect from '../../lib/redirect'
+import dynamic from 'next/dynamic'
+import type { PageProps, ServerSlug } from '../../types'
 
 type AuthLoginState = {
   humanCode: string,
   waiting: boolean
 }
 
+type AuthLoginProps = PageProps & {
+  redirect: ?string,
+  redirectSlug: ?ServerSlug
+}
+
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 3em;
+  width: 400px;
+  max-width: calc(98vw - 10px);
+  margin: 0 auto;
+  text-align: center;
   ${() => MediaQuery({
     md: `
       padding-top: 0;
@@ -76,16 +87,60 @@ const HiderButton = styled.button`
     pointer-events: none;
   }
 `
+const SlugWrapper = styled.div`
+  padding-bottom: 2em;
+  text-align: center;
+`
 
-export default class AuthLogin extends React.Component<{}, AuthLoginState> {
+const DiscordGuildPic = dynamic(() => import('../../components/discord-guild-pic'))
+const StyledDGP = styled(DiscordGuildPic)`
+  border-radius: 100%;
+  border: 2px solid rgba(0,0,0,0.2);
+  height: 4em;
+  margin-top: 1em;
+`
+
+const ServerName = styled.span`
+  font-weight: bold;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 370px;
+  display: block;
+`
+
+const Slug = (slug: ServerSlug) => <SlugWrapper>
+  <StyledDGP {...slug} />
+  <br />Hey there.<br /><ServerName>{slug.name}</ServerName> uses Roleypoly to manage its roles.
+</SlugWrapper>
+
+export default class AuthLogin extends React.Component<AuthLoginProps, AuthLoginState> {
   state = {
     humanCode: '',
     waiting: false
   }
 
-  static async getInitialProps (ctx, rpc) {
+  static async getInitialProps (ctx: *, rpc: typeof RPC, router: *) {
+    let { r } = (router.query: { r: string })
+
     if (ctx.user != null) {
-      redirect(ctx, '/')
+      redirect(ctx, r || '/')
+    }
+
+    ctx.robots = 'NOINDEX, NOFOLLOW'
+
+    if (r != null) {
+      let redirectSlug = null
+      if (r.startsWith('/s/') && r !== '/s/add') {
+        redirectSlug = await rpc.getServerSlug(r.replace('/s/', ''))
+      }
+      return { redirect: r, redirectSlug }
+    }
+  }
+
+  componentDidMount () {
+    if (this.props.redirect != null) {
+      this.props.router.replace(this.props.router.pathname)
     }
   }
 
@@ -98,9 +153,9 @@ export default class AuthLogin extends React.Component<{}, AuthLoginState> {
     try {
       const result = await RPC.checkAuthChallenge(this.state.humanCode)
       if (result === true) {
-        redirect(null, '/')
+        redirect(null, this.props.redirect || '/')
       }
-    } finally {
+    } catch (e) {
       this.setState({ waiting: false })
     }
   }
@@ -108,7 +163,8 @@ export default class AuthLogin extends React.Component<{}, AuthLoginState> {
   render () {
     return <Wrapper>
       <div>
-        <DiscordButton href='/api/auth/redirect'>Sign in with Discord</DiscordButton>
+        {(this.props.redirectSlug != null) ? <Slug {...this.props.redirectSlug} /> : null}
+        <DiscordButton href={`/api/auth/redirect?r=${this.props.redirect || '/'}`}>Sign in with Discord</DiscordButton>
         <Line />
         <div>
           <i>Or, send a DM to <b>roleypoly</b>#3712 saying: login</i>
