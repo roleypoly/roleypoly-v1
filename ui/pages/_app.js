@@ -22,7 +22,7 @@ const MissingJS = styled.noscript`
 `
 
 class RoleypolyApp extends App {
-  static async getInitialProps ({ Component, ctx }: { Component: NextPage, ctx: {[x:string]: any}}) {
+  static async getInitialProps ({ Component, ctx, router }: { Component: NextPage, router: any, ctx: {[x:string]: any}}) {
     // Fix for next/error rendering instead of our error page.
     // Who knows why this would ever happen.
     if (Component.displayName === 'ErrorPage' || Component.constructor.name === 'ErrorPage') {
@@ -36,18 +36,19 @@ class RoleypolyApp extends App {
 
     const user = await rpc.getCurrentUser()
     ctx.user = user
+    ctx.robots = 'INDEX, FOLLOW'
 
     ctx.layout = {
       noBackground: false
     }
 
     if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx, rpc)
+      pageProps = await Component.getInitialProps(ctx, rpc, router)
     }
 
     // console.log({ pageProps })
 
-    return { pageProps, user, layout: ctx.layout }
+    return { pageProps, user, layout: ctx.layout, robots: ctx.robots }
   }
 
   catchFOUC () {
@@ -57,7 +58,7 @@ class RoleypolyApp extends App {
   }
 
   render () {
-    const { Component, pageProps, router, user, layout } = this.props
+    const { Component, pageProps, router, user, layout, robots } = this.props
     // Fix for next/error rendering instead of our error page.
     // Who knows why this would ever happen.
     const ErrorCaughtComponent = (Component.displayName === 'ErrorPage' || Component.constructor.name === 'ErrorPage') ? ErrorP : Component
@@ -71,6 +72,7 @@ class RoleypolyApp extends App {
         <title key='title'>Roleypoly</title>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/static/favicon.png' />
+        <meta key='robots' name='robots' content={robots} />
         <script key='typekit' dangerouslySetInnerHTML={{ __html: `
             (function(d) {
               var config = {

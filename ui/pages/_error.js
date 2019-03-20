@@ -55,8 +55,9 @@ const Code = styled.h1`
 `
 
 export default class CustomErrorPage extends React.Component {
-  static getInitialProps ({ res, err }) {
+  static getInitialProps ({ res, err, robots }) {
     const statusCode = res ? res.statusCode : err ? err.statusCode : null
+    robots = 'NOINDEX, NOFOLLOW'
     return { statusCode }
   }
 
