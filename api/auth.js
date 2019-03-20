@@ -24,7 +24,7 @@ export default (R: Router, $: AppContext) => {
       ctx.session.expiresAt = new Date() + ctx.expires_in
     }
 
-    const user = await $.discord.getUser(ctx.session.accessToken)
+    const user = await $.discord.getUserFromToken(ctx.session.accessToken)
     ctx.session.userId = user.id
     ctx.session.avatarHash = user.avatar
 
@@ -44,7 +44,7 @@ export default (R: Router, $: AppContext) => {
       return
     }
 
-    const user = await $.discord.getUser(accessToken)
+    const user = await $.discord.getUserFromToken(accessToken)
     ctx.session.userId = user.id
     ctx.session.avatarHash = user.avatar
 
@@ -57,6 +57,11 @@ export default (R: Router, $: AppContext) => {
   })
 
   R.get('/api/auth/redirect', async (ctx: Context) => {
+    // check if already authed
+    if (await $.auth.isLoggedIn(ctx, { refresh: true })) {
+      return ctx.redirect('/')
+    }
+
     const url = $.discord.getAuthUrl(ksuid.randomSync().string)
     if (ctx.query.url === '✔️') {
       ctx.body = { url }
@@ -66,8 +71,50 @@ export default (R: Router, $: AppContext) => {
     ctx.redirect(url)
   })
 
+  R.get('/api/oauth/callback', async (ctx: Context) => {
+    if (await $.auth.isLoggedIn(ctx)) {
+      return ctx.redirect('/')
+    }
+
+    const { code, state } = ctx.query
+    if (code == null) {
+      ctx.status = 400
+      return
+    }
+
+    if (state != null) {
+      const ksState = ksuid.parse(state)
+      const twoMinAgo = new Date() - 1000 * 60 * 2
+      if (ksState.date < twoMinAgo) {
+        ctx.status = 400
+        return
+      }
+    }
+
+    try {
+      const tokens = await $.discord.getAuthToken(code)
+      const user = await $.discord.getUserFromToken(tokens.access_token)
+      $.auth.injectSessionFromOAuth(ctx, tokens, user.id)
+      return ctx.redirect('/')
+    } catch (e) {
+      log.error('token and auth fetch failure', e)
+      ctx.status = 400
+    }
+  })
+
   R.post('/api/auth/logout', async (ctx: Context) => {
     ctx.session = null
+  })
+
+  R.get('/api/auth/logout', async (ctx: Context) => {
+    if (await $.auth.isLoggedIn(ctx)) {
+      if (ctx.session.authType === 'oauth') {
+        await $.discord.revokeOAuth(ctx.session)
+      }
+    }
+
+    ctx.session = null
+    return ctx.redirect('/')
   })
 
   R.get('/api/oauth/bot', async (ctx: Context) => {
@@ -89,16 +136,11 @@ export default (R: Router, $: AppContext) => {
     const chall = await $.auth.fetchDMChallenge({ magic: challenge })
     if (chall == null) {
       log.warn('bad magic', challenge)
-      ctx.status = 404
-      return
+      return ctx.redirect('/auth/expired')
     }
 
-    ctx.session = {
-      userId: chall.userId,
-      authType: 'dm',
-      expiresAt: Date.now() + 1000 * 60 * 60 * 24
-    }
-
+    $.auth.injectSessionFromChallenge(ctx, chall)
+    await $.auth.deleteDMChallenge(chall)
     log.info('logged in via magic', chall)
 
     return ctx.redirect('/')

@@ -11,6 +11,7 @@ import {
   type Collection,
   Client
 } from 'discord.js'
+import type { AuthTokens } from './auth'
 
 export type UserPartial = {
   id: string,
@@ -46,6 +47,7 @@ class DiscordService extends Service {
     super(ctx)
     this.appUrl = ctx.config.appUrl
 
+    this.oauthCallback = `${this.appUrl}/api/oauth/callback`
     this.botCallback = `${this.appUrl}/api/oauth/bot/callback`
     this.rootUsers = new Set((process.env.ROOT_USERS || '').split(','))
 
@@ -132,7 +134,7 @@ class DiscordService extends Service {
   }
 
   // oauth step 2 flow, grab the auth token via code
-  async getAuthToken (code: string) {
+  async getAuthToken (code: string): Promise<AuthTokens> {
     const url = 'https://discordapp.com/api/oauth2/token'
     try {
       const rsp =
@@ -154,7 +156,7 @@ class DiscordService extends Service {
     }
   }
 
-  async getUser (authToken?: string): Promise<UserPartial> {
+  async getUserFromToken (authToken?: string): Promise<UserPartial> {
     const url = 'https://discordapp.com/api/v6/users/@me'
     try {
       if (authToken == null || authToken === '') {
@@ -183,6 +185,50 @@ class DiscordService extends Service {
       discriminator: U.discriminator,
       avatar: U.displayAvatarURL,
       id: U.id
+    }
+  }
+
+  async refreshOAuth ({ refreshToken }: { refreshToken: string }): Promise<AuthTokens> {
+    const url = 'https://discordapp.com/api/oauth2/token'
+    try {
+      const rsp =
+        await superagent
+          .post(url)
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send({
+            client_id: this.clientId,
+            client_secret: this.clientSecret,
+            grant_type: 'refresh_token',
+            refresh_token: refreshToken,
+            redirect_uri: this.oauthCallback
+          })
+
+      return rsp.body
+    } catch (e) {
+      this.log.error('refreshOAuth failed', e)
+      throw e
+    }
+  }
+
+  async revokeOAuth ({ accessToken }: { accessToken: string }) {
+    const url = 'https://discordapp.com/api/oauth2/token/revoke'
+    try {
+      const rsp =
+        await superagent
+          .post(url)
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send({
+            client_id: this.clientId,
+            client_secret: this.clientSecret,
+            grant_type: 'access_token',
+            token: accessToken,
+            redirect_uri: this.oauthCallback
+          })
+
+      return rsp.body
+    } catch (e) {
+      this.log.error('revokeOAuth failed', e)
+      throw e
     }
   }
 
