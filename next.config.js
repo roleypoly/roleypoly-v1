@@ -1,4 +1,4 @@
-import 'dotenv/config'
+require('dotenv').config()
 module.exports = {
   publicRuntimeConfig: {
     BOT_HANDLE: process.env.BOT_HANDLE
