@@ -245,7 +245,7 @@ class DiscordService extends Service {
   }
 
   mentionResponse (message: Message) {
-    message.channel.send(`🔰 Assign your roles here! <${this.appUrl}/s/${message.guild.id}>`, { disableEveryone: true })
+    message.channel.send(`🔰 Assign your roles here! ${this.appUrl}/s/${message.guild.id}`, { disableEveryone: true })
   }
 
   _cmds () {
