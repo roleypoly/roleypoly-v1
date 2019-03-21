@@ -68,12 +68,10 @@ export default class Role extends React.Component<RoleProps, RoleState> {
       active={this.props.active}
       disabled={this.props.disabled}
       onClick={this.onToggle}
-      onMouseOver={this.onMouseOver}
-      onMouseOut={this.onMouseOut}
       onTouchStart={this.onMouseOver}
       onTouchEnd={this.onMouseOut}
       colors={roleColors}
-      // title={(this.props.disabled) ? 'This role is disabled for safety.' : null}
+      title={(this.props.disabled) ? 'This role has unsafe permissions.' : null}
     >
       {this.props.role.name}
       { (this.props.disabled && this.state.hovering) && <Tooltip>This role has unsafe permissions.</Tooltip> }

@@ -65,7 +65,7 @@ const getUncategorized = (roleMap: OrderedMap<RenderedRole>, allCategories): Ren
     name: 'Uncategorized',
     position: -1,
     roles: rolesLeft,
-    _roles: OrderedSet(rolesLeft.map(r => roleMap.get(r))).sortBy(v => -v.position),
+    _roles: OrderedSet(rolesLeft.map(r => roleMap.get(r))).sortBy(v => -(v.position || 0)),
     hidden: true,
     type: 'multi'
   }
@@ -93,7 +93,7 @@ export const renderRoles = (id: string) => (dispatch: *, getState: *) => {
   let render = OrderedSet()
   for (let catId in categories) {
     const category = categories[catId]
-    category._roles = OrderedSet(category.roles.map(r => roleMap.get(r))).sortBy(v => -v.position)
+    category._roles = OrderedSet(category.roles.map(r => roleMap.get(r))).sortBy(v => -(v.position || 0))
     render = render.add(category)
   }
   // console.log({id})
