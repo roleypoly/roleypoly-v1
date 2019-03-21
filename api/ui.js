@@ -7,6 +7,7 @@ export default (R: Router, $: AppContext) => {
   const processMappings = (mapping: { [path: string]: { path: string, noAutoFix?: boolean } }) => {
     for (let p in mapping) {
       R.get(p, (ctx: Context) => {
+        ctx.status = 200
         return $.ui.render(ctx.req, ctx.res, mapping[p].path || mapping[p], { ...ctx.query, ...ctx.params })
       })
 
