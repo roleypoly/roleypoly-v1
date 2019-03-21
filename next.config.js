@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config({ quiet: true })
 module.exports = {
   publicRuntimeConfig: {
     BOT_HANDLE: process.env.BOT_HANDLE

@@ -61,8 +61,10 @@ export default class CustomErrorPage extends React.Component {
     return { statusCode }
   }
 
+  render400 = () => this.out('400', `Your client sent me something weird...`, '((((；゜Д゜)))')
   render403 = () => this.out('403', `You weren't allowed to access this.`, 'あなたはこの点に合格しないかもしれません')
   render404 = () => this.out('404', 'This page is in another castle.', 'お探しのページは見つかりませんでした')
+  render419 = () => this.out('419', 'Something went too slowly...', 'おやすみなさい〜')
   render500 = () => this.out('500', `The server doesn't like you right now. Feed it a cookie.`, 'クッキーを送ってください〜  クッキーを送ってください〜')
   renderDefault = () => this.out('Oops', 'Something went bad. How could this happen?', 'おねがい？')
   renderServer = () => this.out('Oops.', 'Server was unhappy about this render. Try reloading or changing page.', 'クッキーを送ってください〜')
@@ -86,16 +88,18 @@ export default class CustomErrorPage extends React.Component {
   }
 
   handlers = {
+    400: this.render400,
     403: this.render403,
     404: this.render404,
+    419: this.render419,
     500: this.render500,
     1001: this.renderAuthExpired
   }
 
   render () {
-    if (this.props.originalName === 'ErrorPage') {
-      return this.renderServer()
-    }
+    // if (this.props.originalName === 'ErrorPage') {
+    //   return this.renderServer()
+    // }
 
     if (this.props.statusCode in this.handlers) {
       return this.handlers[this.props.statusCode]()

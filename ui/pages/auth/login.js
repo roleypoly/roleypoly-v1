@@ -163,7 +163,6 @@ export default class AuthLogin extends React.Component<AuthLoginProps, AuthLogin
   }
 
   get dm () {
-    console.log({ e: process.env })
     if (BOT_HANDLE) {
       const [username, discrim] = BOT_HANDLE.split('#')
       return <><b>{ username }</b>#{discrim}</>

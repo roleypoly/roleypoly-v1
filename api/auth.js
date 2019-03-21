@@ -3,6 +3,7 @@ import { type Context } from 'koa'
 import { type AppContext, type Router } from '../Roleypoly'
 import ksuid from 'ksuid'
 import logger from '../logger'
+import renderError from '../util/error'
 const log = logger(__filename)
 
 export default (R: Router, $: AppContext) => {
@@ -73,7 +74,7 @@ export default (R: Router, $: AppContext) => {
     ctx.redirect(url)
   })
 
-  R.get('/api/oauth/callback', async (ctx: Context) => {
+  R.get('/api/oauth/callback', async (ctx: Context, next: *) => {
     const { code, state } = ctx.query
     const { oauthRedirect: r } = ctx.session
     delete ctx.session.oauthRedirect
@@ -83,14 +84,22 @@ export default (R: Router, $: AppContext) => {
 
     if (code == null) {
       ctx.status = 400
+      await renderError($, ctx)
       return
     }
 
     if (state != null) {
-      const ksState = ksuid.parse(state)
-      const twoMinAgo = new Date() - 1000 * 60 * 2
-      if (ksState.date < twoMinAgo) {
+      try {
+        const ksState = ksuid.parse(state)
+        const fiveMinAgo = new Date() - 1000 * 60 * 5
+        if (ksState.date < fiveMinAgo) {
+          ctx.status = 419
+          await renderError($, ctx)
+          return
+        }
+      } catch (e) {
         ctx.status = 400
+        await renderError($, ctx)
         return
       }
     }
@@ -103,6 +112,7 @@ export default (R: Router, $: AppContext) => {
     } catch (e) {
       log.error('token and auth fetch failure', e)
       ctx.status = 400
+      return renderError($, ctx)
     }
   })
 
