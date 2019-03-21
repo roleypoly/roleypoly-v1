@@ -17,7 +17,7 @@ export default styled.div`
   flex-direction: column;
 
   font-size: 1.2em;
-  line-height: 1.3;
+  line-height: 20px;
 
   margin: 0.3em;
   padding: 4px 0.5em;
@@ -33,10 +33,13 @@ export default styled.div`
   white-space: nowrap;
   transform: rotateZ(0);
 
-  ${(props: any) => (props.active) ? `box-shadow: inset 0 0 0 3em ${props.colors.outlineAlt};` : ''}
+  ${(props: any) => (props.active) ? `
+    box-shadow: inset 0 0 0 3em ${props.colors.outlineAlt};
+  ` : `
+  `}
 
   .wf-active & {
-    padding-top: 2px;
+    /* padding-top: 4px; */
   }
 
   &[disabled]:hover {
@@ -46,7 +49,8 @@ export default styled.div`
   &:hover::after {
     transform: translateY(-1px) rotateZ(0);
     box-shadow: 0 0 1px rgba(0,0,0,0.75);
-    border-color: ${(props: any) => props.colors.active}
+    border-color: ${(props: any) => props.colors.active};
+    clip-path: border-box circle(50.2% at 49.6% 50%); /* firefox fix */
   }
 
   &:active::after {
@@ -69,12 +73,15 @@ export default styled.div`
     border: 1px solid ${(props: any) => props.colors.base};
     border-radius: 100%;
 
-    transition: border 0.3s ease-in-out, transform 0.1s ease-in-out;
-
-    clip-path: border-box circle(50% at 50% 50%); /* firefox fix */
+    clip-path: border-box circle(50.2% at 50% 50%); /* firefox fix */
 
     transform: rotateZ(0);
-    ${(props: any) => (props.active) ? 'border-left-width: 21px;' : ''}
+    ${(props: any) => (props.active) ? `
+      transition: border 0.3s ease-in-out, transform 0.1s ease-in-out, background-color 1ms ease-in-out 0.29s;
+      border-left-width: 21px;
+    ` : `
+      transition: border 0.3s ease-in-out, transform 0.1s ease-in-out;
+    `}
   }
 
   ${(props: any) => MediaQuery({
@@ -82,8 +89,9 @@ export default styled.div`
       font-size: 1em;
       text-shadow: none;
       padding-left: 32px;
-      ${(props.active) ? 'box-shadow: none;' : ''}
+      ${(props.active) ? `box-shadow: none;` : ''}
       &::after {
+        ${(props.active) ? `background-color: ${props.colors.base};` : ''}
         display: block;
       }
     `
