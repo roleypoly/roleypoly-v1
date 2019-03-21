@@ -54,18 +54,18 @@ export const toggleRole = action('toggleRole', (state: ViewState, role: string, 
   }
 })
 
-const getUncategorized = (roleMap: OrderedMap<RenderedRole>, allCategories): RenderedCategory => {
-  const roles = Set(roleMap.keys())
-  const knownRoles = Set([...Object.values(allCategories).map((c: any) => c.roles)])
+const getUncategorized = (roleMap: OrderedMap<RenderedRole>, allCategories: Set): RenderedCategory => {
+  const roles = roleMap.keySeq().toSet()
+  const knownRoles = allCategories.map(v => v.roles).flatMap(v => v)
   const rolesLeft = roles.subtract(knownRoles)
 
-  // console.log({ roles, knownRoles, rolesLeft })
+  // console.log(Map({ roles, knownRoles, rolesLeft }).toJS())
   return {
     id: 'Uncategorized',
     name: 'Uncategorized',
     position: -1,
     roles: rolesLeft,
-    _roles: OrderedSet(rolesLeft.map(r => roleMap.get(r))).sortBy(v => -(v.position || 0)),
+    _roles: rolesLeft.map(v => roleMap.get(v)).filter(v => v != null),
     hidden: true,
     type: 'multi'
   }
@@ -93,13 +93,14 @@ export const renderRoles = (id: string) => (dispatch: *, getState: *) => {
   let render = OrderedSet()
   for (let catId in categories) {
     const category = categories[catId]
-    category._roles = OrderedSet(category.roles.map(r => roleMap.get(r))).sortBy(v => -(v.position || 0))
+    category._roles = OrderedSet(
+      category.roles.map(r => roleMap.get(r))
+    ).filter(role => role != null).sortBy(role => role ? -(role.position || 0) : 0)
     render = render.add(category)
   }
   // console.log({id})
-  render = render.add(getUncategorized(roleMap, categories))
-
-  render = render.sortBy(h => h.position || 0)
+  render = render.add(getUncategorized(roleMap, render.toSet()))
+  render = render.sortBy(h => (h.position) ? h.position : h.name)
 
   dispatch(updateCurrentView({ server: id, categories: render, invalidated: false, selected: Set(current.gm.roles), originalSelected: Set(current.gm.roles) }))
 }
