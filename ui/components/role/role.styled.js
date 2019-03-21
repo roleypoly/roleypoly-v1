@@ -80,7 +80,7 @@ export default styled.div`
       transition: border 0.3s ease-in-out, transform 0.1s ease-in-out, background-color 1ms ease-in-out 0.29s;
       border-left-width: 21px;
     ` : `
-      transition: border 0.3s ease-in-out, transform 0.1s ease-in-out;
+      transition: border 0.3s ease-in-out, transform 0.1s ease-in-out, background-color 0.3s ease-in-out;
     `}
   }
 
@@ -94,6 +94,10 @@ export default styled.div`
         ${(props.active) ? `background-color: var(--role-color-base);` : ''}
         display: block;
       }
+
+      &:hover::after {
+        ${(props.active) ? `background-color: var(--role-color-active);` : ''}
+      }
     `
   })}
 
@@ -102,7 +106,10 @@ export default styled.div`
     color: hsla(0,0%,40%,0.7);
     cursor: default;
     box-shadow: none;
-    ${(props: any) => (props.active) ? `box-shadow: inset 0 0 0 3em hsla(0,0%,40%,0.1);` : ``};
+    ${(props: any) => (props.active) ? `
+      box-shadow: inset 0 0 0 3em hsla(0,0%,40%,0.1);
+      background-color: hsl(0,0%,40%);`
+    : ``};
 
     &::after {
       border-color: hsl(0,0%,40%);
