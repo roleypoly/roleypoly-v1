@@ -9,7 +9,7 @@ export default styled.div`
   cursor: pointer;
 
   position: relative;
-  display: inline-flex;
+  display: flex;
   overflow: hidden;
   align-items: center;
   justify-content: flex-start;
@@ -73,7 +73,7 @@ export default styled.div`
     border: 1px solid var(--role-color-base);
     border-radius: 100%;
 
-    clip-path: border-box circle(50.2% at 50% 50%); /* firefox fix */
+    clip-path: border-box circle(50.2% at 50% 50%); /* this is just for you, firefox. */
 
     transform: rotateZ(0);
     ${(props: any) => (props.active) ? `

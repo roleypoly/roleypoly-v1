@@ -5,7 +5,9 @@ import Role from '../role/demo'
 import demoRoles from '../../config/demo'
 
 const DemoWrapper = styled.div`
-  text-align: center;
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
 `
 
 export default () => <DemoWrapper>

@@ -32,6 +32,10 @@ const Hider = styled.div`
   /* ${(props: any) => props.visible ? '' : 'display: none;'} */
 `
 
+const RoleHolder = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`
 class Server extends React.Component<ServerPageProps> {
   static async getInitialProps (ctx: *, rpc: *, router: *) {
     const isDiscordBot = ctx.req && ctx.req.headers['user-agent'].includes('Discordbot')
@@ -92,11 +96,11 @@ class Server extends React.Component<ServerPageProps> {
         <Hider visible={true || currentServer.id !== null}>
           { !view.invalidated && view.categories.map(c => <Category key={`cat__${c.name}__${c.id}`}>
             <div>{ c.name }</div>
-            <div>
+            <RoleHolder>
               {
                 c._roles && c._roles.map(r => <Role key={`role__${r.name}__${r.id}`} role={r} active={view.selected.includes(r.id)} onToggle={this.onToggle(r)} disabled={!r.safe} />)
               }
-            </div>
+            </RoleHolder>
           </Category>) }
         </Hider>
       </div>
