@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import MediaQuery from '../../kit/media'
 
 export default styled.div`
-  border: solid 1px ${(props: any) => props.colors.outline};
+  border: solid 1px var(--role-color-outline);
   border-radius: 1.2em;
 
   box-sizing: border-box;
@@ -34,7 +34,7 @@ export default styled.div`
   transform: rotateZ(0);
 
   ${(props: any) => (props.active) ? `
-    box-shadow: inset 0 0 0 3em ${props.colors.outlineAlt};
+    box-shadow: inset 0 0 0 3em var(--role-color-outline-alt);
   ` : `
   `}
 
@@ -49,7 +49,7 @@ export default styled.div`
   &:hover::after {
     transform: translateY(-1px) rotateZ(0);
     box-shadow: 0 0 1px rgba(0,0,0,0.75);
-    border-color: ${(props: any) => props.colors.active};
+    border-color: var(--role-color-active);
     clip-path: border-box circle(50.2% at 49.6% 50%); /* firefox fix */
   }
 
@@ -70,7 +70,7 @@ export default styled.div`
     width: 22px;
     height: 22px;
 
-    border: 1px solid ${(props: any) => props.colors.base};
+    border: 1px solid var(--role-color-base);
     border-radius: 100%;
 
     clip-path: border-box circle(50.2% at 50% 50%); /* firefox fix */
@@ -91,18 +91,18 @@ export default styled.div`
       padding-left: 32px;
       ${(props.active) ? `box-shadow: none;` : ''}
       &::after {
-        ${(props.active) ? `background-color: ${props.colors.base};` : ''}
+        ${(props.active) ? `background-color: var(--role-color-base);` : ''}
         display: block;
       }
     `
   })}
 
-  ${(props: any) => (props.disabled) ? `
+  &[disabled] {
     border-color: hsl(0,0%,40%);
     color: hsla(0,0%,40%,0.7);
     cursor: default;
     box-shadow: none;
-    ${(props.active) ? `box-shadow: inset 0 0 0 3em hsla(0,0%,40%,0.1);` : ''}
+    ${(props: any) => (props.active) ? `box-shadow: inset 0 0 0 3em hsla(0,0%,40%,0.1);` : ``};
 
     &::after {
       border-color: hsl(0,0%,40%);
@@ -113,5 +113,5 @@ export default styled.div`
       transform: none;
       box-shadow: none;
     }
-  ` : ''}
+  }
 `

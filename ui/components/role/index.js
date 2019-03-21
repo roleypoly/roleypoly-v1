@@ -5,6 +5,10 @@ import Color from 'color'
 import RoleStyled from './role.styled'
 import Tooltip from '../tooltip'
 
+const fromColors = (colors) => Object.entries(colors).reduce(
+  (acc, [v, val]) => ({ ...acc, [`--role-color-${v}`]: val })
+  , {})
+
 export type RoleData = {
   color: string,
   name: string,
@@ -58,10 +62,10 @@ export default class Role extends React.Component<RoleProps, RoleState> {
     }
 
     const roleColors = {
-      outline: Color(color).alpha(0.7).hsl().string(),
-      outlineAlt: Color(color).alpha(0.4).hsl().string(),
-      active: Color(color).lighten(0.1).hsl().string(),
-      base: Color(color).hsl().string()
+      'outline': Color(color).alpha(0.7).hsl().string(),
+      'outline-alt': Color(color).alpha(0.4).hsl().string(),
+      'active': Color(color).lighten(0.1).hsl().string(),
+      'base': Color(color).hsl().string()
     }
 
     const name = (this.props.role.name !== '') ? this.props.role.name : <>&nbsp;</>
@@ -69,10 +73,10 @@ export default class Role extends React.Component<RoleProps, RoleState> {
     return <RoleStyled
       active={this.props.active}
       disabled={this.props.disabled}
-      onClick={this.onToggle}
-      onTouchStart={this.onMouseOver}
-      onTouchEnd={this.onMouseOut}
-      colors={roleColors}
+      onClick={(this.props.disabled) ? null : this.onToggle}
+      onTouchStart={(this.props.disabled) ? this.onMouseOver : null}
+      onTouchEnd={(this.props.disabled) ? this.onMouseOut : null}
+      style={fromColors(roleColors)}
       title={(this.props.disabled) ? 'This role has unsafe permissions.' : null}
     >
       {name}
