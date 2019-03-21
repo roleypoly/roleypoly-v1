@@ -64,6 +64,8 @@ export default class Role extends React.Component<RoleProps, RoleState> {
       base: Color(color).hsl().string()
     }
 
+    const name = (this.props.role.name !== '') ? this.props.role.name : <>&nbsp;</>
+
     return <RoleStyled
       active={this.props.active}
       disabled={this.props.disabled}
@@ -73,7 +75,7 @@ export default class Role extends React.Component<RoleProps, RoleState> {
       colors={roleColors}
       title={(this.props.disabled) ? 'This role has unsafe permissions.' : null}
     >
-      {this.props.role.name}
+      {name}
       { (this.props.disabled && this.state.hovering) && <Tooltip>This role has unsafe permissions.</Tooltip> }
     </RoleStyled>
   }

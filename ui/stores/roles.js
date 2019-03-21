@@ -65,7 +65,7 @@ const getUncategorized = (roleMap: OrderedMap<RenderedRole>, allCategories: Set)
     name: 'Uncategorized',
     position: -1,
     roles: rolesLeft,
-    _roles: rolesLeft.map(v => roleMap.get(v)).filter(v => v != null),
+    _roles: rolesLeft.map(v => roleMap.get(v)).filter(v => v != null).sortBy(v => -v.position),
     hidden: true,
     type: 'multi'
   }
