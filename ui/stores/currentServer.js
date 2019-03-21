@@ -2,6 +2,7 @@
 import { dynamicPropertyConfig } from 'fast-redux'
 // import { Map } from 'immutable'
 import type { PresentableServer } from '../../services/presentation'
+import type { Category } from '../../models/Server'
 import RPC from '../config/rpc'
 import { action } from './servers'
 
@@ -15,7 +16,8 @@ const DEFAULT_STATE: $Shape<PresentableServer> | { id: ?string } = {
   },
   gm: {
     nickname: 'person',
-    color: '#ff00ff'
+    color: '#ff00ff',
+    roles: ['0000']
   },
   categories: {},
   perms: {
@@ -46,7 +48,7 @@ export const fetchServerIfNeed = (id: string, rpc?: typeof RPC) => async (dispat
   if (state.id == null || state.id !== id) {
     const server = await rpc.getServer(id)
     dispatch(updateCurrentServer(id, server))
-    console.log({ state, server, fullStore: getState() })
+    // console.log({ state, server, fullStore: getState() })
   } else {
     console.log('did not update')
   }

@@ -6,18 +6,30 @@ import SocialCards from '../../components/social-cards'
 import redirect from '../../lib/redirect'
 import { connect } from 'react-redux'
 import { fetchServerIfNeed, getCurrentServerState, type ServerState } from '../../stores/currentServer'
-import { renderRoles, getCurrentRoles } from '../../stores/roles'
+import { renderRoles, getCategoryViewState, toggleRole, type ViewState } from '../../stores/roles'
+import styled from 'styled-components'
+import Role from '../../components/role'
 
 type ServerPageProps = PageProps & {
-  currentServer: ServerState
+  currentServer: ServerState,
+  view: ViewState
 }
 
 const mapStateToProps = (state, { router: { query: { id } } }) => {
   return {
     currentServer: getCurrentServerState(state, id),
-    roles: getCurrentRoles(state, id)
+    view: getCategoryViewState(state)
   }
 }
+
+const Category = styled.div``
+
+const Hider = styled.div`
+  /* opacity: ${(props: any) => props.visible ? '1' : '0'}; */
+  /* opacity: 1; */
+  /* transition: opacity 0.15s ease-out; */
+  /* ${(props: any) => props.visible ? '' : 'display: none;'} */
+`
 
 class Server extends React.Component<ServerPageProps> {
   static async getInitialProps (ctx: *, rpc: *, router: *) {
@@ -26,29 +38,29 @@ class Server extends React.Component<ServerPageProps> {
     }
 
     ctx.robots = 'NOINDEX, NOFOLLOW'
-    try {
-      if (router.query.id == null) {
-        console.warn({ query: router.query })
-      }
-      ctx.store.dispatch(fetchServerIfNeed(router.query.id, rpc))
-      ctx.store.dispatch(renderRoles(router.query.id))
-    } catch (e) {
-
-    }
+    await ctx.store.dispatch(fetchServerIfNeed(router.query.id, rpc))
+    await ctx.store.dispatch(renderRoles(router.query.id))
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     const { currentServer, router: { query: { id } }, dispatch } = this.props
     if (currentServer == null) {
       this.props.router.push('/s/add')
     }
 
-    dispatch(fetchServerIfNeed(id))
+    await dispatch(fetchServerIfNeed(id))
+    await dispatch(renderRoles(id))
+  }
+
+  onToggle = (role) => (nextState) => {
+    if (role.safe) {
+      this.props.dispatch(toggleRole(role.id, nextState))
+    }
   }
 
   render () {
-    const { currentServer } = this.props
-    console.log({ currentServer })
+    const { currentServer, view } = this.props
+    // console.log({ currentServer })
     if (currentServer == null) {
       return null
     }
@@ -59,7 +71,17 @@ class Server extends React.Component<ServerPageProps> {
           <title key='title'>{currentServer.server.name} - Roleypoly</title>
         </Head>
         <SocialCards title={`${currentServer.server.name} on Roleypoly`} />
-        hello <span style={{ color: currentServer.gm.color }}>{currentServer.gm.nickname}</span> on {currentServer.server.name}
+        hello <span style={{ color: currentServer.gm.color }}>{currentServer.gm.nickname}</span> on {currentServer.server.name} ({ view.dirty ? 'dirty' : 'clean' })
+        <Hider visible={true || currentServer.id !== null}>
+          { !view.invalidated && view.categories.map(c => <Category key={c.id}>
+            <div>{ c.name }</div>
+            <div>
+              {
+                c._roles && c._roles.map(r => <Role key={r.id} role={r} active={view.selected.includes(r.id)} onToggle={this.onToggle(r)} disabled={!r.safe} />)
+              }
+            </div>
+          </Category>) }
+        </Hider>
       </div>
     )
   }
