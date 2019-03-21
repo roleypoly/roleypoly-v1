@@ -26,16 +26,22 @@ export default ($: AppContext) => ({
     const { userId } = (ctx.session: { userId: string })
 
     const srv = $.discord.client.guilds.get(id)
-
     if (srv == null) {
       return { err: 'not_found' }
+    }
+
+    if (userId == null) {
+      return {
+        id: id,
+        server: $.P.serverSlug(srv)
+      }
     }
 
     let gm
     if (srv.members.has(userId)) {
       gm = $.discord.gm(id, userId)
     } else if ($.discord.isRoot(userId)) {
-      // gm = $.discord.fakeGm({ id: userId })
+      gm = $.discord.fakeGm({ id: userId })
     }
 
     if (gm == null) {

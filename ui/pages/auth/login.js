@@ -129,10 +129,6 @@ export default class AuthLogin extends React.Component<AuthLoginProps, AuthLogin
       redirect(ctx, r || '/')
     }
 
-    if (ctx.req.headers['user-agent'].contains('Discordbot')) {
-      redirect(ctx, '/_internal/_discordbot/_login')
-    }
-
     ctx.robots = 'NOINDEX, NOFOLLOW'
 
     if (r != null) {

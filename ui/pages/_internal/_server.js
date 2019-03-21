@@ -34,7 +34,7 @@ const Hider = styled.div`
 
 class Server extends React.Component<ServerPageProps> {
   static async getInitialProps (ctx: *, rpc: *, router: *) {
-    const isDiscordBot = ctx.req.headers['user-agent'].includes('Discordbot')
+    const isDiscordBot = ctx.req && ctx.req.headers['user-agent'].includes('Discordbot')
     if (ctx.user == null) {
       if (!isDiscordBot) {
         redirect(ctx, `/auth/login?r=${router.asPath}`)
