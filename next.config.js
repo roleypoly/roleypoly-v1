@@ -1,4 +1,8 @@
+import 'dotenv/config'
 module.exports = {
+  publicRuntimeConfig: {
+    BOT_HANDLE: process.env.BOT_HANDLE
+  },
   webpack: config => {
     // Fixes npm packages that depend on `fs` module
     config.node = {

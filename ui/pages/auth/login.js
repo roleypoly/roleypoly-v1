@@ -7,6 +7,8 @@ import RPC from '../../config/rpc'
 import redirect from '../../lib/redirect'
 import dynamic from 'next/dynamic'
 import type { PageProps, ServerSlug } from '../../types'
+import getConfig from 'next/config'
+const { publicRuntimeConfig: { BOT_HANDLE } } = getConfig()
 
 type AuthLoginState = {
   humanCode: string,
@@ -160,6 +162,16 @@ export default class AuthLogin extends React.Component<AuthLoginProps, AuthLogin
     }
   }
 
+  get dm () {
+    console.log({ e: process.env })
+    if (BOT_HANDLE) {
+      const [username, discrim] = BOT_HANDLE.split('#')
+      return <><b>{ username }</b>#{discrim}</>
+    }
+
+    return <><b>roleypoly</b>#3712</>
+  }
+
   render () {
     return <Wrapper>
       <div>
@@ -167,7 +179,7 @@ export default class AuthLogin extends React.Component<AuthLoginProps, AuthLogin
         <DiscordButton href={`/api/auth/redirect?r=${this.props.redirect || '/'}`}>Sign in with Discord</DiscordButton>
         <Line />
         <div>
-          <i>Or, send a DM to <b>roleypoly</b>#3712 saying: login</i>
+          <i>Or, send a DM to {this.dm} saying: login</i>
         </div>
         <div>
           <SecretCode placeholder='click to enter super secret code' onChange={this.onChange} value={this.state.humanCode} />

@@ -109,7 +109,9 @@ class Roleypoly {
     this.ctx.sql = sequelize
     this.M = fetchModels(sequelize)
     this.ctx.M = this.M
-    await sequelize.sync()
+    if (!process.env.DB_NO_SYNC) {
+      await sequelize.sync()
+    }
 
     this.ctx.server = new ServerService(this.ctx)
     this.ctx.discord = new DiscordService(this.ctx)
