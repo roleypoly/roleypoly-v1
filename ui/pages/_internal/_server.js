@@ -90,11 +90,11 @@ class Server extends React.Component<ServerPageProps> {
         { this.renderSocial() }
         hello <span style={{ color: currentServer.gm.color }}>{currentServer.gm.nickname}</span> on {currentServer.server.name} ({ view.dirty ? 'dirty' : 'clean' })
         <Hider visible={true || currentServer.id !== null}>
-          { !view.invalidated && view.categories.map(c => <Category key={c.id}>
+          { !view.invalidated && view.categories.map(c => <Category key={`cat__${c.name}__${c.id}`}>
             <div>{ c.name }</div>
             <div>
               {
-                c._roles && c._roles.map(r => <Role key={r.id} role={r} active={view.selected.includes(r.id)} onToggle={this.onToggle(r)} disabled={!r.safe} />)
+                c._roles && c._roles.map(r => <Role key={`role__${r.name}__${r.id}`} role={r} active={view.selected.includes(r.id)} onToggle={this.onToggle(r)} disabled={!r.safe} />)
               }
             </div>
           </Category>) }
