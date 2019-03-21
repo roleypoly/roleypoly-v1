@@ -94,7 +94,8 @@ class PresentationService extends Service {
       id: server.id,
       gm: {
         nickname: gm.nickname || gm.user.username,
-        color: gm.displayHexColor
+        color: gm.displayHexColor,
+        roles: gm.roles.keyArray()
       },
       server: this.serverSlug(server),
       roles: (incRoles) ? (await this.rolesByServer(server, sd)).map(r => ({ ...r, selected: gm.roles.has(r.id) })) : [],
