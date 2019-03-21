@@ -23,11 +23,11 @@ const ContentBox = styled.div`
   /* max-height: calc(100vh - 50px); */
 `
 
-const Layout = ({ children, user, noBackground }: {children: React.Element<any>, user: User, noBackground: boolean }) => <>
+const Layout = ({ children, user, noBackground, router }: {children: React.Element<any>, user: User, noBackground: boolean, router: * }) => <>
   <GlobalColors />
   <SocialCards />
   <LayoutWrapper>
-    <HeaderBar user={user} noBackground={noBackground} />
+    <HeaderBar user={user} noBackground={noBackground} router={router} />
     <ContentBox>
       {children}
     </ContentBox>

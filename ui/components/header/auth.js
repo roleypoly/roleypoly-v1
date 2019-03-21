@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { Hide } from '../../kit/media'
 import Link from 'next/link'
 import { connect } from 'react-redux'
+import { getCurrentServerState } from '../../stores/currentServer'
 
 const temporaryServer = {
   id: '423497622876061707',
@@ -47,10 +48,10 @@ const StyledAvatar = styled.img`
 
 const ServerSelector = (props) => <div {...props}>
   <div>
-    <StyledServerPic {...temporaryServer} />
+    <StyledServerPic {...props} />
   </div>
   <div>
-    { temporaryServer.name }
+    { props.name }
   </div>
 </div>
 
@@ -73,22 +74,27 @@ const StyledUserSection = styled(UserSection)`
   text-align: right;
 `
 
-const HeaderBarAuth: React.StatelessFunctionalComponent<{ user: User }> = ({ user }) => (
+const Spacer = styled.div`
+  flex: 1;
+`
+
+const HeaderBarAuth: React.StatelessFunctionalComponent<{ user: User, isOnServer: boolean, currentServer: * }> = ({ user, isOnServer, currentServer = temporaryServer }) => (
   <HeaderBarCommon noBackground={false}>
     <>
-      <Link href='/s/add' prefetch>
+      <Link href='/'>
         <LogoBox>
           <Logomark />
         </LogoBox>
       </Link>
-      <StyledServerSelector />
+      { isOnServer ? <StyledServerSelector name={currentServer.name} id={currentServer.id} icon={currentServer.icon} /> : <Spacer /> }
       <StyledUserSection user={user} />
     </>
   </HeaderBarCommon>
 )
 
-const mapStateToProps = state => {
-
-}
+const mapStateToProps = (state, { router }) => ({
+  isOnServer: router.pathname === '/_internal/_server',
+  currentServer: router.pathname === '/_internal/_server' ? getCurrentServerState(state, router.query.id).server : {}
+})
 
 export default connect(mapStateToProps)(HeaderBarAuth)

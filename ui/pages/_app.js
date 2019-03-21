@@ -56,7 +56,11 @@ class RoleypolyApp extends App {
   catchFOUC () {
     setTimeout(() => {
       if (document.documentElement) document.documentElement.className += ' force-active'
-    }, 1500)
+    }, 700)
+  }
+
+  componentDidMount () {
+    this.catchFOUC()
   }
 
   render () {
@@ -87,7 +91,7 @@ class RoleypolyApp extends App {
           ` }} />
       </Head>
       <Provider store={store}>
-        <Layout user={user} {...layout}>
+        <Layout user={user} {...layout} router={router}>
           <ErrorCaughtComponent {...pageProps} router={router} originalName={Component.displayName || Component.constructor.name} />
         </Layout>
       </Provider>
