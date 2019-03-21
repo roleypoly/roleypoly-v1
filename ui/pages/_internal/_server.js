@@ -12,7 +12,8 @@ import Role from '../../components/role'
 
 type ServerPageProps = PageProps & {
   currentServer: ServerState,
-  view: ViewState
+  view: ViewState,
+  isDiscordBot: boolean
 }
 
 const mapStateToProps = (state, { router: { query: { id } } }) => {
@@ -33,13 +34,20 @@ const Hider = styled.div`
 
 class Server extends React.Component<ServerPageProps> {
   static async getInitialProps (ctx: *, rpc: *, router: *) {
+    const isDiscordBot = ctx.req.headers['user-agent'].includes('Discordbot')
     if (ctx.user == null) {
-      redirect(ctx, `/auth/login?r=${router.asPath}`)
+      if (!isDiscordBot) {
+        redirect(ctx, `/auth/login?r=${router.asPath}`)
+      }
     }
 
     ctx.robots = 'NOINDEX, NOFOLLOW'
     await ctx.store.dispatch(fetchServerIfNeed(router.query.id, rpc))
-    await ctx.store.dispatch(renderRoles(router.query.id))
+
+    if (!isDiscordBot) {
+      await ctx.store.dispatch(renderRoles(router.query.id))
+    }
+    return { isDiscordBot }
   }
 
   async componentDidMount () {
@@ -58,11 +66,20 @@ class Server extends React.Component<ServerPageProps> {
     }
   }
 
+  renderSocial () {
+    const { currentServer } = this.props
+    return <SocialCards title={`${currentServer.server.name} on Roleypoly`} description='Manage your roles here.' />
+  }
+
   render () {
-    const { currentServer, view } = this.props
+    const { isDiscordBot, currentServer, view } = this.props
     // console.log({ currentServer })
     if (currentServer == null) {
       return null
+    }
+
+    if (isDiscordBot) {
+      return this.renderSocial()
     }
 
     return (
@@ -70,7 +87,7 @@ class Server extends React.Component<ServerPageProps> {
         <Head>
           <title key='title'>{currentServer.server.name} - Roleypoly</title>
         </Head>
-        <SocialCards title={`${currentServer.server.name} on Roleypoly`} />
+        { this.renderSocial() }
         hello <span style={{ color: currentServer.gm.color }}>{currentServer.gm.nickname}</span> on {currentServer.server.name} ({ view.dirty ? 'dirty' : 'clean' })
         <Hider visible={true || currentServer.id !== null}>
           { !view.invalidated && view.categories.map(c => <Category key={c.id}>

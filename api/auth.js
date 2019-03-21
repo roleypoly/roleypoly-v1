@@ -146,8 +146,14 @@ export default (R: Router, $: AppContext) => {
   })
 
   R.get('/magic/:challenge', async (ctx: Context) => {
+    if (ctx.request.headers['user-agent'].includes('Discordbot')) {
+      return $.ui.render(ctx.req, ctx.res, '/_internal/_discordbot/_magic', {})
+    }
+
     const { challenge } = ((ctx.params: any): { challenge: string })
     const chall = await $.auth.fetchDMChallenge({ magic: challenge })
+    // log.notice('magic user agent', { ua: ctx.request.headers['User-Agent'] })
+
     if (chall == null) {
       log.warn('bad magic', challenge)
       return ctx.redirect('/auth/expired')
