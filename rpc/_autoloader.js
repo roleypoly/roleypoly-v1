@@ -18,6 +18,9 @@ export default (ctx: AppContext, forceClear: ?boolean = false): {
     const filename = path.basename(a)
     const dirname = path.dirname(a)
 
+    const pathname = a.replace('rpc/', '')
+    delete require.cache[require.resolve(pathname)]
+
     // internal stuff
     if (filename.startsWith('_')) {
       log.debug(`skipping ${a}`)
@@ -37,10 +40,6 @@ export default (ctx: AppContext, forceClear: ?boolean = false): {
 
     log.debug(`mounting ${a}`)
     try {
-      const pathname = a.replace('rpc/', '')
-
-      delete require.cache[require.resolve(pathname)]
-
       const r = require(pathname)
       let o = r
       if (o.default) {

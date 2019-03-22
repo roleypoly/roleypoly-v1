@@ -7,9 +7,9 @@ import { type ServerModel } from '../models/Server'
 import type DiscordService, { Permissions } from './discord'
 import {
   type Guild,
-  type GuildMember,
+  type Member,
   type Collection
-} from 'discord.js'
+} from 'eris'
 import areduce from '../util/areduce'
 
 export type ServerSlug = {
@@ -60,21 +60,6 @@ class PresentationService extends Service {
     }
   }
 
-  async oldPresentableServers (collection: Collection<string, Guild>, userId: string) {
-    this.log.deprecated('use presentableServers instead of oldPresentableServers')
-
-    let servers = []
-
-    for (let server of collection.array()) {
-      const gm = server.members.get(userId)
-
-      // $FlowFixMe this is deprecated, forget adding more check code.
-      servers.push(await this.presentableServer(server, gm))
-    }
-
-    return servers
-  }
-
   presentableServers (collection: Collection<string, Guild>, userId: string) {
     return areduce(collection.array(), async (acc, server) => {
       const gm = server.members.get(userId)
@@ -87,7 +72,7 @@ class PresentationService extends Service {
     }, [])
   }
 
-  async presentableServer (server: Guild, gm: GuildMember, { incRoles = true }: { incRoles: boolean } = {}): Promise<PresentableServer> {
+  async presentableServer (server: Guild, gm: Member, { incRoles = true }: { incRoles: boolean } = {}): Promise<PresentableServer> {
     const sd = await this.ctx.server.get(server.id)
 
     return {

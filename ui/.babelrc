@@ -3,6 +3,7 @@
     "next/babel", "@babel/preset-flow"
   ],
   "plugins": [
-    [ "styled-components", { "ssr": true } ]
+    [ "styled-components", { "ssr": true } ],
+    "@babel/plugin-proposal-optional-chaining"
   ]
 }

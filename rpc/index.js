@@ -86,6 +86,18 @@ export default class RPCServer {
     }
   }
 
+  /**
+   * For internally called stuff, such as from a bot shard.
+   */
+  async call (fn: string, ...args: any[]) {
+    if (!(fn in this.rpcMap)) {
+      throw new RPCError(`RPC call ${fn}(...) not found.`, 404)
+    }
+
+    const call = this.rpcMap[fn]
+    return call(...args)
+  }
+
   rpcError (ctx: Context & {body: any}, msg: ?string, err: ?Error = null, code: ?number = null) {
     log.error('rpc error', { msg, err })
 

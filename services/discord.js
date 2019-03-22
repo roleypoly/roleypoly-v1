@@ -1,17 +1,44 @@
 // @flow
 import Service from './Service'
+import type { AppContext } from '../Roleypoly'
+import Bot from '../bot'
+import Eris, { type Member, Role, type Guild, type Permission as ErisPermission } from 'eris'
+import LRU from 'lru-cache'
+// $FlowFixMe
+import { OrderedSet } from 'immutable'
 import superagent from 'superagent'
-// import invariant from 'invariant'
-import { type AppContext } from '../Roleypoly'
-import {
-  type Message,
-  type Guild,
-  type Role,
-  type GuildMember,
-  type Collection,
-  Client
-} from 'discord.js'
 import type { AuthTokens } from './auth'
+
+type DiscordServiceConfig = {
+  token: string,
+  clientId: string,
+  clientSecret: string,
+  rootUsers: Set<string>,
+  isBot: boolean
+}
+
+export type Permissions = {
+  canManageRoles: boolean,
+  isAdmin: boolean,
+  faked?: boolean,
+  __faked?: Permissions
+}
+
+type CachedRole = {
+  id: string,
+  position: number
+}
+
+type OAuthRequestData = {
+  grant_type: 'authorization_code',
+  code: string
+} | {
+  grant_type: 'refresh_token',
+  refresh_token: string
+} | {
+  grant_type: 'access_token',
+  token: string
+}
 
 export type UserPartial = {
   id: string,
@@ -20,153 +47,201 @@ export type UserPartial = {
   avatar: string
 }
 
-export type Permissions = {
-  isAdmin: boolean,
-  canManageRoles: boolean
-}
+export default class DiscordService extends Service {
+  ctx: AppContext
+  bot: Bot
+  client: Eris
 
-type ChatCommandHandler = (message: Message, matches: string[], reply: (text: string) => Promise<Message>) => Promise<void>|void
-type ChatCommand = {
-  regex: RegExp,
-  handler: ChatCommandHandler
-}
+  cfg: DiscordServiceConfig
 
-class DiscordService extends Service {
-  botToken: string = process.env.DISCORD_BOT_TOKEN || ''
-  clientId: string = process.env.DISCORD_CLIENT_ID || ''
-  clientSecret: string = process.env.DISCORD_CLIENT_SECRET || ''
-  oauthCallback: string = process.env.OAUTH_AUTH_CALLBACK || ''
-  isBot: boolean = process.env.IS_BOT === 'true'
+  // a small cache of role data for checking viability
+  ownRoleCache: LRU<string, CachedRole>
 
-  appUrl: string
-  botCallback: string
-  rootUsers: Set<string>
-  client: Client
-  cmds: ChatCommand[]
+  oauthCallback: string
+
   constructor (ctx: AppContext) {
     super(ctx)
-    this.appUrl = ctx.config.appUrl
+    this.ctx = ctx
 
-    this.oauthCallback = `${this.appUrl}/api/oauth/callback`
-    this.botCallback = `${this.appUrl}/api/oauth/bot/callback`
-    this.rootUsers = new Set((process.env.ROOT_USERS || '').split(','))
+    this.cfg = {
+      rootUsers: new Set((process.env.ROOT_USERS || '').split(',')),
+      token: process.env.DISCORD_BOT_TOKEN || '',
+      clientId: process.env.DISCORD_CLIENT_ID || '',
+      clientSecret: process.env.DISCORD_CLIENT_SECRET || '',
+      isBot: process.env.IS_BOT === 'true'
+    }
 
-    this.client = new Client()
-    this.client.options.disableEveryone = true
+    this.oauthCallback = `${ctx.config.appUrl}/api/oauth/callback`
 
-    this._cmds()
+    this.ownRoleCache = new LRU()
 
-    this.startBot()
-  }
-
-  ownGm (server: string) {
-    return this.gm(server, this.client.user.id)
-  }
-
-  fakeGm ({ id = '0', nickname = '[none]', displayHexColor = '#ffffff' }: $Shape<{ id: string, nickname: string, displayHexColor: string }>) { // eslint-disable-line no-undef
-    return { id, nickname, displayHexColor, __faked: true, roles: { has () { return false } } }
+    if (this.cfg.isBot) {
+      this.client = new Eris(this.cfg.token, {
+        disableEveryone: true,
+        maxShards: 'auto',
+        messageLimit: 10,
+        disableEvents: {
+          CHANNEL_PINS_UPDATE: true,
+          USER_SETTINGS_UPDATE: true,
+          USER_NOTE_UPDATE: true,
+          RELATIONSHIP_ADD: true,
+          RELATIONSHIP_REMOVE: true,
+          GUILD_BAN_ADD: true,
+          GUILD_BAN_REMOVE: true,
+          TYPING_START: true,
+          MESSAGE_UPDATE: true,
+          MESSAGE_DELETE: true,
+          MESSAGE_DELETE_BULK: true,
+          VOICE_STATE_UPDATE: true
+        }
+      })
+      this.bot = new Bot(this)
+    } else {
+      this.client = new Eris(`Bot ${this.cfg.token}`, {
+        restMode: true
+      })
+    }
   }
 
   isRoot (id: string): boolean {
-    return this.rootUsers.has(id)
+    return this.cfg.rootUsers.has(id)
   }
 
-  async startBot () {
-    await this.client.login(this.botToken)
-
-    // not all roleypolys are bots.
-    if (this.isBot) {
-      this.log.info('this roleypoly is a bot')
-      this.client.on('message', this.handleMessage.bind(this))
-      this.client.on('guildCreate', this.handleJoin.bind(this))
-    }
-
-    for (let server of this.client.guilds.array()) {
-      await this.ctx.server.ensure(server)
-    }
+  getRelevantServers (user: string) {
+    return this.client.guilds.filter(guild => guild.members.has(user))
   }
 
-  getRelevantServers (userId: string): Collection<string, Guild> {
-    return this.client.guilds.filter((g) => g.members.has(userId))
+  gm (serverId: string, userId: string): ?Member {
+    return this.client.guilds.get(serverId)?.members.get(userId)
   }
 
-  gm (serverId: string, userId: string): ?GuildMember {
-    const s = this.client.guilds.get(serverId)
-    if (s == null) {
-      return null
-    }
-    return s.members.get(userId)
+  ownGm (serverId: string) {
+    return this.gm(serverId, this.client.user.id)
+  }
+
+  fakeGm ({ id = '0', nickname = '[none]', displayHexColor = '#ffffff' }: $Shape<Member>): $Shape<Member> {
+    return { id, nickname, displayHexColor, __faked: true, roles: { has () { return false } } }
   }
 
   getRoles (server: string) {
-    const s = this.client.guilds.get(server)
-    if (s == null) {
-      return null
-    }
-    return s.roles
+    return this.client.guilds.get(server)?.roles
   }
 
-  getPermissions (gm: GuildMember): Permissions {
+  getOwnPermHeight (server: Guild): number {
+    if (this.ownRoleCache.has(server)) {
+      return this.ownRoleCache.get(server).position
+    }
+
+    const gm = this.ownGm(server.id)
+    const g = gm?.guild
+    const r: Role = OrderedSet(gm?.roles).map(id => g?.roles.get(id)).sortBy(r => r.position).last({ position: 0, id: '0' })
+    this.ownRoleCache.set(server, {
+      id: r.id,
+      position: r.position
+    })
+
+    return r.position
+  }
+
+  calcPerms (permable: Role | Member): Permissions {
+    const p: ErisPermission = (permable instanceof Role) ? permable.permissions : permable.permission
+    return {
+      isAdmin: p.has('administrator'),
+      canManageRoles: p.has('manageRoles') || p.has('administrator')
+    }
+  }
+
+  getPermissions (gm: Member): Permissions {
+    const real = this.calcPerms(gm)
+
     if (this.isRoot(gm.id)) {
       return {
         isAdmin: true,
-        canManageRoles: true
+        canManageRoles: true,
+        faked: true,
+        __faked: real
       }
     }
 
-    return {
-      isAdmin: gm.permissions.has('ADMINISTRATOR'),
-      canManageRoles: gm.permissions.has('MANAGE_ROLES', true)
-    }
+    return real
   }
 
   safeRole (server: string, role: string) {
-    const rl = this.getRoles(server)
-    if (rl == null) {
-      throw new Error(`safeRole can't see ${server}`)
-    }
-    const r: ?Role = rl.get(role)
+    const r = this.getRoles(server)?.get(role)
     if (r == null) {
       throw new Error(`safeRole can't find ${role} in ${server}`)
     }
 
-    return r.editable && !r.hasPermission('MANAGE_ROLES', false, true)
+    return this.roleIsEditable(r) && !this.calcPerms(r).canManageRoles
   }
 
-  // oauth step 2 flow, grab the auth token via code
-  async getAuthToken (code: string): Promise<AuthTokens> {
-    const url = 'https://discordapp.com/api/oauth2/token'
-    try {
-      const rsp =
-        await superagent
-          .post(url)
-          .set('Content-Type', 'application/x-www-form-urlencoded')
-          .send({
-            client_id: this.clientId,
-            client_secret: this.clientSecret,
-            grant_type: 'authorization_code',
-            code: code,
-            redirect_uri: this.oauthCallback
-          })
+  roleIsEditable (role: Role): boolean {
+    // role will be LOWER than my own
+    return this.getOwnPermHeight(role.guild) > role.position
+  }
 
-      return rsp.body
+  async oauthRequest (path: string, data: OAuthRequestData) {
+    const url = `https://discordapp.com/api/oauth2/${path}`
+    try {
+      const rsp = await superagent.post(url)
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .set('User-Agent', 'DiscordBot (https://roleypoly.com, 2.x.x) OAuthHandler/1.0')
+        .send({
+          client_id: this.cfg.clientId,
+          client_secret: this.cfg.clientSecret,
+          redirect_uri: this.oauthCallback,
+          ...data
+        })
+
+      return (rsp.body: AuthTokens)
     } catch (e) {
-      this.log.error('getAuthToken failed', e)
+      this.log.error('oauthRequest failed', { e, path })
       throw e
     }
   }
 
-  async getUserFromToken (authToken?: string): Promise<UserPartial> {
+  initializeOAuth (code: string) {
+    return this.oauthRequest('token', {
+      grant_type: 'authorization_code',
+      code
+    })
+  }
+
+  refreshOAuth ({ refreshToken }: { refreshToken: string }) {
+    return this.oauthRequest('token', {
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken
+    })
+  }
+
+  revokeOAuth ({ accessToken }: { accessToken: string }) {
+    return this.oauthRequest('token/revoke', {
+      grant_type: 'access_token',
+      token: accessToken
+    })
+  }
+
+  getUserPartial (userId: string): ?UserPartial {
+    const u = this.client.users.get(userId)
+    if (u == null) {
+      return null
+    }
+
+    return {
+      username: u.username,
+      discriminator: u.discriminator,
+      avatar: u.avatarURL,
+      id: u.id
+    }
+  }
+
+  async getUserFromToken (authToken: string): Promise<UserPartial> {
     const url = 'https://discordapp.com/api/v6/users/@me'
     try {
-      if (authToken == null || authToken === '') {
-        throw new Error('not logged in')
-      }
+      const rsp = await superagent.get(url)
+        .set('User-Agent', 'DiscordBot (https://roleypoly.com, 2.x.x) OAuthHandler/1.0')
+        .set('Authorization', `Bearer ${authToken}`)
 
-      const rsp =
-        await superagent
-          .get(url)
-          .set('Authorization', `Bearer ${authToken}`)
       return rsp.body
     } catch (e) {
       this.log.error('getUser error', e)
@@ -174,142 +249,19 @@ class DiscordService extends Service {
     }
   }
 
-  getUserPartial (userId: string): ?UserPartial {
-    const U = this.client.users.get(userId)
-    if (U == null) {
-      return null
-    }
-
-    return {
-      username: U.username,
-      discriminator: U.discriminator,
-      avatar: U.displayAvatarURL,
-      id: U.id
-    }
-  }
-
-  async refreshOAuth ({ refreshToken }: { refreshToken: string }): Promise<AuthTokens> {
-    const url = 'https://discordapp.com/api/oauth2/token'
-    try {
-      const rsp =
-        await superagent
-          .post(url)
-          .set('Content-Type', 'application/x-www-form-urlencoded')
-          .send({
-            client_id: this.clientId,
-            client_secret: this.clientSecret,
-            grant_type: 'refresh_token',
-            refresh_token: refreshToken,
-            redirect_uri: this.oauthCallback
-          })
-
-      return rsp.body
-    } catch (e) {
-      this.log.error('refreshOAuth failed', e)
-      throw e
-    }
-  }
-
-  async revokeOAuth ({ accessToken }: { accessToken: string }) {
-    const url = 'https://discordapp.com/api/oauth2/token/revoke'
-    try {
-      const rsp =
-        await superagent
-          .post(url)
-          .set('Content-Type', 'application/x-www-form-urlencoded')
-          .send({
-            client_id: this.clientId,
-            client_secret: this.clientSecret,
-            grant_type: 'access_token',
-            token: accessToken,
-            redirect_uri: this.oauthCallback
-          })
-
-      return rsp.body
-    } catch (e) {
-      this.log.error('revokeOAuth failed', e)
-      throw e
-    }
-  }
-
-  // returns oauth authorize url with IDENTIFY permission
-  // we only need IDENTIFY because we only use it for matching IDs from the bot
   getAuthUrl (state: string): string {
-    return `https://discordapp.com/oauth2/authorize?client_id=${this.clientId}&redirect_uri=${this.oauthCallback}&response_type=code&scope=identify&state=${state}`
+    return `https://discordapp.com/oauth2/authorize?client_id=${this.cfg.clientId}&redirect_uri=${this.oauthCallback}&response_type=code&scope=identify&state=${state}`
   }
 
   // returns the bot join url with MANAGE_ROLES permission
   // MANAGE_ROLES is the only permission we really need.
   getBotJoinUrl (): string {
-    return `https://discordapp.com/oauth2/authorize?client_id=${this.clientId}&scope=bot&permissions=268435456`
+    return `https://discordapp.com/oauth2/authorize?client_id=${this.cfg.clientId}&scope=bot&permissions=268435456`
   }
 
-  mentionResponse (message: Message) {
-    message.channel.send(`🔰 Assign your roles here! ${this.appUrl}/s/${message.guild.id}`, { disableEveryone: true })
-  }
-
-  _cmds () {
-    const cmds = [
-      {
-        regex: /say (.*)/,
-        handler (message, matches, r) {
-          r(matches[0])
-        }
-      },
-      {
-        regex: /set username (.*)/,
-        async handler (message, matches) {
-          const { username } = this.client.user
-          await this.client.user.setUsername(matches[0])
-          message.channel.send(`Username changed from ${username} to ${matches[0]}`)
-        }
-      },
-      {
-        regex: /stats/,
-        async handler (message, matches) {
-          const t = [
-            `**Stats** 📈`,
-            '',
-            `👩‍❤️‍👩 **Users Served:** ${this.client.guilds.reduce((acc, g) => acc + g.memberCount, 0)}`,
-            `🔰 **Servers:** ${this.client.guilds.size}`,
-            `💮 **Roles Seen:** ${this.client.guilds.reduce((acc, g) => acc + g.roles.size, 0)}`
-          ]
-          message.channel.send(t.join('\n'))
-        }
-      }
-    ]
-      // prefix regex with ^ for ease of code
-      .map(({ regex, ...rest }) => ({ regex: new RegExp(`^${regex.source}`, regex.flags), ...rest }))
-
-    this.cmds = cmds
-    return cmds
-  }
-
-  async handleCommand (message: Message) {
-    const cmd = message.content.replace(`<@${this.client.user.id}> `, '')
-    this.log.debug(`got command from ${message.author.username}`, cmd)
-    for (let { regex, handler } of this.cmds) {
-      const match = regex.exec(cmd)
-      if (match !== null) {
-        this.log.debug('command accepted', { cmd, match })
-        try {
-          await handler.call(this, message, match.slice(1))
-          return
-        } catch (e) {
-          this.log.error('command errored', { e, cmd, message })
-          message.channel.send(`❌ **An error occured.** ${e}`)
-          return
-        }
-      }
-    }
-
-    // nothing matched?
-    this.mentionResponse(message)
-  }
-
-  async issueChallenge (message: Message) {
+  async issueChallenge (author: string) {
     // Create a challenge
-    const chall = await this.ctx.auth.createDMChallenge(message.author.id)
+    const chall = await this.ctx.auth.createDMChallenge(author)
 
     const randomLines = [
       '🐄 A yellow cow is only as bright as it lets itself be. ✨',
@@ -324,7 +276,7 @@ class DiscordService extends Service {
       '🛠 I am completely open source, check me out!~ <https://github.com/kayteh/roleypoly>'
     ]
 
-    message.channel.send([
+    return ([
       '**Hey there!** <a:StockKyaa:435353158462603266>',
       '',
       `Use this secret code: **${chall.human}**`,
@@ -336,37 +288,11 @@ class DiscordService extends Service {
     ].join('\n'))
   }
 
-  handleDM (message: Message) {
-    switch (message.content.toLowerCase()) {
-      case 'login':
-      case 'auth':
-      case 'log in':
-        this.issueChallenge(message)
-    }
+  canManageRoles (server: string, user: string) {
+    return this.getPermissions(this.gm(server, user)).canManageRoles
   }
 
-  handleMessage (message: Message) {
-    if (message.author.bot) { // drop bot messages
-      return
-    }
-
-    if (message.channel.type === 'dm') {
-      // handle dm
-      return this.handleDM(message)
-    }
-
-    if (message.mentions.users.has(this.client.user.id)) {
-      if (this.rootUsers.has(message.author.id)) {
-        this.handleCommand(message)
-      } else {
-        this.mentionResponse(message)
-      }
-    }
-  }
-
-  async handleJoin (guild: Guild) {
-    await this.ctx.server.ensure(guild)
+  isMember (server: string, user: string) {
+    return this.gm(server, user) != null
   }
 }
-
-module.exports = DiscordService

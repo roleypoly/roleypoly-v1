@@ -19,7 +19,7 @@ export default (R: Router, $: AppContext) => {
     console.log(ctx.session.expiresAt >= new Date(), ctx.session.expiresAt, new Date())
 
     if (ctx.session.accessToken === undefined || ctx.session.expiresAt >= new Date()) {
-      const data = await $.discord.getAuthToken(token)
+      const data = await $.discord.initializeOAuth(token)
       ctx.session.accessToken = data.access_token
       ctx.session.refreshToken = data.refresh_token
       ctx.session.expiresAt = new Date() + ctx.expires_in
@@ -105,7 +105,7 @@ export default (R: Router, $: AppContext) => {
     }
 
     try {
-      const tokens = await $.discord.getAuthToken(code)
+      const tokens = await $.discord.initializeOAuth(code)
       const user = await $.discord.getUserFromToken(tokens.access_token)
       $.auth.injectSessionFromOAuth(ctx, tokens, user.id)
       return ctx.redirect(r || '/')

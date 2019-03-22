@@ -1,17 +1,19 @@
 // @flow
 import { type AppContext } from '../Roleypoly'
 import { type Context } from 'koa'
-import { type Guild } from 'discord.js'
+import { type Guild } from 'eris'
+import { root } from './_security'
 
 export default ($: AppContext) => ({
-  listRelevantServers (ctx: Context) {
+
+  rootGetAllServers: root($, (ctx: Context) => {
     return $.discord.client.guilds.map<{
       url: string,
       name: string,
       members: number,
       roles: number
-    }>((g: Guild) => ({ url: `${$.config.appUrl}/s/${g.id}`, name: g.name, members: g.members.array().length, roles: g.roles.array().length }))
-  },
+    }>((g: Guild) => ({ url: `${$.config.appUrl}/s/${g.id}`, name: g.name, members: g.memberCount, roles: g.roles.size }))
+  }),
 
   getServerSlug (ctx: Context, id: string) {
     const srv = $.discord.client.guilds.get(id)

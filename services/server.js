@@ -4,7 +4,7 @@ import { type AppContext } from '../Roleypoly'
 import type PresentationService from './presentation'
 import {
   type Guild
-} from 'discord.js'
+} from 'eris'
 import { type ServerModel, type Category } from '../models/Server'
 
 export default class ServerService extends Service {
