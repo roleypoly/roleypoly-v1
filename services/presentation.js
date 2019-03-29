@@ -29,9 +29,10 @@ export type PresentableRole = {
 
 export type PresentableServer = ServerModel & {
   id: string,
-  gm: {
+  gm?: {
+    color: number | string,
     nickname: string,
-    color: string
+    roles: string[]
   },
   server: ServerSlug,
   roles: ?PresentableRole[],

@@ -1,6 +1,7 @@
 // @flow
 // import { action } from './servers'
 import { namespaceConfig } from 'fast-redux'
+// $FlowFixMe
 import { OrderedMap, OrderedSet, Set } from 'immutable'
 import { getCurrentServerState, type ServerState } from './currentServer'
 
@@ -102,5 +103,5 @@ export const renderRoles = (id: string) => (dispatch: *, getState: *) => {
   render = render.add(getUncategorized(roleMap, render.toSet()))
   render = render.sortBy(h => (h.position) ? h.position : h.name)
 
-  dispatch(updateCurrentView({ server: id, categories: render, invalidated: false, selected: Set(current.gm.roles), originalSelected: Set(current.gm.roles) }))
+  dispatch(updateCurrentView({ server: id, categories: render, invalidated: false, selected: Set(current.gm?.roles), originalSelected: Set(current.gm?.roles) }))
 }

@@ -1,6 +1,7 @@
 module.exports = {
   babelrcRoots: [
-    '.'
+    '.',
+    './ui'
   ],
-  ignore: [ './ui', './node_modules', './flow-typed' ]
+  ignore: [ './node_modules', './flow-typed' ]
 }

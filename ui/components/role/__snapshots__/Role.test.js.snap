@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Role /> renders correctly 1`] = `
+<div
+  className="rolestyled-r4hjov-0 kfzQxT"
+  onClick={[Function]}
+  onTouchEnd={null}
+  onTouchStart={null}
+  style={
+    Object {
+      "--role-color-active": "hsl(0, 0%, 100%)",
+      "--role-color-base": "hsl(0, 0%, 100%)",
+      "--role-color-outline": "hsla(0, 0%, 100%, 0.7)",
+      "--role-color-outline-alt": "hsla(0, 0%, 100%, 0.4)",
+    }
+  }
+  title={null}
+>
+  Test Role
+</div>
+`;
+
+exports[`<Role /> when disabled, does not trigger onToggle on click 1`] = `"<div disabled=\\"\\" style=\\"--role-color-outline:hsla(0, 0%, 100%, 0.7);--role-color-outline-alt:hsla(0, 0%, 100%, 0.4);--role-color-active:hsl(0, 0%, 100%);--role-color-base:hsl(0, 0%, 100%)\\" title=\\"This role has unsafe permissions.\\" class=\\"rolestyled-r4hjov-0 kfzQxT\\">Test Role</div>"`;
+
+exports[`<Role /> when disabled, handles touch hover events 1`] = `"<div disabled=\\"\\" style=\\"--role-color-outline:hsla(0, 0%, 100%, 0.7);--role-color-outline-alt:hsla(0, 0%, 100%, 0.4);--role-color-active:hsl(0, 0%, 100%);--role-color-base:hsl(0, 0%, 100%)\\" title=\\"This role has unsafe permissions.\\" class=\\"rolestyled-r4hjov-0 kfzQxT\\">unsafe role<div class=\\"tooltip-aykj5z-0 euOEXl\\">This role has unsafe permissions.</div></div>"`;

@@ -2,11 +2,11 @@
 import { type AppContext } from '../Roleypoly'
 import { type Context } from 'koa'
 import { type Guild } from 'eris'
-import { root } from './_security'
+import * as secureAs from './_security'
 
 export default ($: AppContext) => ({
 
-  rootGetAllServers: root($, (ctx: Context) => {
+  rootGetAllServers: secureAs.root($, (ctx: Context) => {
     return $.discord.client.guilds.map<{
       url: string,
       name: string,
@@ -24,19 +24,12 @@ export default ($: AppContext) => ({
     return $.P.serverSlug(srv)
   },
 
-  getServer (ctx: Context, id: string) {
+  getServer: secureAs.member($, (ctx: Context, id: string) => {
     const { userId } = (ctx.session: { userId: string })
 
     const srv = $.discord.client.guilds.get(id)
     if (srv == null) {
       return { err: 'not_found' }
-    }
-
-    if (userId == null) {
-      return {
-        id: id,
-        server: $.P.serverSlug(srv)
-      }
     }
 
     let gm
@@ -51,5 +44,5 @@ export default ($: AppContext) => ({
     }
 
     return $.P.presentableServer(srv, gm)
-  }
+  })
 })

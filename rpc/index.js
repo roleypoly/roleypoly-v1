@@ -3,10 +3,19 @@ import logger from '../logger'
 import fnv from 'fnv-plus'
 import autoloader from './_autoloader'
 import RPCError from './_error'
-import type Roleypoly from '../Roleypoly'
-import type betterRouter from 'koa-better-router'
-import { type Context } from 'koa'
+import type Roleypoly, { Router } from '../Roleypoly'
+import type { Context } from 'koa'
 const log = logger(__filename)
+
+export type RPCIncoming = {
+  fn: string,
+  args: any[]
+}
+
+export type RPCOutgoing = {
+  hash: string,
+  response: any
+}
 
 export default class RPCServer {
   ctx: Roleypoly
@@ -21,6 +30,7 @@ export default class RPCServer {
   constructor (ctx: Roleypoly) {
     this.ctx = ctx
     this.reload()
+    ctx.addRouteHook(this.hookRoutes)
   }
 
   reload () {
@@ -32,33 +42,33 @@ export default class RPCServer {
     this.mapHash = fnv.hash(Object.keys(this.rpcMap)).str()
 
     // call map for the client.
-    this.rpcCalls = Object.keys(this.rpcMap).map(fn => ({ name: this.rpcMap[fn].name, args: 0 }))
+    this.rpcCalls = Object.keys(this.rpcMap).map(fn => ({ name: fn, args: 0 }))
   }
 
-  hookRoutes (router: betterRouter) {
+  hookRoutes = (router: Router) => {
     // RPC call reporter.
     // this is NEVER called in prod.
     // it is used to generate errors if RPC calls don't exist or are malformed in dev.
-    router.get('/api/_rpc', async (ctx) => {
-      ctx.body = {
+    router.get('/api/_rpc', async (ctx: Context) => {
+      ctx.body = ({
         hash: this.mapHash,
         available: this.rpcCalls
-      }
+      }: any)
       ctx.status = 200
       return true
     })
 
-    router.post('/api/_rpc', this.handleRPC.bind(this))
+    router.post('/api/_rpc', this.handleRPC)
   }
 
-  async handleRPC (ctx: Context) {
+  handleRPC = async (ctx: Context) => {
     // handle an impossible situation
     if (!(ctx.request.body instanceof Object)) {
       return this.rpcError(ctx, null, new RPCError('RPC format was very incorrect.', 400))
     }
 
     // check if RPC exists
-    const { fn, args } = ctx.request.body
+    const { fn, args } = (ctx.request.body: RPCIncoming)
 
     if (!(fn in this.rpcMap)) {
       return this.rpcError(ctx, null, new RPCError(`RPC call ${fn}(...) not found.`, 404))

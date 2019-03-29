@@ -68,7 +68,7 @@ export default class Role extends React.Component<RoleProps, RoleState> {
       'base': Color(color).hsl().string()
     }
 
-    const name = (this.props.role.name !== '') ? this.props.role.name : <>&nbsp;</>
+    const name = (this.props.role.name !== '') ? this.props.role.name : ' '
 
     return <RoleStyled
       active={this.props.active}

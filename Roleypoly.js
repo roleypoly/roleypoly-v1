@@ -2,7 +2,7 @@
 import Sequelize from 'sequelize'
 import Next from 'next'
 import betterRouter from 'koa-better-router'
-import EventEmitter from 'events'
+import type EventEmitter from 'events'
 import fs from 'fs'
 import logger from './logger'
 import ServerService from './services/server'
@@ -28,6 +28,9 @@ export type Router = {
   put: HTTPHandler,
   middleware: () => any
 }
+
+export type RouteHook = (router: Router) => void
+
 export type AppContext = {
   config: {
     appUrl: string,
@@ -59,6 +62,8 @@ class Roleypoly {
   __initialized: Promise<void>
   __apiWatcher: EventEmitter
   __rpcWatcher: EventEmitter
+
+  __routeHooks: Set<RouteHook> = new Set()
   constructor (io: SocketIO, app: KoaApp) {
     this.io = io
     this.__app = app
@@ -121,12 +126,24 @@ class Roleypoly {
     this.ctx.RPC = new RPCServer(this)
   }
 
+  addRouteHook (hook: RouteHook) {
+    this.__routeHooks.add(hook)
+  }
+
+  hookServiceRoutes (router: Router) {
+    for (let h of this.__routeHooks) {
+      h(router)
+    }
+  }
+
   async loadRoutes (forceClear: boolean = false) {
     await this.ctx.ui.prepare()
 
     this.router = betterRouter().loadMethods()
     fetchApis(this.router, this.ctx, { forceClear })
-    this.ctx.RPC.hookRoutes(this.router)
+    // this.ctx.RPC.hookRoutes(this.router)
+
+    this.hookServiceRoutes(this.router)
 
     // after routing, add the * for ui handler
     this.router.get('*', async ctx => {

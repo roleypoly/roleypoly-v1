@@ -1,11 +1,18 @@
 // @flow
 import { type AppContext } from '../Roleypoly'
 import { type Context } from 'koa'
-// import { type Guild } from 'discord.js'
+import * as secureAs from './_security'
 
 export default ($: AppContext) => ({
-  getCurrentUser (ctx: Context) {
-    const { userId } = ctx.session
+
+  getCurrentUser: secureAs.authed($, (ctx: Context) => {
     return $.discord.getUserPartial(ctx.session.userId)
-  }
+  }),
+
+  isRoot: secureAs.root($, () => {
+    return true
+  })
+
+
+
 })

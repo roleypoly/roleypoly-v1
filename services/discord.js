@@ -8,6 +8,7 @@ import LRU from 'lru-cache'
 import { OrderedSet } from 'immutable'
 import superagent from 'superagent'
 import type { AuthTokens } from './auth'
+import type { IFetcher } from './discord/types'
 
 type DiscordServiceConfig = {
   token: string,
@@ -59,6 +60,8 @@ export default class DiscordService extends Service {
 
   oauthCallback: string
 
+  fetcher: IFetcher
+
   constructor (ctx: AppContext) {
     super(ctx)
     this.ctx = ctx
@@ -96,10 +99,14 @@ export default class DiscordService extends Service {
         }
       })
       this.bot = new Bot(this)
+      const BotFetcher = require('./discord/botFetcher').default
+      this.fetcher = new BotFetcher(this)
     } else {
       this.client = new Eris(`Bot ${this.cfg.token}`, {
         restMode: true
       })
+      const RestFetcher = require('./discord/restFetcher').default
+      this.fetcher = new RestFetcher(this)
     }
   }
 

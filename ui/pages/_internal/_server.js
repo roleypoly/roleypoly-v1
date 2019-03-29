@@ -92,7 +92,7 @@ class Server extends React.Component<ServerPageProps> {
           <title key='title'>{currentServer.server.name} - Roleypoly</title>
         </Head>
         { this.renderSocial() }
-        hello <span style={{ color: currentServer.gm.color }}>{currentServer.gm.nickname}</span> on {currentServer.server.name} ({ view.dirty ? 'dirty' : 'clean' })
+        hello <span style={{ color: currentServer.gm?.color }}>{currentServer.gm?.nickname}</span> on {currentServer.server.name} ({ view.dirty ? 'dirty' : 'clean' })
         <Hider visible={true || currentServer.id !== null}>
           { !view.invalidated && view.categories.map(c => <Category key={`cat__${c.name}__${c.id}`}>
             <div>{ c.name }</div>
