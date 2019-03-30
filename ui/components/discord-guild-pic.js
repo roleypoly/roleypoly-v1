@@ -19,7 +19,7 @@ const Fallback = styled.div`
   justify-content: center;
   align-items: center;
 
-  background-color: hsl(${(props: any) => '' + (props.serverName.codePointAt(0) % 360)},50%,50%);
+  background-color: var(--fallback-color);
 `
 
 export default class DiscordGuildPic extends React.Component<GuildPicProps, GuildPicState> {
@@ -34,7 +34,7 @@ export default class DiscordGuildPic extends React.Component<GuildPicProps, Guil
 
   renderFallback () {
     const { name, id, icon, ...rest } = this.props
-    return <Fallback serverName={name} {...rest}>{name[0]}</Fallback>
+    return <Fallback serverName={name} style={{ '--fallback-color': `hsl(${(name.codePointAt(0) % 360)},50%,50%)` }} {...rest}>{name[0]}</Fallback>
   }
 
   onError = () => {
