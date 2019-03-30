@@ -1,13 +1,14 @@
 /* eslint-env jest */
 
 import * as React from 'react'
-import renderer from 'react-test-renderer'
+// import renderer from 'react-test-renderer'
 import { shallow } from 'enzyme'
-import Role from './index'
+import Role from '../index'
+import 'jest-styled-components'
 
 describe('<Role />', () => {
   it('renders correctly', () => {
-    const role = renderer.create(<Role role={{ name: 'Test Role', color: '#ffffff' }} />)
+    const role = shallow(<Role role={{ name: 'Test Role', color: '#ffffff' }} />)
     expect(role).toMatchSnapshot()
   })
 
@@ -50,7 +51,7 @@ describe('<Role />', () => {
 
       role.simulate('touchstart')
       expect(role.state().hovering).toEqual(true)
-      expect(role.html()).toMatchSnapshot() // expecting tooltip
+      expect(role).toMatchSnapshot() // expecting tooltip
       expect(role.exists('tooltip')).toEqual(true)
 
       role.simulate('touchend')
@@ -67,7 +68,7 @@ describe('<Role />', () => {
           disabled
         />
       )
-      expect(role.html()).toMatchSnapshot()
+      expect(role).toMatchSnapshot()
       role.simulate('click')
 
       expect(role.html()).toBe(role.html())

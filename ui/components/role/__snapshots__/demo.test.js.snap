@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`<RoleDemo /> renders 1`] = `"<div style=\\"--role-color-outline:hsla(0, 0%, 100%, 0.7);--role-color-outline-alt:hsla(0, 0%, 100%, 0.4);--role-color-active:hsl(0, 0%, 100%);--role-color-base:hsl(0, 0%, 100%)\\" class=\\"rolestyled-r4hjov-0 kfzQxT\\">test demo role</div>"`;
