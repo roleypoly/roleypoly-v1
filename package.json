@@ -73,10 +73,12 @@
     "chokidar": "^2.1.5",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.11.2",
+    "enzyme-to-json": "^3.3.5",
     "eslint-plugin-flowtype": "^3.4.2",
     "flow-bin": "^0.95.1",
     "flow-typed": "^2.5.1",
     "jest": "^24.5.0",
+    "jest-styled-components": "^6.3.1",
     "npm-run-all": "^4.1.5",
     "react-test-renderer": "^16.8.6",
     "standard": "12.0.1"
@@ -95,12 +97,24 @@
       {
         "displayName": "server",
         "rootDir": "<rootDir>",
-        "testPathIgnorePatterns": ["/node_modules/","/ui/"]
-        }, {
-          "displayName": "ui",
-          "rootDir": "<rootDir>/ui",
-          "setupFiles": ["<rootDir>/setupTests.js"],
-          "testPathIgnorePatterns": ["/node_modules/", "/.next/"]
+        "testPathIgnorePatterns": [
+          "/node_modules/",
+          "/ui/"
+        ]
+      },
+      {
+        "displayName": "ui",
+        "rootDir": "<rootDir>/ui",
+        "setupFiles": [
+          "<rootDir>/setupTests.js"
+        ],
+        "snapshotSerializers": [
+          "enzyme-to-json/serializer"
+        ],
+        "testPathIgnorePatterns": [
+          "/node_modules/",
+          "/.next/"
+        ]
       }
     ]
   }
