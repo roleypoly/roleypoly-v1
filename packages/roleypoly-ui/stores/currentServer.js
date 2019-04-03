@@ -1,8 +1,7 @@
 // @flow
 import { dynamicPropertyConfig } from 'fast-redux'
 // import { Map } from 'immutable'
-import type { PresentableServer } from '../../services/presentation'
-// import type { Category } from '../../models/Server'
+import type { PresentableServer } from '@roleypoly/types'
 import RPC from '../config/rpc'
 import { action } from './servers'
 

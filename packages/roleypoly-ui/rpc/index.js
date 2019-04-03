@@ -1,6 +1,6 @@
 // @flow
 import superagent from 'superagent'
-import RPCError from '../../rpc/_error'
+import RPCError from '@roleypoly/server/rpc/_error'
 
 export type RPCResponse = {
   response?: mixed,

@@ -3,13 +3,11 @@ import 'dotenv/config'
 import logger from './logger'
 import http from 'http'
 import Koa from 'koa'
-import SocketIO from 'socket.io'
 import Roleypoly from './Roleypoly'
 import ksuid from 'ksuid'
 import bodyParser from 'koa-bodyparser'
 import compress from 'kompression'
 import session from 'koa-session'
-import invariant from 'invariant'
 import Keygrip from 'keygrip'
 
 const log = logger(__filename)
@@ -17,13 +15,12 @@ const app = new Koa()
 
 // Create the server and socket.io server
 const server = http.createServer(app.callback())
-const io = SocketIO(server, { transports: ['websocket'], path: '/api/socket.io' })
 
-const M = new Roleypoly(io, app) // eslint-disable-line no-unused-vars
+const M = new Roleypoly(null, app) // eslint-disable-line no-unused-vars
 
 const appKey = process.env.APP_KEY
-if (appKey == null) {
-  throw invariant(false, '')
+if (appKey == null || appKey === '') {
+  throw new Error('APP_KEY not set')
 }
 app.keys = new Keygrip([ appKey ])
 

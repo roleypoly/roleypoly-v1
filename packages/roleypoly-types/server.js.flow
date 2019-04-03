@@ -1,0 +1,30 @@
+// @flow
+import type { Category } from './category'
+import type { PresentableRole, Permissions } from './role'
+
+export type ServerSlug = {
+  id: string,
+  name: string,
+  ownerID: string,
+  icon: string
+}
+
+export type ServerModel = {
+  id: string,
+  categories: {
+    [uuid: string]: Category
+  },
+  message: string
+}
+
+export type PresentableServer = ServerModel & {
+  id: string,
+  gm?: {
+    color: number | string,
+    nickname: string,
+    roles: string[]
+  },
+  server: ServerSlug,
+  roles: ?PresentableRole[],
+  perms: Permissions
+}

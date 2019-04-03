@@ -8,7 +8,7 @@ import { Provider } from 'react-redux'
 import ErrorP, { Overlay } from './_error'
 import styled from 'styled-components'
 import { withRedux } from '../config/redux'
-import type { UserPartial } from '../../services/discord'
+import type { UserPartial } from '@roleypoly/types'
 
 type NextPage = React.Component<any> & React.StatelessFunctionalComponent<any> & {
   getInitialProps: (ctx: any, ...args: any) => any

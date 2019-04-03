@@ -1,0 +1,22 @@
+// @flow
+
+export type PresentableRole = {
+  id: string,
+  color: number,
+  name: string,
+  position: number,
+  safe: boolean
+}
+
+export type Permissions = {
+  canManageRoles: boolean,
+  isAdmin: boolean,
+  faked?: boolean,
+  __faked?: Permissions
+}
+
+export type CachedRole = {
+  id: string,
+  position: number,
+  color?: number
+}

@@ -1,9 +1,9 @@
 // @flow
 import Sequelize from 'sequelize'
-import Next from 'next'
+import connector from '@roleypoly/ui/connector'
+import type Next from 'next'
 import betterRouter from 'koa-better-router'
 import type EventEmitter from 'events'
-import fs from 'fs'
 import logger from './logger'
 import ServerService from './services/server'
 import DiscordService from './services/discord'
@@ -16,7 +16,6 @@ import fetchApis from './api'
 
 import type SocketIO from 'socket.io'
 import type KoaApp, { Context } from 'koa'
-
 const log = logger(__filename)
 
 type HTTPHandler = (path: string, handler: (ctx: Context, next: () => void) => any) => void
@@ -73,12 +72,8 @@ class Roleypoly {
     const dev = process.env.NODE_ENV !== 'production'
 
     // simple check if we're in a compiled situation or not.
-    let uiDir = './ui'
-    if (!fs.existsSync(uiDir) && fs.existsSync('../ui')) {
-      uiDir = '../ui'
-    }
 
-    const ui = Next({ dev, dir: uiDir })
+    const ui = connector({ dev })
     const uiHandler = ui.getRequestHandler()
 
     const appUrl = process.env.APP_URL
