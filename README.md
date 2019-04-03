@@ -2,11 +2,11 @@
 
 a discord bot & web ui for managing self-assignable roles.
 
-**Most likely, you'll want to go here: https://roleypoly.com**. This app is already hosted, you don't need to deal with deploying it or anything, I've already done it for you.
+**Most likely, you'll want to go here: https://roleypoly.com** (or at the time of writing, `develop` is deployed to https://beta.roleypoly.com). This app is already hosted, you don't need to deal with deploying it or anything, I've already done it for you.
 
 If you're here to report a bug or develop on Roleypoly, the rest of this document is for you.
 
-Roleypoly is built with node.js, next.js, react/redux, discord.js, and little sprinkles of weird magic goo.
+Roleypoly is built with node.js, next.js, react/redux, eris, and little sprinkles of weird magic goo.
 
 ## developing/running your own
 
@@ -22,29 +22,20 @@ Check `.env.example` for all the various possible configuration values. Roleypol
 ### for developers
 
 ```
-docker-compose up -d
 yarn
+yarn dev:up # for docker-compose stuff
 yarn dev
 ```
 
 tooling notes:
-- we use flow-type, and in development, it is ideally transparent.
-- `./ui` has hot-reloading via next.js  
-- `./api` and `./rpc` have hot-reloading built in.
-  - if this isn't ideal for you, set `NO_HOT_RELOADING=1`
-
-this backend framework is one i've been building on for a long time and has a shitload of magic and auto-importing involved. for the most part, unless you make a new Service class, you do not need to define it's import anywhere.
-
-there is websocket stuff, but i don't use it anywhere. if you have a good use, go for it... but scalability was not in mind. it may be at some point.
-
-**A tour**  
-- `Roleypoly.js` is the main app
-- `index.js` is the setup code, does some things that the app doesn't ever need to care about.
-- `api` folder includes most routing. Most of these may be phased out into the new RPC system, but it does not solve everything, so this will exist into eternity.
-- `rpc` folder includes magically imported RPC routes. generally, if it exists here, it's callable from client code as-is, sans the first argument. function return is 1:1 what it'll spit out on client.
-- `services` folder is various services, such as Discord, Sessions, and other data-fetcher/sorter classes. Most of these are on AppContext.
-- `models` folder is magically imported sequelize model files.
-- `ui` is the Next.js app. This is operationally unable to parse anything outside of it's root, so shared libs must be non-transpiled, non-flowtyped JS code, luckily this is rarely ever needed.
+- we use react, redux, and next.js.
+- we use koa and a custom backend framework with some hot reloading on API and RPC.
+- we use standardjs and stylelint for code style.
+- we use flow-type, although possibly a little loosely.
+- we use babel for transpiling and development tools.
+- we use jest and enzyme for tests, pending more tooling for this.
+- we use yarn workspaces and lerna to manage the mono repo.
+- `yarn rpcrepl` for a fun REPL for RPC testing.
 
 ### for production
 
@@ -52,6 +43,7 @@ If you want an unedited latest version of roleypoly, it is available on the Dock
 
 If you're not into Docker and/or want to deploy your own, simply run
 ```
+yarn
 yarn build
 yarn start
 ```
