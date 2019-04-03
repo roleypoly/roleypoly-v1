@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import MediaQuery from '../kit/media'
+import { md } from '../kit/media'
 
 export const Overlay = styled.div`
   opacity: 0.6;
@@ -23,9 +23,12 @@ const ResponsiveSplitter = styled.div`
   line-height: 1.6;
   font-size: 1.3em;
   flex-direction: column;
-  ${() => MediaQuery({
-    md: `flex-direction: row; min-height: 100vh; position: relative; top: -50px;`
-  })}
+  ${md`
+    flex-direction: row; 
+    min-height: 100vh; 
+    position: relative; 
+    top: -50px;
+  `}
 
   & > div {
     margin: 1rem;
@@ -33,7 +36,7 @@ const ResponsiveSplitter = styled.div`
 
   & section {
     text-align: center;
-    ${() => MediaQuery({ md: `text-align: left;` })}
+    ${md`text-align: left;`}
   }
 `
 
@@ -46,9 +49,7 @@ const Code = styled.h1`
   margin: 0;
   padding: 0;
   font-size: 4em;
-  ${() => MediaQuery({
-    md: `font-size: 2em;`
-  })}
+  ${md`font-size: 2em;`}
 `
 
 export default class CustomErrorPage extends React.Component {

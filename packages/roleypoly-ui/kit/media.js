@@ -17,6 +17,15 @@ export const breakpoints = {
   xl: 1280
 }
 
+const mediaTemplateLiteral = (size: number, ...stuff: any): string =>
+  `@media screen and (min-width: ${size}px) {\n${stuff.join()}\n};`
+
+export const xs = mediaTemplateLiteral.bind(null, breakpoints.xs)
+export const sm = mediaTemplateLiteral.bind(null, breakpoints.sm)
+export const md = mediaTemplateLiteral.bind(null, breakpoints.md)
+export const lg = mediaTemplateLiteral.bind(null, breakpoints.lg)
+export const xl = mediaTemplateLiteral.bind(null, breakpoints.xl)
+
 const MediaQuery = (mq: MediaQueryConfig) => {
   const out = []
 

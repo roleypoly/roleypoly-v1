@@ -17,3 +17,21 @@ font-size: 2em;
 font-size: 2.5em;
 };"
 `;
+
+exports[`mediaTemplateLiteral renders how we expect 1`] = `
+"@media screen and (min-width: 0px) {
+font-size: 0.5em;
+};
+@media screen and (min-width: 544px) {
+font-size: 1em;
+};
+@media screen and (min-width: 768px) {
+font-size: 1.5em;
+};
+@media screen and (min-width: 1012px) {
+font-size: 2em;
+};
+@media screen and (min-width: 1280px) {
+font-size: 2.5em;
+};"
+`;

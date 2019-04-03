@@ -6,7 +6,7 @@ import redirect from '../lib/redirect'
 import TypingDemo from '../components/demos/typing'
 import TapDemo from '../components/demos/tap'
 import styled from 'styled-components'
-import MediaQuery from '../kit/media'
+import { md } from '../kit/media'
 
 const HeroBig = styled.h1`
   color: var(--c-7);
@@ -52,7 +52,7 @@ const FooterLink = styled.a`
 const DemoArea = styled.div`
   display: flex;
   flex-direction: column;
-  ${() => MediaQuery({ md: `flex-direction: row;` })}
+  ${md`flex-direction: row;`}
 
   & > div {
     flex: 1;
@@ -66,15 +66,13 @@ const DemoArea = styled.div`
 
 const Wrapper = styled.div`
   flex-wrap: wrap;
-  ${() => MediaQuery({
-    md: `
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 80vh;
-      min-height: 500px;
-    `
-  })}
+  ${md`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    min-height: 500px;
+  `}
 `
 
 export default class Home extends React.Component {

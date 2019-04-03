@@ -1,16 +1,11 @@
-
 .env
 *.env
 dist
 /docker-compose.test.yml
-
 node_modules
 .vscode
 .data
-
 yarn-error\.log
 *.log
-
 \.next/
-
 coverage/

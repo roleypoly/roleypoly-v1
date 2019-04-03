@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import MediaQuery from '../../kit/media'
+import { md } from '../../kit/media'
 
 export default styled.div`
   border: solid 1px var(--role-color-outline);
@@ -92,20 +92,22 @@ export default styled.div`
     transform: none;
   }
 
-  ${(props: any) => MediaQuery({
-    md: `
+  ${md`
       font-size: 1em;
       text-shadow: none;
       padding-left: 32px;
-      ${(props.active) ? `box-shadow: none;` : ''}
       &::after {
-        ${(props.active) ? `background-color: var(--role-color-base);` : ''}
         display: block;
       }
-
+  `}
+  ${(props: any) => props.active
+    ? md`
+      box-shadow: none;
       &:hover::after {
-        ${(props.active) ? `background-color: var(--role-color-active);` : ''}
+        background-color: var(--role-color-active);
       }
-    `
-  })}
+      &::after {
+        background-color: var(--role-color-base);
+      }`
+    : ''}
 `

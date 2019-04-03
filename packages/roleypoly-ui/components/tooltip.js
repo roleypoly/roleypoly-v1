@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import MediaQuery from '../kit/media'
+import { md } from '../kit/media'
 
 export default styled.div`
   position: absolute;
@@ -15,7 +15,7 @@ export default styled.div`
   overflow: auto;
   pointer-events: none;
   white-space: normal;
-  ${() => MediaQuery({ md: `
-    white-space: nowrap;  `
-  })}
+  ${md`
+    white-space: nowrap;
+  `}
 `

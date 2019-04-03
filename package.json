@@ -15,8 +15,7 @@
     "lint:css": "stylelint 'packages/roleypoly-ui/**/*.js'",
     "lint:js": "standard",
     "rpcrepl": "babel-node packages/roleypoly-server/util/rpcrepl.js",
-    "dev:up": "docker-compose up -d",
-    "precommit": "yarn lint && yarn test"
+    "dev:up": "docker-compose up -d"
   },
   "private": true,
   "workspaces": [
@@ -24,8 +23,7 @@
   ],
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint",
-      "pre-push": "yarn lint && yarn test"
+      "pre-commit": "yarn lint"
     }
   },
   "devDependencies": {

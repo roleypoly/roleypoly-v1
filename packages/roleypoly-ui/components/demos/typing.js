@@ -1,8 +1,9 @@
+// @flow
 import * as React from 'react'
 import moment from 'moment'
 import Typist from 'react-typist'
 import styled from 'styled-components'
-import MediaQuery from '../../kit/media'
+import { sm } from '../../kit/media'
 import demoRoles from '../../config/demo'
 
 const Outer = styled.div`
@@ -15,7 +16,7 @@ const Outer = styled.div`
 const Chat = styled.div`
   padding: 10px 0;
   font-size: 0.8em;
-  ${() => MediaQuery({ sm: 'font-size: 1em;' })}
+  ${sm`font-size: 1em;`}
 
   & span {
     display: inline-block;
@@ -28,7 +29,7 @@ const TextArea = styled.div`
   border-radius: 5px;
   padding: 10px;
   font-size: 0.8em;
-  ${() => MediaQuery({ sm: 'font-size: 1em;' })}
+  ${sm`font-size: 1em;`}
 
   & .Typist .Cursor {
     display: inline-block;
