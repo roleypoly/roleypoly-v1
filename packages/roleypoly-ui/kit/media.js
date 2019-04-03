@@ -17,7 +17,7 @@ export const breakpoints = {
   xl: 1280
 }
 
-const mediaTemplateLiteral = (size: number, ...stuff: any): string =>
+const mediaTemplateLiteral = (size: number, ...stuff: mixed[]): string =>
   `@media screen and (min-width: ${size}px) {\n${stuff.join()}\n};`
 
 export const xs = mediaTemplateLiteral.bind(null, breakpoints.xs)

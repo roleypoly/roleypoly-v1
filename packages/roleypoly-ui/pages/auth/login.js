@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import styled from 'styled-components'
-import MediaQuery from '../../kit/media'
+import { md } from '../../kit/media'
 import DiscordButton from '../../components/discord-button'
 import RPC from '../../config/rpc'
 import redirect from '../../lib/redirect'
@@ -29,13 +29,11 @@ const Wrapper = styled.div`
   max-width: calc(98vw - 10px);
   margin: 0 auto;
   text-align: center;
-  ${() => MediaQuery({
-    md: `
-      padding-top: 0;
-      align-items: center;
-      min-height: 80vh;
-    `
-  })}
+  ${md`
+    padding-top: 0;
+    align-items: center;
+    min-height: 80vh;
+  `}
 `
 
 const Line = styled.div`
