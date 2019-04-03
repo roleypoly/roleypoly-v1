@@ -20,7 +20,7 @@ export type ServerModel = {
 export type PresentableServer = ServerModel & {
   id: string,
   gm?: {
-    color: number | string,
+    color?: number | string,
     nickname: string,
     roles: string[]
   },

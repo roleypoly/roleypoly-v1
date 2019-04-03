@@ -4,41 +4,18 @@ import LRU from 'lru-cache'
 import { type AppContext } from '../Roleypoly'
 import { type Models } from '../models'
 import { type ServerModel } from '../models/Server'
-import type DiscordService, { Permissions } from './discord'
+import type DiscordService from './discord'
 import {
   type Guild,
-  type Member,
   type Collection
 } from 'eris'
+import type {
+  Member,
+  PresentableServer,
+  ServerSlug,
+  PresentableRole
+} from '@roleypoly/types'
 import areduce from '../util/areduce'
-
-export type ServerSlug = {
-  id: string,
-  name: string,
-  ownerID: string,
-  icon: string
-}
-
-export type PresentableRole = {
-  id: string,
-  color: number,
-  name: string,
-  position: number,
-  safe: boolean
-}
-
-export type PresentableServer = ServerModel & {
-  id: string,
-  gm?: {
-    color: number | string,
-    nickname: string,
-    roles: string[]
-  },
-  server: ServerSlug,
-  roles: ?PresentableRole[],
-  perms: Permissions
-}
-
 class PresentationService extends Service {
   cache: LRU
   M: Models
@@ -61,8 +38,8 @@ class PresentationService extends Service {
     }
   }
 
-  presentableServers (collection: Collection<string, Guild>, userId: string) {
-    return areduce(collection.array(), async (acc, server) => {
+  presentableServers (collection: Collection<Guild>, userId: string) {
+    return areduce(Array.from(collection.values()), async (acc, server) => {
       const gm = server.members.get(userId)
       if (gm == null) {
         throw new Error(`somehow this guildmember ${userId} of ${server.id} didn't exist.`)
@@ -79,12 +56,12 @@ class PresentationService extends Service {
     return {
       id: server.id,
       gm: {
-        nickname: gm.nickname || gm.user.username,
-        color: gm.displayHexColor,
-        roles: gm.roles.keyArray()
+        nickname: gm.nick || gm.user.username,
+        color: gm?.color,
+        roles: gm.roles
       },
       server: this.serverSlug(server),
-      roles: (incRoles) ? (await this.rolesByServer(server, sd)).map(r => ({ ...r, selected: gm.roles.has(r.id) })) : [],
+      roles: (incRoles) ? (await this.rolesByServer(server, sd)).map(r => ({ ...r, selected: gm.roles.includes(r.id) })) : [],
       message: sd.message,
       categories: sd.categories,
       perms: this.discord.getPermissions(gm)

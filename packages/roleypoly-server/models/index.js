@@ -15,18 +15,18 @@ export type Models = {
 
 export default (sql: Sequelize): Models => {
   const models: Models = {}
-  const modelFiles = glob.sync('./models/**/!(index).js')
+  const modelFiles = glob.sync(`${__dirname}/**/!(index).js`).map(v => v.replace(__dirname, '.'))
   log.debug('found models', modelFiles)
 
   modelFiles.forEach((v) => {
     let name = path.basename(v).replace('.js', '')
-    if (v === './models/index.js') {
+    if (v === `./index.js`) {
       log.debug('index.js hit, skipped')
       return
     }
     try {
-      log.debug('importing..', v.replace('models/', ''))
-      let model = sql.import(v.replace('models/', ''))
+      log.debug('importing..', v)
+      let model = sql.import(v)
       models[name] = model
     } catch (err) {
       log.fatal('error importing model ' + v, err)

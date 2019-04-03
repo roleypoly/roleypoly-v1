@@ -95,12 +95,12 @@ export const member = (
   $: AppContext,
   fn: (ctx: Context, server: string, ...args: any[]) => any,
   silent: boolean = false
-) => authed($, (
+) => authed($, async (
   ctx: Context,
   server: string,
   ...args: any[]
 ) => {
-  if ($.discord.isMember(server, ctx.session.userId)) {
+  if (await $.discord.isMember(server, ctx.session.userId)) {
     return fn(ctx, server, ...args)
   }
 

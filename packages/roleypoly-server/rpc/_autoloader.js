@@ -11,14 +11,14 @@ export default (ctx: AppContext, forceClear: ?boolean = false): {
   [rpc: string]: Function
 } => {
   let map = {}
-  const apis = glob.sync(`./rpc/**/!(index).js`)
+  const apis = glob.sync(`${__dirname}/**/!(index).js`).map(v => v.replace(__dirname, '.'))
   log.debug('found rpcs', apis)
 
   for (let a of apis) {
     const filename = path.basename(a)
     const dirname = path.dirname(a)
 
-    const pathname = a.replace('rpc/', '')
+    const pathname = a
     delete require.cache[require.resolve(pathname)]
 
     // internal stuff

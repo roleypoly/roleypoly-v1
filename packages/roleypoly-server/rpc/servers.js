@@ -3,6 +3,7 @@ import { type AppContext } from '../Roleypoly'
 import { type Context } from 'koa'
 import { type Guild } from 'eris'
 import * as secureAs from './_security'
+import RPCError from './_error'
 
 export default ($: AppContext) => ({
 
@@ -24,23 +25,18 @@ export default ($: AppContext) => ({
     return $.P.serverSlug(srv)
   },
 
-  getServer: secureAs.member($, (ctx: Context, id: string) => {
+  getServer: secureAs.member($, async (ctx: Context, id: string) => {
     const { userId } = (ctx.session: { userId: string })
 
-    const srv = $.discord.client.guilds.get(id)
+    const srv = await $.discord.fetcher.getGuild(id)
     if (srv == null) {
-      return { err: 'not_found' }
+      throw new RPCError('server not found', 404)
     }
 
-    let gm
-    if (srv.members.has(userId)) {
-      gm = $.discord.gm(id, userId)
-    } else if ($.discord.isRoot(userId)) {
-      gm = $.discord.fakeGm({ id: userId })
-    }
+    let gm = await $.discord.gm(id, userId, { canFake: true })
 
     if (gm == null) {
-      return { err: 'not_found' }
+      throw new RPCError('server not found', 404)
     }
 
     return $.P.presentableServer(srv, gm)

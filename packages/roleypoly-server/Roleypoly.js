@@ -105,6 +105,8 @@ class Roleypoly {
       throw log.fatal('DB_URL not set.')
     }
 
+    await this.ctx.ui.prepare()
+
     const sequelize = new Sequelize(dbUrl, { logging: log.sql.bind(log, log) })
     this.ctx.sql = sequelize
     this.M = fetchModels(sequelize)
@@ -132,8 +134,6 @@ class Roleypoly {
   }
 
   async loadRoutes (forceClear: boolean = false) {
-    await this.ctx.ui.prepare()
-
     this.router = betterRouter().loadMethods()
     fetchApis(this.router, this.ctx, { forceClear })
     // this.ctx.RPC.hookRoutes(this.router)
@@ -156,15 +156,16 @@ class Roleypoly {
       // hot-reloading system
       log.info('API hot-reloading is active.')
       const chokidar = require('chokidar')
+      const path = require('path')
       let hotMiddleware = mw
 
-      this.__apiWatcher = chokidar.watch('api/**')
+      this.__apiWatcher = chokidar.watch(path.join(__dirname, 'api/**'))
       this.__apiWatcher.on('all', async (path) => {
         log.info('reloading APIs...', path)
         hotMiddleware = await this.loadRoutes(true)
       })
 
-      this.__rpcWatcher = chokidar.watch('rpc/**')
+      this.__rpcWatcher = chokidar.watch(path.join(__dirname, 'rpc/**'))
       this.__rpcWatcher.on('all', (path) => {
         log.info('reloading RPCs...', path)
         this.ctx.RPC.reload()

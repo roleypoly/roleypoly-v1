@@ -5,7 +5,7 @@ import { addAwaitOutsideToReplServer } from 'await-outside'
 import Roleypoly from '../Roleypoly'
 import chokidar from 'chokidar'
 import logger from '../logger'
-process.env.DEBUG = false
+// process.env.DEBUG = false
 process.env.IS_BOT = false
 
 dotenv.config()
