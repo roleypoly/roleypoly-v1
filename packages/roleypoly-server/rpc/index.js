@@ -1,11 +1,11 @@
 // @flow
-import logger from '../logger'
 import fnv from 'fnv-plus'
 import autoloader from './_autoloader'
 import RPCError from './_error'
 import type Roleypoly, { Router } from '../Roleypoly'
 import type { Context } from 'koa'
-const log = logger(__filename)
+// import logger from '../logger'
+// const log = logger(__filename)
 
 export type RPCIncoming = {
   fn: string,

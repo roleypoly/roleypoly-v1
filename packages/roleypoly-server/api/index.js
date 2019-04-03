@@ -1,7 +1,6 @@
 // @flow
 import glob from 'glob'
 import type { Router, AppContext } from '../Roleypoly'
-import path from 'path'
 import logger from '../logger'
 const log = logger(__filename)
 
