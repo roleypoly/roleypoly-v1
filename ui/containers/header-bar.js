@@ -10,7 +10,7 @@ type Props = {
 const HeaderBarAuth = dynamic(() => import('../components/header/auth'))
 const HeaderBarUnauth = dynamic(() => import('../components/header/unauth'))
 
-const HeaderBar: React.StatelessFunctionalComponent<Props> = (props) => {
+const HeaderBar = (props: Props) => {
   if (props.user == null) {
     return <HeaderBarUnauth {...props} />
   } else {

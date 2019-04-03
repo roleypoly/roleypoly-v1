@@ -5,14 +5,12 @@ import * as secureAs from './_security'
 
 export default ($: AppContext) => ({
 
-  getCurrentUser: secureAs.authed($, (ctx: Context) => {
-    return $.discord.getUserPartial(ctx.session.userId)
+  getCurrentUser: secureAs.authed($, async (ctx: Context) => {
+    return await $.discord.getUserPartial(ctx.session.userId)
   }),
 
   isRoot: secureAs.root($, () => {
     return true
   })
-
-
 
 })

@@ -16,7 +16,7 @@ const defaultProps: SocialCardProps = {
   imageSize: 200
 }
 
-const SocialCards: React.StatelessFunctionalComponent<SocialCardProps> = (props) => {
+const SocialCards = (props: SocialCardProps) => {
   props = {
     ...defaultProps,
     ...props

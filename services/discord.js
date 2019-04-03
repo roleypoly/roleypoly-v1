@@ -27,7 +27,8 @@ export type Permissions = {
 
 type CachedRole = {
   id: string,
-  position: number
+  position: number,
+  color?: number
 }
 
 type OAuthRequestData = {
@@ -48,6 +49,11 @@ export type UserPartial = {
   avatar: string
 }
 
+export type MemberExt = Member & {
+  color?: number,
+  __faked?: true
+}
+
 export default class DiscordService extends Service {
   ctx: AppContext
   bot: Bot
@@ -57,6 +63,7 @@ export default class DiscordService extends Service {
 
   // a small cache of role data for checking viability
   ownRoleCache: LRU<string, CachedRole>
+  topRoleCache: LRU<string, CachedRole>
 
   oauthCallback: string
 
@@ -77,6 +84,7 @@ export default class DiscordService extends Service {
     this.oauthCallback = `${ctx.config.appUrl}/api/oauth/callback`
 
     this.ownRoleCache = new LRU()
+    this.topRoleCache = new LRU()
 
     if (this.cfg.isBot) {
       this.client = new Eris(this.cfg.token, {
@@ -118,36 +126,68 @@ export default class DiscordService extends Service {
     return this.client.guilds.filter(guild => guild.members.has(user))
   }
 
-  gm (serverId: string, userId: string): ?Member {
-    return this.client.guilds.get(serverId)?.members.get(userId)
+  async gm (serverId: string, userId: string, { canFake = false }: { canFake: boolean } = {}): Promise<?MemberExt> {
+    const gm: ?Member = await this.fetcher.getMember(serverId, userId)
+    if (gm == null && this.isRoot(userId)) {
+      return this.fakeGm({ id: userId })
+    }
+
+    if (gm == null) {
+      return null
+    }
+
+    const out: MemberExt = gm
+    out.color = this.getHighestRole(gm).color
+    return out
   }
 
   ownGm (serverId: string) {
     return this.gm(serverId, this.client.user.id)
   }
 
-  fakeGm ({ id = '0', nickname = '[none]', displayHexColor = '#ffffff' }: $Shape<Member>): $Shape<Member> {
-    return { id, nickname, displayHexColor, __faked: true, roles: { has () { return false } } }
+  fakeGm ({ id = '0', nick = '[none]', color = 0 }: $Shape<MemberExt>): $Shape<MemberExt> {
+    return { id, nick, color, __faked: true, roles: [] }
   }
 
   getRoles (server: string) {
     return this.client.guilds.get(server)?.roles
   }
 
-  getOwnPermHeight (server: Guild): number {
+  async getOwnPermHeight (server: Guild): Promise<number> {
     if (this.ownRoleCache.has(server)) {
-      return this.ownRoleCache.get(server).position
+      const r = this.ownRoleCache.get(server)
+      return r.position
     }
 
-    const gm = this.ownGm(server.id)
+    const gm = await this.ownGm(server.id)
     const g = gm?.guild
-    const r: Role = OrderedSet(gm?.roles).map(id => g?.roles.get(id)).sortBy(r => r.position).last({ position: 0, id: '0' })
+    const r: Role = OrderedSet(gm?.roles).map(id => g?.roles.get(id)).minBy(r => r.position)
     this.ownRoleCache.set(server, {
       id: r.id,
       position: r.position
     })
 
     return r.position
+  }
+
+  getHighestRole (gm: MemberExt): Role {
+    const trk = `${gm.guild.id}:${gm.id}`
+    if (this.topRoleCache.has(trk)) {
+      const r = gm.guild.roles.get(this.topRoleCache.get(trk).id)
+      if (r != null) {
+        return r
+      }
+    }
+
+    const g = gm.guild
+    const top = OrderedSet(gm.roles).map(id => g.roles.get(id)).minBy(r => r.position)
+    this.topRoleCache.set(trk, {
+      id: top.id,
+      position: top.position,
+      color: top.color
+    })
+
+    return top
   }
 
   calcPerms (permable: Role | Member): Permissions {
@@ -173,18 +213,19 @@ export default class DiscordService extends Service {
     return real
   }
 
-  safeRole (server: string, role: string) {
+  async safeRole (server: string, role: string) {
     const r = this.getRoles(server)?.get(role)
     if (r == null) {
       throw new Error(`safeRole can't find ${role} in ${server}`)
     }
 
-    return this.roleIsEditable(r) && !this.calcPerms(r).canManageRoles
+    return (await this.roleIsEditable(r)) && !this.calcPerms(r).canManageRoles
   }
 
-  roleIsEditable (role: Role): boolean {
+  async roleIsEditable (role: Role): Promise<boolean> {
     // role will be LOWER than my own
-    return this.getOwnPermHeight(role.guild) > role.position
+    const ownPh = await this.getOwnPermHeight(role.guild)
+    return ownPh > role.position
   }
 
   async oauthRequest (path: string, data: OAuthRequestData) {
@@ -228,8 +269,8 @@ export default class DiscordService extends Service {
     })
   }
 
-  getUserPartial (userId: string): ?UserPartial {
-    const u = this.client.users.get(userId)
+  async getUserPartial (userId: string): Promise<?UserPartial> {
+    const u = await this.fetcher.getUser(userId)
     if (u == null) {
       return null
     }
@@ -295,11 +336,16 @@ export default class DiscordService extends Service {
     ].join('\n'))
   }
 
-  canManageRoles (server: string, user: string) {
-    return this.getPermissions(this.gm(server, user)).canManageRoles
+  async canManageRoles (server: string, user: string): Promise<boolean> {
+    const gm = await this.gm(server, user)
+    if (gm == null) {
+      return false
+    }
+
+    return this.getPermissions(gm).canManageRoles
   }
 
-  isMember (server: string, user: string) {
+  isMember (server: string, user: string): boolean {
     return this.gm(server, user) != null
   }
 }

@@ -109,25 +109,35 @@ export default class RPCServer {
   }
 
   rpcError (ctx: Context & {body: any}, msg: ?string, err: ?Error = null, code: ?number = null) {
-    log.error('rpc error', { msg, err })
+    // log.error('rpc error', { msg, err })
 
     ctx.body = {
-      msg,
+      msg: err?.message || msg,
       error: true
     }
 
-    if (err instanceof RPCError) {
-      // this is one of our own errors, so we have a lot of data on this.
-      ctx.status = err.code || code || 500
-      ctx.body.msg = `${msg || 'RPC Error'}: ${err.message}`
-    } else {
-      if (msg == null && err != null) {
-        ctx.body.msg = msg = err.message
+    ctx.status = code || 500
+    if (err != null) {
+      if (err instanceof RPCError || err.constructor.name === 'RPCError') {
+        // $FlowFixMe
+        ctx.status = err.code
+        console.log(err.code)
       }
-
-      // if not, just play cloudflare, say something was really weird, and move on.
-      ctx.status = code || 520
-      ctx.message = 'Unknown Error'
     }
+
+    // if (err != null && err.constructor.name === 'RPCError') {
+    //   console.log({ status: err.code })
+    //   // this is one of our own errors, so we have a lot of data on this.
+    //   ctx.status = err.code // || code || 500
+    //   ctx.body.msg = `${err.message || msg || 'RPC Error'}`
+    // } else {
+    //   if (msg == null && err != null) {
+    //     ctx.body.msg = err.message
+    //   }
+
+    //   // if not, just play cloudflare, say something was really weird, and move on.
+    //   ctx.status = code || 520
+    //   ctx.message = 'Unknown Error'
+    // }
   }
 }

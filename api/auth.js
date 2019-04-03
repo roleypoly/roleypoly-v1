@@ -61,6 +61,7 @@ export default (R: Router, $: AppContext) => {
     const { r } = ctx.query
     // check if already authed
     if (await $.auth.isLoggedIn(ctx, { refresh: true })) {
+      log.debug('already authed.', ctx.session)
       return ctx.redirect(r || '/')
     }
 
@@ -79,6 +80,7 @@ export default (R: Router, $: AppContext) => {
     const { oauthRedirect: r } = ctx.session
     delete ctx.session.oauthRedirect
     if (await $.auth.isLoggedIn(ctx)) {
+      log.debug('user was logged in')
       return ctx.redirect(r || '/')
     }
 
@@ -108,6 +110,7 @@ export default (R: Router, $: AppContext) => {
       const tokens = await $.discord.initializeOAuth(code)
       const user = await $.discord.getUserFromToken(tokens.access_token)
       $.auth.injectSessionFromOAuth(ctx, tokens, user.id)
+      log.debug('user logged in', { tokens, user, s: ctx.session })
       return ctx.redirect(r || '/')
     } catch (e) {
       log.error('token and auth fetch failure', e)

@@ -36,7 +36,7 @@ const RoleHolder = styled.div`
   display: flex;
   flex-wrap: wrap;
 `
-class Server extends React.Component<ServerPageProps> {
+class Server extends React.PureComponent<ServerPageProps> {
   static async getInitialProps (ctx: *, rpc: *, router: *) {
     const isDiscordBot = ctx.req && ctx.req.headers['user-agent'].includes('Discordbot')
     if (ctx.user == null) {

@@ -100,15 +100,6 @@ export default (R: Router, $: AppContext) => {
     ctx.body = { ok: true }
   })
 
-  R.get('/api/admin/servers', async (ctx: Context) => {
-    const { userId } = (ctx.session: { userId: string })
-    if (!$.discord.isRoot(userId)) {
-      return
-    }
-
-    ctx.body = $.discord.client.guilds.map(g => ({ url: `${$.config.appUrl}/s/${g.id}`, name: g.name, members: g.members.array().length, roles: g.roles.array().length }))
-  })
-
   R.patch('/api/servers/:server/roles', async (ctx: Context) => {
     const { userId } = (ctx.session: { userId: string })
     const { server } = (ctx.params: { server: string })
@@ -126,30 +117,20 @@ export default (R: Router, $: AppContext) => {
       }
     }
 
-    const { added, removed } = ((ctx.request.body: any): { added: string[], removed: string[] })
+    const originalRoles = gm.roles
+    let { added, removed } = ((ctx.request.body: any): { added: string[], removed: string[] })
 
-    const allowedRoles = await $.server.getAllowedRoles(server)
+    const allowedRoles: string[] = await $.server.getAllowedRoles(server)
 
-    const pred = r => $.discord.safeRole(server, r) && allowedRoles.indexOf(r) !== -1
+    const isSafe = (r: string) => $.discord.safeRole(server, r) && allowedRoles.includes(r)
 
-    if (added.length > 0) {
-      gm = await gm.addRoles(added.filter(pred))
-    }
+    added = added.filter(isSafe)
+    removed = removed.filter(isSafe)
 
-    setTimeout(() => {
-      if (gm == null) {
-        ctx.body = {
-          err: 'guild member disappeared on remove, this should never happen.'
-        }
-        ctx.status = 500
-
-        return
-      }
-
-      if (removed.length > 0) {
-        gm.removeRoles(removed.filter(pred))
-      }
-    }, 1000)
+    const newRoles = originalRoles.concat(added).filter(x => !removed.includes(x))
+    gm.edit({
+      roles: newRoles
+    })
 
     ctx.body = { ok: true }
   })

@@ -25,7 +25,7 @@ export default class RPCClient {
   cookieHeader: string
 
   rpc: {
-    [fn: string]: (...args: any[]) => Promise<mixed> | string
+    [fn: string]: (...args: any[]) => Promise<any>
   } = {}
 
   __rpcAvailable: Array<{
@@ -42,11 +42,12 @@ export default class RPCClient {
       this.dev = process.env.NODE_ENV === 'development'
     }
 
-    this.rpc = new Proxy({
-      toJSON () {
-        return '{}'
-      }
-    }, { get: this.__rpcCall, has: this.__checkCall, ownKeys: this.__listCalls, delete: () => {} })
+    this.rpc = new Proxy({}, {
+      get: this.__rpcCall,
+      has: this.__checkCall,
+      ownKeys: this.__listCalls,
+      delete: () => {}
+    })
 
     if (this.dev) {
       this.updateCalls()
@@ -90,7 +91,9 @@ export default class RPCClient {
     }
     const rsp = await rq.send(req).ok(() => true)
     const body: RPCResponse = rsp.body
+    // console.log(body)
     if (body.error === true) {
+      console.error(body)
       throw RPCError.fromResponse(body, rsp.status)
     }
 

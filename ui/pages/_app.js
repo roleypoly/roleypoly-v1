@@ -8,6 +8,7 @@ import { Provider } from 'react-redux'
 import ErrorP, { Overlay } from './_error'
 import styled from 'styled-components'
 import { withRedux } from '../config/redux'
+import type { UserPartial } from '../../services/discord'
 
 type NextPage = React.Component<any> & React.StatelessFunctionalComponent<any> & {
   getInitialProps: (ctx: any, ...args: any) => any
@@ -35,9 +36,18 @@ class RoleypolyApp extends App {
 
     let pageProps = {}
     const rpc = withCookies(ctx)
-
-    const user = await rpc.getCurrentUser()
-    ctx.user = user
+    let user: ?UserPartial
+    try {
+      user = await rpc.getCurrentUser()
+      ctx.user = user
+    } catch (e) {
+      if (e.code === 403) {
+        ctx.user = null
+      } else {
+        console.error(e)
+        throw e
+      }
+    }
     ctx.robots = 'INDEX, FOLLOW'
 
     ctx.layout = {

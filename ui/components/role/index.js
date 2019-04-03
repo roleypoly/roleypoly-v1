@@ -4,8 +4,8 @@ import { colors } from '../global-colors'
 import Color from 'color'
 import RoleStyled from './role.styled'
 import Tooltip from '../tooltip'
-import logger from '../../../logger'
-const log = logger(__filename)
+// import logger from '../../../logger'
+// const log = logger(__filename)
 
 const fromColors = (colors) => Object.entries(colors).reduce(
   (acc, [v, val]) => ({ ...acc, [`--role-color-${v}`]: val })
@@ -45,15 +45,15 @@ export default class Role extends React.Component<RoleProps, RoleState> {
   }
 
   onMouseOver = () => {
-    log.debug('caught hovering')
+    // log.debug('caught hovering')
     if (this.props.disabled && this.state.hovering === false) {
-      log.debug('set hovering')
+      // log.debug('set hovering')
       this.setState({ hovering: true })
     }
   }
 
   onMouseOut = () => {
-    log.debug('out hovering')
+    // log.debug('out hovering')
     this.setState({ hovering: false })
   }
 
