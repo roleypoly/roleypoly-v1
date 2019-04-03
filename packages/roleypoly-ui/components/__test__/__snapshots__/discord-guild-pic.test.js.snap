@@ -36,7 +36,7 @@ exports[`<DiscordGuildPic /> falls-back to a default when things go bad. 1`] = `
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
           "componentStyle": ComponentStyle {
-            "componentId": "discord-guild-pic__Fallback-d55lwu-0",
+            "componentId": "discord-guild-pic__Fallback-sc-93euug-0",
             "isStatic": true,
             "lastClassName": "c0",
             "rules": Array [
@@ -46,7 +46,7 @@ exports[`<DiscordGuildPic /> falls-back to a default when things go bad. 1`] = `
           "displayName": "discord-guild-pic__Fallback",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "discord-guild-pic__Fallback-d55lwu-0",
+          "styledComponentId": "discord-guild-pic__Fallback-sc-93euug-0",
           "target": "div",
           "toString": [Function],
           "warnTooManyClasses": [Function],

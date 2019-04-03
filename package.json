@@ -5,13 +5,14 @@
   "scripts": {
     "lerna": "lerna",
     "start": "lerna run start",
-    "dev": "lerna run dev",
+    "dev": "babel-node packages/roleypoly-server/index.js",
     "build": "lerna run build",
     "flow:install": "flow-mono install-types",
     "remotedebug": "remotedebug_ios_webkit_adapter --port=9000 > /dev/null",
-    "test": "jest",
+    "test": "jest --color --coverage",
     "lint:css": "stylelint 'packages/roleypoly-ui/**/*.js'",
-    "rpcrepl": "babel-node packages/roleypoly-server/util/rpcrepl.js"
+    "rpcrepl": "babel-node packages/roleypoly-server/util/rpcrepl.js",
+    "dev:up": "docker-compose up -d"
   },
   "private": true,
   "workspaces": [
@@ -27,8 +28,10 @@
     "@babel/plugin-transform-runtime": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
     "@babel/preset-flow": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
     "await-outside": "^2.1.2",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.7.0",
     "babel-plugin-styled-components": "^1.10.0",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "chokidar": "^2.1.5",
@@ -63,11 +66,6 @@
     "globals": [
       "$Shape",
       "$Call"
-    ]
-  },
-  "jest": {
-    "projects": [
-      "projects/*/jest.config.js"
     ]
   }
 }
