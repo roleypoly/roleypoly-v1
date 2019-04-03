@@ -7,9 +7,11 @@ import { type User } from '../stores/user'
 import styled from 'styled-components'
 
 const LayoutWrapper = styled.div`
-  transition: opacity: 0.1s ease-out;
+  transition: opacity 0.1s ease-out;
   opacity: 0;
-  .wf-active &, .force-active & {
+
+  .wf-active &,
+  .force-active & {
     opacity: 1;
   }
 `
@@ -20,7 +22,6 @@ const ContentBox = styled.div`
   max-width: 100vw;
   padding: 5px;
   padding-top: 50px;
-  /* max-height: calc(100vh - 50px); */
 `
 
 const Layout = ({ children, user, noBackground, router }: {children: React.Element<any>, user: User, noBackground: boolean, router: * }) => <>

@@ -11,12 +11,12 @@ const Button = styled.a`
   color: var(--c-white);
   padding: 0.4em 1em;
   border-radius: 3px;
-  border: 1px solid rgba(0,0,0,0.25);
+  border: 1px solid rgba(0, 0, 0, 0.25);
   text-decoration: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: translateY(0px);
+  transform: translateY(0);
   transition: all 0.3s ease-in-out;
   position: relative;
 
@@ -28,22 +28,23 @@ const Button = styled.a`
     left: 0;
     bottom: 0;
     transition: all 0.35s ease-in-out;
-    background-color: hsla(0,0%,100%,0.1);
+    background-color: hsla(0, 0%, 100%, 0.1);
     pointer-events: none;
     opacity: 0;
     z-index: 2;
   }
 
   &:hover {
-    box-shadow: 0 1px 2px rgba(0,0,0,0.75);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
     transform: translateY(-1px);
+
     &::after {
       opacity: 1;
     }
   }
 
   &:active {
-    transform: translateY(0px);
+    transform: translateY(0);
     box-shadow: none;
   }
 `

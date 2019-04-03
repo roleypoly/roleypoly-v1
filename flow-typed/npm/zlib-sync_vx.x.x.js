@@ -23,7 +23,6 @@ declare module 'zlib-sync' {
  * needed.
  */
 
-
 // Filename aliases
 declare module 'zlib-sync/index' {
   declare module.exports: $Exports<'zlib-sync'>;

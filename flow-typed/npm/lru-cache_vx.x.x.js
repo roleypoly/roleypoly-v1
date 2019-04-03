@@ -23,7 +23,6 @@ declare module 'lru-cache' {
  * needed.
  */
 
-
 // Filename aliases
 declare module 'lru-cache/index' {
   declare module.exports: $Exports<'lru-cache'>;

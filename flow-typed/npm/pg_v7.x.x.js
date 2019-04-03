@@ -52,15 +52,15 @@ declare module pg {
     log: Function,
 
     // node-postgres Client ------
-    //database connection string to define some other config parameters
+    // database connection string to define some other config parameters
     connectionString: string,
-    //database user's name
+    // database user's name
     user: string,
-    //name of database to connect
+    // name of database to connect
     database: string,
-    //database user's password
+    // database user's password
     password: string,
-    //database port
+    // database port
     port: number,
     // database host. defaults to localhost
     host?: string,
@@ -89,16 +89,16 @@ declare module pg {
     release(error?: mixed): void,
 
     query:
-    ( <T: QuerySubmittableConfig>(query: T, callback?: QueryCallback) => T ) &
-    ( (query: QueryConfig|string, callback?: QueryCallback) => Query ) &
-    ( (text: string, values: Array<any>, callback?: QueryCallback) => Query ),
+    (<T: QuerySubmittableConfig>(query: T, callback?: QueryCallback) => T) &
+    ((query: QueryConfig|string, callback?: QueryCallback) => Query) &
+    ((text: string, values: Array<any>, callback?: QueryCallback) => Query),
 
     on:
-    ((event: 'drain', listener: () => void) => events$EventEmitter )&
-    ((event: 'error', listener: (err: PG_ERROR) => void) => events$EventEmitter )&
-    ((event: 'notification', listener: (message: any) => void) => events$EventEmitter )&
-    ((event: 'notice', listener: (message: any) => void) => events$EventEmitter )&
-    ((event: 'end', listener: () => void) => events$EventEmitter ),
+    ((event: 'drain', listener: () => void) => events$EventEmitter)&
+    ((event: 'error', listener: (err: PG_ERROR) => void) => events$EventEmitter)&
+    ((event: 'notification', listener: (message: any) => void) => events$EventEmitter)&
+    ((event: 'notice', listener: (message: any) => void) => events$EventEmitter)&
+    ((event: 'end', listener: () => void) => events$EventEmitter),
   }
 
   declare type PoolConnectCallback = (error: PG_ERROR|null,
@@ -117,8 +117,8 @@ declare module pg {
   // And there is a flow(<0.34) issue here, when Array<mixed>,
   // the overloading will not work
     query:
-    ( (query: QueryConfig|string, callback?: QueryCallback) => Promise<ResultSet> ) &
-    ( (text: string, values: Array<any>, callback?: QueryCallback) => Promise<ResultSet>);
+    ((query: QueryConfig|string, callback?: QueryCallback) => Promise<ResultSet>) &
+    ((text: string, values: Array<any>, callback?: QueryCallback) => Promise<ResultSet>);
 
     /* flow issue: https://github.com/facebook/flow/issues/2423
      * When this fixed, this overloading can be used.
@@ -133,7 +133,6 @@ declare module pg {
   }
 
   // <<------------- copy from 'pg-pool' ------------------------------
-
 
   // error
   declare type PG_ERROR = {
@@ -158,13 +157,13 @@ declare module pg {
   };
 
   declare type ClientConfig = {
-    //database user's name
+    // database user's name
     user?: string,
-    //name of database to connect
+    // name of database to connect
     database?: string,
-    //database user's password
+    // database user's password
     password?: string,
-    //database port
+    // database port
     port?: number,
     // database host. defaults to localhost
     host?: string,
@@ -232,9 +231,9 @@ declare module pg {
     ): Promise<U>;
 
     on :
-    ((event: 'row', listener: (row: Row, result: ResultBuilder) => void) => events$EventEmitter )&
-    ((event: 'end', listener: (result: ResultBuilder) => void) => events$EventEmitter )&
-    ((event: 'error', listener: (err: PG_ERROR) => void) => events$EventEmitter );
+    ((event: 'row', listener: (row: Row, result: ResultBuilder) => void) => events$EventEmitter)&
+    ((event: 'end', listener: (result: ResultBuilder) => void) => events$EventEmitter)&
+    ((event: 'error', listener: (err: PG_ERROR) => void) => events$EventEmitter);
   }
 
   /*
@@ -254,16 +253,16 @@ declare module pg {
     escapeIdentifier(str: string): string;
 
     query:
-    ( <T: QuerySubmittableConfig>(query: T, callback?: QueryCallback) => T ) &
-    ( (query: QueryConfig|string, callback?: QueryCallback) => Query ) &
-    ( (text: string, values: Array<any>, callback?: QueryCallback) => Query );
+    (<T: QuerySubmittableConfig>(query: T, callback?: QueryCallback) => T) &
+    ((query: QueryConfig|string, callback?: QueryCallback) => Query) &
+    ((text: string, values: Array<any>, callback?: QueryCallback) => Query);
 
     on:
-    ((event: 'drain', listener: () => void) => this )&
-    ((event: 'error', listener: (err: PG_ERROR) => void) => this )&
-    ((event: 'notification', listener: (message: any) => void) => this )&
-    ((event: 'notice', listener: (message: any) => void) => this )&
-    ((event: 'end', listener: () => void) => this );
+    ((event: 'drain', listener: () => void) => this)&
+    ((event: 'error', listener: (err: PG_ERROR) => void) => this)&
+    ((event: 'notification', listener: (message: any) => void) => this)&
+    ((event: 'notice', listener: (message: any) => void) => this)&
+    ((event: 'end', listener: () => void) => this);
   }
 
   /*
@@ -273,11 +272,11 @@ declare module pg {
   declare type TypeParserBinary = (value: Buffer) => any;
   declare type Types = {
     getTypeParser:
-      ((oid: number, format?: 'text') => TypeParserText )&
-      ((oid: number, format: 'binary') => TypeParserBinary );
+      ((oid: number, format?: 'text') => TypeParserText)&
+      ((oid: number, format: 'binary') => TypeParserBinary);
 
     setTypeParser:
-      ((oid: number, format?: 'text', parseFn: TypeParserText) => void )&
+      ((oid: number, format?: 'text', parseFn: TypeParserText) => void)&
       ((oid: number, format: 'binary', parseFn: TypeParserBinary) => void)&
       ((oid: number, parseFn: TypeParserText) => void),
   }
@@ -289,7 +288,7 @@ declare module pg {
     types: Types;
     Client: Class<Client>;
     Pool: Class<Pool>;
-    Connection: mixed; //Connection is used internally by the Client.
+    Connection: mixed; // Connection is used internally by the Client.
     constructor(client: Client): void;
     native: { // native binding, have the same capability like PG
       types: Types;

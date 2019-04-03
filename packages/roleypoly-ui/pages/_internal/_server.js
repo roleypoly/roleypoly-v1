@@ -24,13 +24,7 @@ const mapStateToProps = (state, { router: { query: { id } } }) => {
 }
 
 const Category = styled.div``
-
-const Hider = styled.div`
-  /* opacity: ${(props: any) => props.visible ? '1' : '0'}; */
-  /* opacity: 1; */
-  /* transition: opacity 0.15s ease-out; */
-  /* ${(props: any) => props.visible ? '' : 'display: none;'} */
-`
+const Hider = styled.div``
 
 const RoleHolder = styled.div`
   display: flex;

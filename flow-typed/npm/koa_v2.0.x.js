@@ -63,31 +63,31 @@ declare module 'koa' {
     // if you meet some error here, temporarily add an additional annotation
     // like: `request.accepts((['json', 'text']:Array<string>))` to fix it.
     ((arg: string, ...args: string[]) => string|false) &
-    ( () => string[] ) , // return the old value.
+    (() => string[]), // return the old value.
 
 //  https://github.com/jshttp/accepts/blob/master/index.js#L153
 //  https://github.com/jshttp/accepts/blob/master/test/charset.js
-    acceptsCharsets: ( (args: string[]) => buffer$Encoding|false)&
+    acceptsCharsets: ((args: string[]) => buffer$Encoding|false)&
     // ToDo: https://github.com/facebook/flow/issues/3009
     // if you meet some error here, see L70.
-    ( (arg: string, ...args: string[]) => buffer$Encoding|false ) &
-    ( () => string[] ),
+    ((arg: string, ...args: string[]) => buffer$Encoding|false) &
+    (() => string[]),
 
 //  https://github.com/jshttp/accepts/blob/master/index.js#L119
 //  https://github.com/jshttp/accepts/blob/master/test/encoding.js
-    acceptsEncodings: ( (args: string[]) => string|false)&
+    acceptsEncodings: ((args: string[]) => string|false)&
     // ToDo: https://github.com/facebook/flow/issues/3009
     // if you meet some error here, see L70.
-    ( (arg: string, ...args: string[]) => string|false ) &
-    ( () => string[] ),
+    ((arg: string, ...args: string[]) => string|false) &
+    (() => string[]),
 
 //  https://github.com/jshttp/accepts/blob/master/index.js#L185
 //  https://github.com/jshttp/accepts/blob/master/test/language.js
-    acceptsLanguages: ( (args: string[]) => string|false) &
+    acceptsLanguages: ((args: string[]) => string|false) &
     // ToDo: https://github.com/facebook/flow/issues/3009
     // if you meet some error here, see L70.
-    ( (arg: string, ...args: string[]) => string|false ) &
-    ( () => string[] ),
+    ((arg: string, ...args: string[]) => string|false) &
+    (() => string[]),
 
     get: (field: string) => string,
 
@@ -98,9 +98,9 @@ declare module 'koa' {
 * If there is no content type, `false` is returned.
 * Otherwise, it returns the first `type` that matches.
 */
-    is: ( (args: string[]) => null|false|string)&
-    ( (arg: string, ...args: string[]) => null|false|string ) &
-    ( () => string ), // should return the mime type
+    is: ((args: string[]) => null|false|string)&
+    ((arg: string, ...args: string[]) => null|false|string) &
+    (() => string), // should return the mime type
 
     toJSON: () => RequestJSON,
     inspect: () => RequestInspect,
@@ -149,9 +149,9 @@ declare module 'koa' {
     get: (field: string) => string,
     // https://github.com/jshttp/type-is/blob/master/test/test.js
     // https://github.com/koajs/koa/blob/v2.x/lib/response.js#L382
-    is: ( (arg: string[]) => false|string) &
-    ( (arg: string, ...args: string[]) => false|string ) &
-    ( () => string ), // should return the mime type
+    is: ((arg: string[]) => false|string) &
+    ((arg: string, ...args: string[]) => false|string) &
+    (() => string), // should return the mime type
     redirect: (url: string, alt?: string) => void,
     remove: (field: string) => void,
     // https://github.com/koajs/koa/blob/v2.x/lib/response.js#L418
@@ -180,7 +180,7 @@ declare module 'koa' {
   declare type CookiesSetOptions = {
     domain: string, // domain of the cookie (no default).
     maxAge: number, // milliseconds from Date.now() for expiry
-    expires?: Date, //cookie's expiration date (expires at the end of session by default).
+    expires?: Date, // cookie's expiration date (expires at the end of session by default).
     path?: string, //  the path of the cookie (/ by default).
     secure?: boolean, // false by default for HTTP, true by default for HTTPS
     httpOnly?: boolean, //  a boolean indicating whether the cookie is only to be sent over HTTP(S),
@@ -192,7 +192,7 @@ declare module 'koa' {
     get: (name: string, options?: {signed: boolean}) => string|void,
     set: ((name: string, value: string, options?: CookiesSetOptions) => Context)&
     // delete cookie (an outbound header with an expired date is used.)
-    ( (name: string) => Context),
+    ((name: string) => Context),
   };
   // The default props of context come from two files
   // `application.createContext` & `context.js`
@@ -215,9 +215,9 @@ declare module 'koa' {
     // if (!(err instanceof Error)) err = new Error(`non-error thrown: ${err}`);
     onerror: (err?: mixed) => void,
     // context.js#L70
-    throw: (( statusOrErr: string|number|Error, errOrStatus?: string|number|Error,
+    throw: ((statusOrErr: string|number|Error, errOrStatus?: string|number|Error,
       opts?: {}) => void) &
-      (( statusOrErr: string|number|Error, opts?: Object) => void),
+      ((statusOrErr: string|number|Error, opts?: Object) => void),
     toJSON(): ContextJSON,
     inspect(): ContextJSON,
 

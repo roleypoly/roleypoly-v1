@@ -23,69 +23,67 @@ const getColors = () => {
 }
 
 export default createGlobalStyle`
-body {
-  margin: 0;
-  padding: 0;
-  font-family: "source-han-sans-japanese", "Source Sans Pro", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  /* prevent FOUC */
-  transition: opacity 0.2s ease-in-out;
-}
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "source-han-sans-japanese", "Source Sans Pro", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: opacity 0.2s ease-in-out;
+    height: 100%;
+    overflow: auto;
+    color: var(--c-white);
+    background-color: var(--c-1);
+  }
 
-* {
-  box-sizing: border-box;
-}
+  * {
+    box-sizing: border-box;
+  }
 
-.font-sans-serif {
-  font-family: sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-}
+  .font-sans-serif {
+    font-family: sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  }
 
-:root {
-  ${() => getColors()}
-  --not-quite-black: #23272A;
-  --dark-but-not-black: #2C2F33;
-  --greyple: #99AAB5;
-  --blurple: var(--c-discord);
-}
+  ::selection {
+    background: var(--c-9);
+    color: var(--c-1);
+  }
 
-::selection {
-  background: var(--c-9);
-  color: var(--c-1);
-}
+  ::-moz-selection {
+    background: var(--c-9);
+    color: var(--c-1);
+  }
 
-::-moz-selection {
-  background: var(--c-9);
-  color: var(--c-1);
-}
+  :root {
+    ${() => getColors()}
 
-html {
-  overflow: hidden;
-  height: 100%;
-}
+    --not-quite-black: #23272a;
+    --dark-but-not-black: #2c2f33;
+    --greyple: #99aab5;
+    --blurple: var(--c-discord);
+  }
 
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: auto;
-  color: var(--c-white);
-  background-color: var(--c-1);
-  /* overflow-y: hidden; */
-}
+  html {
+    overflow: hidden;
+    height: 100%;
+  }
 
-h1,h2,h3,h4,h5,h6 {
-  color: var(--c-9);
-}
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--c-9);
+  }
 
-.fade-element {
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out;
-}
+  .fade-element {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+  }
 
-.fade {
-  opacity: 0;
-}
-
+  .fade {
+    opacity: 0;
+  }
 `

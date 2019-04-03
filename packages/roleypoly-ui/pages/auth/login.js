@@ -6,7 +6,8 @@ import DiscordButton from '../../components/discord-button'
 import RPC from '../../config/rpc'
 import redirect from '../../lib/redirect'
 import dynamic from 'next/dynamic'
-import type { PageProps, ServerSlug } from '../../types'
+import type { PageProps } from '../../types'
+import type { ServerSlug } from '@roleypoly/types'
 import getConfig from 'next/config'
 const { publicRuntimeConfig: { BOT_HANDLE } } = getConfig()
 
@@ -54,20 +55,23 @@ const SecretCode = styled.input`
   appearance: none;
   transition: all 0.3s ease-in-out;
 
-  &:focus, &:active, &:hover {
-    background-color: var(--c-3);
-  }
-
-  &:focus, &:active {
-    & ::placeholder {
-      color: transparent;
-    }
-  }
-
   & ::placeholder {
     transition: all 0.3s ease-in-out;
     color: var(--c-7);
     text-align: center;
+  }
+
+  &:focus,
+  &:active,
+  &:hover {
+    background-color: var(--c-3);
+  }
+
+  &:focus,
+  &:active {
+    & ::placeholder {
+      color: transparent;
+    }
   }
 `
 
@@ -97,7 +101,7 @@ const SlugWrapper = styled.div`
 const DiscordGuildPic = dynamic(() => import('../../components/discord-guild-pic'))
 const StyledDGP = styled(DiscordGuildPic)`
   border-radius: 100%;
-  border: 2px solid rgba(0,0,0,0.2);
+  border: 2px solid rgba(0, 0, 0, 0.2);
   height: 4em;
   margin-top: 1em;
 `

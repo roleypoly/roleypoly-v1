@@ -23,7 +23,7 @@ const DiscordOuter = styled.div`
   padding: 10px;
   text-align: left;
   color: var(--c-white);
-  border: 1px solid rgba(0,0,0,0.25);
+  border: 1px solid rgba(0, 0, 0, 0.25);
   width: 250px;
   margin: 0 auto;
   user-select: none;
@@ -34,7 +34,6 @@ const Collapser = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-
   ${() => MediaQuery({
     md: `flex-direction: row;`
   })}

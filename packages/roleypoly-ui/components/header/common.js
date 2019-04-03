@@ -10,8 +10,7 @@ export type CommonProps = {
 }
 
 const Header = styled.div`
-  background-color: ${({ noBackground }: any) => noBackground === false ? 'var(--c-dark);' : 'var(--c-1);'}
-  position: relative;
+  background-color: ${({ noBackground }: any) => noBackground === false ? 'var(--c-dark)' : 'var(--c-1)'};
   transition: background-color 0.3s ease-in-out;
   position: fixed;
   top: 0;

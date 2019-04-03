@@ -373,6 +373,6 @@ declare class moment$Moment {
   static invalid(object: any): moment$Moment;
 }
 
-declare module "moment" {
+declare module 'moment' {
   declare module.exports: Class<moment$Moment>;
 }

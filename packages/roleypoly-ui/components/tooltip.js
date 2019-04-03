@@ -5,7 +5,7 @@ export default styled.div`
   position: absolute;
   bottom: 35px;
   font-size: 0.9em;
-  background-color: rgba(0,0,0,0.50);
+  background-color: rgba(0, 0, 0, 0.5);
   padding: 5px;
   color: var(--c-red);
   border-radius: 3px;
@@ -14,7 +14,6 @@ export default styled.div`
   opacity: 0.99;
   overflow: auto;
   pointer-events: none;
-  /* max-width: 50vw; */
   white-space: normal;
   ${() => MediaQuery({ md: `
     white-space: nowrap;  `

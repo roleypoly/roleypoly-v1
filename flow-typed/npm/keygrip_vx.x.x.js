@@ -23,7 +23,6 @@ declare module 'keygrip' {
  * needed.
  */
 
-
 // Filename aliases
 declare module 'keygrip/index' {
   declare module.exports: $Exports<'keygrip'>;

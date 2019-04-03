@@ -23,14 +23,14 @@ const LoginButton = styled.a`
 
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.75);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
     background-color: var(--c-green);
-    border-color: rgba(0,0,0,0.25);
-    text-shadow: 1px 1px 0px rgba(0,0,0,0.25);
+    border-color: rgba(0, 0, 0, 0.25);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
   }
 
   &:active {
-    transform: translateY(0px);
+    transform: translateY(0);
     box-shadow: none;
   }
 `

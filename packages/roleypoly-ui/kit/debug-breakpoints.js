@@ -5,7 +5,7 @@ import MediaQuery, { breakpoints } from './media'
 
 const BreakpointDebugFloat = styled.div`
   position: absolute;
-  bottom: 0em;
+  bottom: 0;
   left: 0;
   pointer-events: none;
   height: 1.4em;

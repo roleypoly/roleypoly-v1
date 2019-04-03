@@ -16,6 +16,7 @@ const Chat = styled.div`
   padding: 10px 0;
   font-size: 0.8em;
   ${() => MediaQuery({ sm: 'font-size: 1em;' })}
+
   & span {
     display: inline-block;
     margin-left: 5px;
@@ -23,21 +24,19 @@ const Chat = styled.div`
 `
 
 const TextArea = styled.div`
-  background-color: hsla(218,5%,47%,.3);
+  background-color: hsla(218, 5%, 47%, 0.3);
   border-radius: 5px;
   padding: 10px;
   font-size: 0.8em;
   ${() => MediaQuery({ sm: 'font-size: 1em;' })}
 
   & .Typist .Cursor {
-
     display: inline-block;
     color: transparent;
     border-left: 1px solid var(--c-white);
     user-select: none;
 
     &--blinking {
-
       opacity: 1;
       animation: blink 2s ease-in-out infinite;
 
@@ -45,9 +44,11 @@ const TextArea = styled.div`
         0% {
           opacity: 1;
         }
+
         50% {
           opacity: 0;
         }
+
         100% {
           opacity: 1;
         }
@@ -58,7 +59,7 @@ const TextArea = styled.div`
 
 const Timestamp = styled.span`
   font-size: 0.7em;
-  color: hsla(0,0%,100%,.2);
+  color: hsla(0, 0%, 100%, 0.2);
 `
 
 const Username = styled.span`

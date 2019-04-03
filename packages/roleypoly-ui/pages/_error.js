@@ -23,7 +23,6 @@ const ResponsiveSplitter = styled.div`
   line-height: 1.6;
   font-size: 1.3em;
   flex-direction: column;
-
   ${() => MediaQuery({
     md: `flex-direction: row; min-height: 100vh; position: relative; top: -50px;`
   })}
@@ -34,9 +33,7 @@ const ResponsiveSplitter = styled.div`
 
   & section {
     text-align: center;
-  ${() => MediaQuery({
-    md: `text-align: left;`
-  })}
+    ${() => MediaQuery({ md: `text-align: left;` })}
   }
 `
 
