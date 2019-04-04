@@ -1,5 +1,5 @@
 import * as React from 'react'
-import redirect from '../lib/redirect'
+import redirect from '../util/redirect'
 // import Link from 'next/link'
 // import Head from '../components/head'
 // import Nav from '../components/nav'

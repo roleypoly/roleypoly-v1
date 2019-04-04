@@ -3,7 +3,7 @@ import { type AppContext } from '../Roleypoly'
 import { type Context } from 'koa'
 import { type Guild } from 'eris'
 import * as secureAs from './_security'
-import RPCError from './_error'
+import RPCError from '@roleypoly/rpc-client/error'
 
 export default ($: AppContext) => ({
 

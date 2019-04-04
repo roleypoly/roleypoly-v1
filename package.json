@@ -5,7 +5,9 @@
   "scripts": {
     "lerna": "lerna",
     "start": "node packages/roleypoly-server/dist/index.js",
-    "dev": "babel-node packages/roleypoly-server/index.js",
+    "dev": "run-p dev:*",
+    "dev:backend": "babel-node packages/roleypoly-server/index.js",
+    "dev:bot": "babel-node packages/roleypoly-bot/index.js",
     "build": "lerna run build",
     "flow:install": "flow-mono install-types",
     "flow": "flow",
@@ -77,7 +79,8 @@
       "$Call"
     ],
     "ignore": [
-      "flow-typed/*"
+      "flow-typed/*",
+      "packages/*/lib/*"
     ]
   }
 }

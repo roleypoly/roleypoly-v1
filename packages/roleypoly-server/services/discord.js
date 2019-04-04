@@ -1,7 +1,6 @@
 // @flow
 import Service from './Service'
 import type { AppContext } from '../Roleypoly'
-import Bot from '../bot'
 import Eris, { type Member, Role, type Guild, type Permission as ErisPermission } from 'eris'
 import LRU from 'lru-cache'
 // $FlowFixMe
@@ -9,13 +8,13 @@ import { OrderedSet } from 'immutable'
 import superagent from 'superagent'
 import type { AuthTokens } from './auth'
 import type { IFetcher } from './discord/types'
+import RestFetcher from './discord/restFetcher'
 
 type DiscordServiceConfig = {
   token: string,
   clientId: string,
   clientSecret: string,
-  rootUsers: Set<string>,
-  isBot: boolean
+  rootUsers: Set<string>
 }
 
 export type Permissions = {
@@ -56,7 +55,6 @@ export type MemberExt = Member & {
 
 export default class DiscordService extends Service {
   ctx: AppContext
-  bot: Bot
   client: Eris
 
   cfg: DiscordServiceConfig
@@ -77,8 +75,7 @@ export default class DiscordService extends Service {
       rootUsers: new Set((process.env.ROOT_USERS || '').split(',')),
       token: process.env.DISCORD_BOT_TOKEN || '',
       clientId: process.env.DISCORD_CLIENT_ID || '',
-      clientSecret: process.env.DISCORD_CLIENT_SECRET || '',
-      isBot: process.env.IS_BOT === 'true'
+      clientSecret: process.env.DISCORD_CLIENT_SECRET || ''
     }
 
     this.oauthCallback = `${ctx.config.appUrl}/api/oauth/callback`
@@ -86,36 +83,11 @@ export default class DiscordService extends Service {
     this.ownRoleCache = new LRU()
     this.topRoleCache = new LRU()
 
-    if (this.cfg.isBot) {
-      this.client = new Eris(this.cfg.token, {
-        disableEveryone: true,
-        maxShards: 'auto',
-        messageLimit: 10,
-        disableEvents: {
-          CHANNEL_PINS_UPDATE: true,
-          USER_SETTINGS_UPDATE: true,
-          USER_NOTE_UPDATE: true,
-          RELATIONSHIP_ADD: true,
-          RELATIONSHIP_REMOVE: true,
-          GUILD_BAN_ADD: true,
-          GUILD_BAN_REMOVE: true,
-          TYPING_START: true,
-          MESSAGE_UPDATE: true,
-          MESSAGE_DELETE: true,
-          MESSAGE_DELETE_BULK: true,
-          VOICE_STATE_UPDATE: true
-        }
-      })
-      this.bot = new Bot(this)
-      const BotFetcher = require('./discord/botFetcher').default
-      this.fetcher = new BotFetcher(this)
-    } else {
-      this.client = new Eris(`Bot ${this.cfg.token}`, {
-        restMode: true
-      })
-      const RestFetcher = require('./discord/restFetcher').default
-      this.fetcher = new RestFetcher(this)
-    }
+    this.client = new Eris(`Bot ${this.cfg.token}`, {
+      restMode: true
+    })
+
+    this.fetcher = new RestFetcher(this)
   }
 
   isRoot (id: string): boolean {
@@ -272,6 +244,7 @@ export default class DiscordService extends Service {
   async getUserPartial (userId: string): Promise<?UserPartial> {
     const u = await this.fetcher.getUser(userId)
     if (u == null) {
+      this.log.debug('userPartial got a null user', userId, u)
       return null
     }
 

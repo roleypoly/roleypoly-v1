@@ -31,20 +31,25 @@ export default class AuthService extends Service {
   async isLoggedIn (ctx: Context, { refresh = false }: { refresh: boolean } = {}) {
     const { userId, expiresAt, authType } = ctx.session
     if (userId == null) {
+      this.log.debug('isLoggedIn failed, no userId', ctx.session)
       return false
     }
 
     if (expiresAt < Date.now()) {
+      this.log.debug('session has expired.', expiresAt, Date.now())
       if (refresh && authType === 'oauth') {
+        this.log.debug('was oauth and we can refresh')
         const tokens = await this.ctx.discord.refreshOAuth(ctx.session)
         this.injectSessionFromOAuth(ctx, tokens, userId)
         return true
       }
 
+      this.log.debug('was not oauth, we are destroying the session')
       ctx.session = null // reset session as well
       return false
     }
 
+    this.log.debug('this user is logged in', userId)
     return true
   }
 

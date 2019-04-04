@@ -3,7 +3,6 @@
   "private": true,
   "version": "2.0.0",
   "scripts": {
-    "dev": "babel-node index.js",
     "start": "NODE_ENV=production node dist/index.js",
     "pretest": "standard --fix",
     "build": "NODE_ENV=production babel --delete-dir-on-start -d dist ."

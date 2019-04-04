@@ -1,5 +1,5 @@
 // @flow
-import RPCClient from '../rpc'
+import RPCClient from '@roleypoly/rpc-client'
 
 const client = new RPCClient({ forceDev: false })
 

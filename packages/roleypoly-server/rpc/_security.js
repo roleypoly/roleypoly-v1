@@ -1,7 +1,7 @@
 // @flow
 import { type AppContext } from '../Roleypoly'
 import { type Context } from 'koa'
-import RPCError from './_error'
+import RPCError from '@roleypoly/rpc-client/error'
 
 import logger from '../logger'
 const log = logger(__filename)
@@ -121,6 +121,29 @@ export const any = (
   fn: (ctx: Context, ...args: any[]) => any,
   silent: boolean = false
 ) => (...args: any) => fn(...args)
+
+export const bot = (
+  $: AppContext,
+  fn: (ctx: Context, ...args: any[]) => any,
+  silent: boolean = false
+) => (
+  ctx: Context,
+  ...args: any
+) => {
+  const authToken: ?string = ctx.request.headers['Authorization']
+
+  if (authToken != null && authToken.startsWith('Bot ')) {
+    if (authToken === `Bot ${$.config.sharedSecret}`) {
+      return fn(ctx, ...args)
+    }
+  }
+
+  if (!silent) {
+    log.info('RPC bot check failed', logFacts(ctx))
+  }
+
+  throw PermissionError
+}
 
 type Handler = (ctx: Context, ...args: any[]) => any
 type Strategy = (

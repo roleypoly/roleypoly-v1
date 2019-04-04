@@ -34,7 +34,8 @@ export type AppContext = {
   config: {
     appUrl: string,
     dev: boolean,
-    hotReload: boolean
+    hotReload: boolean,
+    sharedSecret: string
   },
   ui: Next,
   uiHandler: Next.Handler,
@@ -85,7 +86,8 @@ class Roleypoly {
       config: {
         appUrl,
         dev,
-        hotReload: process.env.NO_HOT_RELOAD !== '1'
+        hotReload: process.env.NO_HOT_RELOAD !== '1',
+        sharedSecret: process.env.SHARED_SECRET
       },
       io,
       ui,

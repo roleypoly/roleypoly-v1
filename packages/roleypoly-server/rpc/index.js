@@ -1,7 +1,7 @@
 // @flow
 import fnv from 'fnv-plus'
 import autoloader from './_autoloader'
-import RPCError from './_error'
+import RPCError from '@roleypoly/rpc-client/error'
 import type Roleypoly, { Router } from '../Roleypoly'
 import type { Context } from 'koa'
 // import logger from '../logger'
@@ -121,7 +121,6 @@ export default class RPCServer {
       if (err instanceof RPCError || err.constructor.name === 'RPCError') {
         // $FlowFixMe
         ctx.status = err.code
-        console.log(err.code)
       }
     }
 

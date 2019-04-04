@@ -1,6 +1,6 @@
 // @flow
 import superagent from 'superagent'
-import RPCError from '@roleypoly/server/rpc/_error'
+import RPCError from './error'
 
 export type RPCResponse = {
   response?: mixed,
@@ -8,7 +8,7 @@ export type RPCResponse = {
 
   // error stuff
   error?: boolean,
-  msg?: string,
+  msg: string,
   trace?: string
 }
 
@@ -23,6 +23,10 @@ export default class RPCClient {
   firstKnownHash: string
   recentHash: string
   cookieHeader: string
+
+  headerMixins: {
+    [x:string]: string
+  } = {}
 
   rpc: {
     [fn: string]: (...args: any[]) => Promise<any>
@@ -55,7 +59,12 @@ export default class RPCClient {
   }
 
   withCookies = (h: string) => {
-    this.cookieHeader = h
+    this.headerMixins['Set-Cookie'] = h
+    return this.rpc
+  }
+
+  withBotAuth = (h: string) => {
+    this.headerMixins['Authorization'] = `Bot ${h}`
     return this.rpc
   }
 
@@ -85,12 +94,11 @@ export default class RPCClient {
 
   async call (fn: string, ...args: any[]): mixed {
     const req: RPCRequest = { fn, args }
-    const rq = superagent.post(this.baseUrl)
-    if (this.cookieHeader != null) {
-      rq.cookies = this.cookieHeader
-    }
+    const rq = superagent.post(this.baseUrl).set({ ...this.headerMixins })
+
     const rsp = await rq.send(req).ok(() => true)
     const body: RPCResponse = rsp.body
+
     // console.log(body)
     if (body.error === true) {
       console.error(body)

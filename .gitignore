@@ -9,3 +9,4 @@ yarn-error\.log
 *.log
 \.next/
 coverage/
+packages/*/lib

@@ -42,6 +42,7 @@ class RoleypolyApp extends App {
       ctx.user = user
     } catch (e) {
       if (e.code === 403) {
+        console.error('user not found')
         ctx.user = null
       } else {
         console.error(e)
