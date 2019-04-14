@@ -18,8 +18,11 @@ const reset = async (r) => {
 
   r.context.RP = RP
 
-  r.context.ctx = { session: { userId: RP.ctx.discord.cfg.rootUsers.values().next().value } }
-  r.context.guest = { session: {} }
+  r.context.ctx = {
+    session: { userId: RP.ctx.discord.cfg.rootUsers.values().next().value },
+    request: { headers: { 'authorization': `Bot ${process.env.SHARED_SECRET}` } }
+  }
+  r.context.guest = { session: {}, request: { headers: { 'authorization': `guest` } } }
 
   r.context.g_rpc = {}
   r.context.rpc = {}
@@ -37,7 +40,7 @@ const reset = async (r) => {
 
 const motd = () => {
   console.log(`~~ Roleypoly RPC REPL.
-  \`ctx\` a mocked koa context, defaulting to first root user.
+  \`ctx\` a mocked koa context, defaulting to first root user, also authorized as a bot.
   \`rpc\` maps to all rpc functions, prefilled with ctx.
 
   \`guest\` maps to a mock guest sessioned koa context.

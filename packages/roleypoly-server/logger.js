@@ -53,6 +53,10 @@ export class Logger {
     }
   }
 
+  rpc (call: string, ...data: any) {
+    console.log(chalk.redBright.bold`RPC` + chalk.redBright(` ${call}():`), data)
+  }
+
   sql (logger: Logger, ...data: any) {
     if (logger.debugOn && !logger.quietSql) {
       console.log(chalk.bold('DEBUG SQL:\n    '), data)
