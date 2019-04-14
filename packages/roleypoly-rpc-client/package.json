@@ -4,11 +4,14 @@
   "version": "2.0.0",
   "scripts": {
     "postinstall": "yarn build",
-    "build": "babel --delete-dir-on-start -d lib ."
+    "build": "babel --delete-dir-on-start -d lib .",
+    "dev": "yarn build --watch"
   },
+  "types": ".",
   "main": "./lib/index.js",
   "dependencies": {
-    "superagent":"^5.0.2"
+    "async-retry": "^1.2.3",
+    "superagent": "^5.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3"

@@ -3,13 +3,14 @@
   "name": "@roleypoly/bot",
   "version": "2.0.0",
   "scripts": {
-    "build": "babel --delete-dir-on-start -d lib .",
+    "build": "babel --delete-dir-on-start -d lib './*.js*'",
     "dev": "yarn build --watch"
   },
-  "main": "./lib/Bot.js",
   "dependencies": {
-    "eris": "^0.9.0",
-    "@roleypoly/rpc-client": "2.0.0"
+    "@roleypoly/rpc-client": "2.0.0",
+    "async-retry": "^1.2.3",
+    "dotenv": "^7.0.0",
+    "eris": "^0.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3"

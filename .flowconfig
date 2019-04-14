@@ -1,9 +1,13 @@
 [ignore]
 .*/node_modules/*
-.*/dist/*
+.*/packages/*/lib/*
 
 [include]
 
 [libs]
+./packages/*/*
 
 [options]
+esproposal.optional_chaining=enable
+munge_underscores=true
+emoji=true

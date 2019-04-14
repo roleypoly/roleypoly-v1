@@ -11,6 +11,7 @@
     "@discordjs/uws": "^11.149.1",
     "@roleypoly/types": "^2.0.0",
     "@roleypoly/ui": "^2.0.0",
+    "async-retry": "^1.2.3",
     "bufferutil": "^4.0.1",
     "chalk": "^2.4.2",
     "dotenv": "^7.0.0",
@@ -33,7 +34,7 @@
     "nanoid": "^2.0.1",
     "pg": "^7.9.0",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^5.2.10",
+    "sequelize": "^5.3.5",
     "superagent": "^5.0.2",
     "zlib-sync": "^0.1.4"
   },
@@ -51,7 +52,7 @@
     "babel-eslint": "^10.0.1",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "chokidar": "^2.1.5",
-    "eslint-plugin-flowtype": "^3.4.2",
+    "eslint-plugin-flowtype": "^3.6.1",
     "standard": "12.0.1"
   }
 }
