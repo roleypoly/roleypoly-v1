@@ -1,6 +1,7 @@
 // @flow
 import superagent from 'superagent'
 import RPCError from './error'
+import retry from 'async-retry'
 
 export type RPCResponse = {
   response?: mixed,
@@ -37,7 +38,9 @@ export default class RPCClient {
     args: number
   }> = []
 
-  constructor ({ forceDev, baseUrl = '/api/_rpc' }: { forceDev?: boolean, baseUrl?: string } = {}) {
+  retry: boolean
+
+  constructor ({ forceDev, baseUrl = '/api/_rpc', retry = false }: { forceDev?: boolean, baseUrl?: string, retry?: boolean } = {}) {
     this.baseUrl = (process.env.APP_URL || '') + baseUrl
 
     if (forceDev != null) {
@@ -45,6 +48,8 @@ export default class RPCClient {
     } else {
       this.dev = process.env.NODE_ENV === 'development'
     }
+
+    this.retry = retry
 
     this.rpc = new Proxy({}, {
       get: this.__rpcCall,
@@ -59,7 +64,7 @@ export default class RPCClient {
   }
 
   withCookies = (h: string) => {
-    this.headerMixins['Set-Cookie'] = h
+    this.cookieHeader = h
     return this.rpc
   }
 
@@ -92,9 +97,34 @@ export default class RPCClient {
     }
   }
 
-  async call (fn: string, ...args: any[]): mixed {
+  call (fn: string, ...args: any[]): mixed {
+    // console.debug('rpc call:', { fn, args })
+    if (this.retry) {
+      return this.callWithRetry(fn, ...args)
+    } else {
+      return this.callAsNormal(fn, ...args)
+    }
+  }
+
+  async callWithRetry (fn: string, ...args: any[]): mixed {
+    return retry<mixed>(async (bail) => {
+      try {
+        return await this.callAsNormal(fn, ...args)
+      } catch (e) {
+        if (e instanceof RPCError) {
+          bail(e)
+        }
+      }
+    })
+  }
+
+  async callAsNormal (fn: string, ...args: any[]): mixed {
     const req: RPCRequest = { fn, args }
     const rq = superagent.post(this.baseUrl).set({ ...this.headerMixins })
+
+    if (this.cookieHeader != null && this.cookieHeader !== '') {
+      rq.cookies = this.cookieHeader
+    }
 
     const rsp = await rq.send(req).ok(() => true)
     const body: RPCResponse = rsp.body
@@ -121,6 +151,7 @@ export default class RPCClient {
   }
 
   // PROXY HANDLERS
+  // __rpcCall = (_: {}, fn: string) => this.call.bind(this, fn)
   __rpcCall = (_: {}, fn: string) => this.call.bind(this, fn)
   __checkCall = (_: {}, fn: string) => this.dev ? this.__listCalls(_).includes(fn) : true
   __listCalls = (_: {}): string[] => this.__rpcAvailable.map(x => x.name)
