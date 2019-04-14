@@ -13,6 +13,7 @@ import PresentationService from './services/presentation'
 import RPCServer from './rpc'
 import fetchModels, { type Models } from './models'
 import fetchApis from './api'
+import retry from 'async-retry'
 
 import type SocketIO from 'socket.io'
 import type KoaApp, { Context } from 'koa'
@@ -113,8 +114,18 @@ class Roleypoly {
     this.ctx.sql = sequelize
     this.M = fetchModels(sequelize)
     this.ctx.M = this.M
+
+    await retry(async bail => {
+      try {
+        await sequelize.authenticate()
+      } catch (e) {
+        log.error('sequelize failed to connect.', e.message)
+        throw e
+      }
+    })
+
     if (!process.env.DB_NO_SYNC) {
-      await sequelize.sync()
+      await this.ctx.sql.sync()
     }
 
     this.ctx.server = new ServerService(this.ctx)
