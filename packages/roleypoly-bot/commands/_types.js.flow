@@ -1,0 +1,12 @@
+// @flow
+import type { Message } from 'eris'
+import type Bot from '../Bot'
+
+export type Command = {
+  regex: RegExp,
+  usage: string,
+  description: string,
+  handler: (bot: Bot, message: Message, matches: string[]) => Promise<string | void> | string | void
+}
+
+export type CommandSet = Set<Command>
