@@ -321,4 +321,13 @@ export default class DiscordService extends Service {
   isMember (server: string, user: string): boolean {
     return this.gm(server, user) != null
   }
+
+  async isValidUser (user: string): Promise<boolean> {
+    const u = await this.fetcher.getUser(user)
+    if (u != null) {
+      return true
+    }
+
+    return false
+  }
 }

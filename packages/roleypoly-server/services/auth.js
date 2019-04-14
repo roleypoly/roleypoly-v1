@@ -21,7 +21,7 @@ export type AuthTokens = {
 }
 
 export default class AuthService extends Service {
-  M: { AuthChallenge: any }
+  M: { AuthChallenge: any, Session: any }
   monikerGen = moniker.generator([ moniker.adjective, moniker.adjective, moniker.noun ], { glue: ' ' })
   constructor (ctx: AppContext) {
     super(ctx)
@@ -30,6 +30,7 @@ export default class AuthService extends Service {
 
   async isLoggedIn (ctx: Context, { refresh = false }: { refresh: boolean } = {}) {
     const { userId, expiresAt, authType } = ctx.session
+    this.log.debug('isLoggedIn session', ctx.session)
     if (userId == null) {
       this.log.debug('isLoggedIn failed, no userId', ctx.session)
       return false
@@ -54,6 +55,14 @@ export default class AuthService extends Service {
   }
 
   async createDMChallenge (userId: string): Promise<DMChallenge> {
+    if (userId == null || userId === '') {
+      throw new Error('userId was not set')
+    }
+
+    if (await this.ctx.discord.isValidUser(userId) === false) {
+      throw new Error('userId was not a valid user')
+    }
+
     const out: DMChallenge = {
       userId,
       human: this.monikerGen.choose(),
@@ -88,10 +97,13 @@ export default class AuthService extends Service {
 
   injectSessionFromChallenge (ctx: Context, chall: DMChallenge) {
     ctx.session = {
+      ...ctx.session,
       userId: chall.userId,
       authType: 'dm',
       expiresAt: Date.now() + 1000 * 60 * 60 * 24
     }
+
+    this.log.debug('new session', ctx.session)
   }
 
   injectSessionFromOAuth (ctx: Context, tokens: AuthTokens, userId: string) {
@@ -102,6 +114,19 @@ export default class AuthService extends Service {
       expiresAt: Date.now() + expiresIn,
       accessToken,
       refreshToken
+    }
+  }
+
+  async clearUserSessions (userId: string) {
+    // get all sessions but also revoke any oauth tokens.
+    const sessions = await this.M.Session.findAll({ where: { data: { userId } } })
+
+    for (let session of sessions) {
+      if (session.data.authType === 'oauth') {
+        await this.ctx.discord.revokeOAuth({ accessToken: session.data.accessToken })
+      }
+
+      await session.destroy()
     }
   }
 }

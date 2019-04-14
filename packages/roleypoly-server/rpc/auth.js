@@ -1,6 +1,7 @@
 // @flow
 import { type AppContext } from '../Roleypoly'
 import { type Context } from 'koa'
+import { bot } from './_security'
 
 export default ($: AppContext) => ({
   async checkAuthChallenge (ctx: Context, text: string): Promise<boolean> {
@@ -12,5 +13,18 @@ export default ($: AppContext) => ({
     $.auth.injectSessionFromChallenge(ctx, chall)
     $.auth.deleteDMChallenge(chall)
     return true
-  }
+  },
+
+  issueAuthChallenge: bot($, (ctx: Context, userId: string) => {
+    return $.discord.issueChallenge(userId)
+  }),
+
+  botPing: bot($, () => {
+    return true
+  }),
+
+  removeUserSessions: bot($, async (ctx: Context, userId: string) => {
+    await $.auth.clearUserSessions(userId)
+    return true
+  })
 })
