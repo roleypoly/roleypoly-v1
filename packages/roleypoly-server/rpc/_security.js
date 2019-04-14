@@ -130,7 +130,7 @@ export const bot = (
   ctx: Context,
   ...args: any
 ) => {
-  const authToken: ?string = ctx.request.headers['Authorization']
+  const authToken: ?string = ctx.request.headers['authorization']
 
   if (authToken != null && authToken.startsWith('Bot ')) {
     if (authToken === `Bot ${$.config.sharedSecret}`) {
