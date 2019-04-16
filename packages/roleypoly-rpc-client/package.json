@@ -3,11 +3,13 @@
   "name": "@roleypoly/rpc-client",
   "version": "2.0.0",
   "scripts": {
-    "build": "babel -d . src",
-    "dev": "yarn build --watch"
+    "build": "babel -d ./lib ./src",
+    "dev": "yarn build --watch",
+    "postinstall": "test -d lib || npm run build"
   },
   "types": "src/",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "files": ["lib"],
   "dependencies": {
     "async-retry": "^1.2.3",
     "superagent": "^5.0.2"

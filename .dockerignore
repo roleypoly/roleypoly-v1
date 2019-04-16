@@ -1,3 +1,5 @@
 .env
 .git/
 node_modules/
+packages/*/lib/
+packages/*/dist/

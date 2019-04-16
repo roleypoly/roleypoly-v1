@@ -3,7 +3,7 @@
   "name": "@roleypoly/bot",
   "version": "2.0.0",
   "scripts": {
-    "build": "babel --delete-dir-on-start -d lib './*.js*'",
+    "build": "babel --delete-dir-on-start -d lib .",
     "dev": "yarn build --watch"
   },
   "dependencies": {
