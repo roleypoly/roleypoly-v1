@@ -76,7 +76,7 @@ class RolePicker extends Component {
     if (!roleManager && msg !== '') {
       return <section>
         <h3>Server Message</h3>
-        <p>{msgToReal(msg)}</p>
+        <p dangerouslySetInnerHTML={{__html: msgToReal(msg)}}></p>
       </section>
     }
 
