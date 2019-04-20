@@ -1,9 +1,9 @@
 // @flow
-import { type AppContext } from '../Roleypoly'
+import { type AppContext } from '@roleypoly/server/Roleypoly'
 import { type Context } from 'koa'
-import RPCError from '@roleypoly/rpc-client/error'
+import { RPCError } from '@roleypoly/rpc-client'
 
-import logger from '../logger'
+import logger from '../../roleypoly-server/logger'
 const log = logger(__filename)
 
 const PermissionError = new RPCError('User does not have permission to call this RPC.', 403)

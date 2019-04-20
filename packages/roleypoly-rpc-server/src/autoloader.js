@@ -1,33 +1,27 @@
 // @flow
-import logger from '../logger'
+import logger from './logger'
 import glob from 'glob'
 import path from 'path'
-import { type AppContext } from '../Roleypoly'
 
 const log = logger(__filename)
 const PROD: boolean = process.env.NODE_ENV === 'production'
 
-export default (ctx: AppContext, forceClear: ?boolean = false): {
+export default (globString: string, ctx: any, forceClear: ?boolean = false): {
   [rpc: string]: Function
 } => {
   let map = {}
-  const apis = glob.sync(`${__dirname}/**/!(index).js`).map(v => v.replace(__dirname, '.'))
+  const apis = glob.sync(globString)
   log.debug('found rpcs', apis)
 
   for (let a of apis) {
     const filename = path.basename(a)
-    const dirname = path.dirname(a)
+    // const dirname = path.dirname(a)
 
     const pathname = a
     delete require.cache[require.resolve(pathname)]
 
     // internal stuff
     if (filename.startsWith('_')) {
-      log.debug(`skipping ${a}`)
-      continue
-    }
-
-    if (dirname === 'client') {
       log.debug(`skipping ${a}`)
       continue
     }

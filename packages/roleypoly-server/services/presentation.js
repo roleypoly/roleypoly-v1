@@ -5,6 +5,8 @@ import { type AppContext } from '../Roleypoly'
 import { type Models } from '../models'
 import { type ServerModel } from '../models/Server'
 import type DiscordService from './discord'
+// $FlowFixMe
+import type { Sequence } from 'immutable'
 import {
   type Guild,
   type Collection
@@ -38,7 +40,7 @@ class PresentationService extends Service {
     }
   }
 
-  presentableServers (collection: Collection<Guild>, userId: string) {
+  presentableServers (collection: Collection<Guild> | Sequence<Guild>, userId: string): Promise<PresentableServer[]> {
     return areduce(Array.from(collection.values()), async (acc, server) => {
       const gm = server.members.get(userId)
       if (gm == null) {

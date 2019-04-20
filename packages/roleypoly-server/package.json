@@ -10,6 +10,7 @@
   "dependencies": {
     "@discordjs/uws": "^11.149.1",
     "@roleypoly/types": "^2.0.0",
+    "@roleypoly/rpc-server": "^2.0.0",
     "@roleypoly/ui": "^2.0.0",
     "async-retry": "^1.2.3",
     "bufferutil": "^4.0.1",

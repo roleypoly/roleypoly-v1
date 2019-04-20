@@ -2,18 +2,18 @@
 import { type AppContext } from '../Roleypoly'
 import { type Context } from 'koa'
 import { type Guild } from 'eris'
-import * as secureAs from './_security'
-import RPCError from '@roleypoly/rpc-client/error'
+import { secureAs } from '@roleypoly/rpc-server'
+import { RPCError } from '@roleypoly/rpc-client'
 
 export default ($: AppContext) => ({
 
   rootGetAllServers: secureAs.root($, (ctx: Context) => {
-    return $.discord.client.guilds.map<{
+    return $.discord.guilds.valueSeq().map<{
       url: string,
       name: string,
       members: number,
       roles: number
-    }>((g: Guild) => ({ url: `${$.config.appUrl}/s/${g.id}`, name: g.name, members: g.memberCount, roles: g.roles.size }))
+    }>((g: Guild) => ({ url: `${$.config.appUrl}/s/${g.id}`, name: g.name, members: g.members.size, roles: g.roles.size })).toJS()
   }),
 
   getServerSlug (ctx: Context, id: string) {
@@ -40,5 +40,18 @@ export default ($: AppContext) => ({
     }
 
     return $.P.presentableServer(srv, gm)
+  }),
+
+  listOwnServers: secureAs.authed($, async (ctx: Context, id: string) => {
+    const { userId } = (ctx.session: { userId: string })
+    const srv = $.discord.getRelevantServers(userId)
+    return $.P.presentableServers(srv, userId)
+  }),
+
+  syncGuild: secureAs.bot($, async (ctx: Context, type: string, guildId: string) => {
+    const g = await $.discord.guild(guildId, true)
+    if (g != null && type === 'guildCreate') {
+      $.server.ensure(g)
+    }
   })
 })

@@ -7,7 +7,6 @@
     "dev": "yarn build --watch"
   },
   "dependencies": {
-    "@roleypoly/rpc-client": "2.0.0",
     "async-retry": "^1.2.3",
     "dotenv": "^7.0.0",
     "eris": "^0.9.0"

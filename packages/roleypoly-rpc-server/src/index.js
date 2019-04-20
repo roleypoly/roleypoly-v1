@@ -1,9 +1,10 @@
 // @flow
 import fnv from 'fnv-plus'
-import autoloader from './_autoloader'
-import RPCError from '@roleypoly/rpc-client/error'
-import type Roleypoly, { Router } from '../Roleypoly'
+import autoloader from './autoloader'
+import { RPCError } from '@roleypoly/rpc-client'
+import type Roleypoly, { Router } from '@roleypoly/server/Roleypoly'
 import type { Context } from 'koa'
+export * as secureAs from './security'
 // import logger from '../logger'
 // const log = logger(__filename)
 
@@ -68,7 +69,7 @@ export default class RPCServer {
     }
 
     // check if RPC exists
-    const { fn, args } = (ctx.request.body: RPCIncoming)
+    const { fn, args } = ((ctx.request.body: any): RPCIncoming)
 
     if (!(fn in this.rpcMap)) {
       return this.rpcError(ctx, null, new RPCError(`RPC call ${fn}(...) not found.`, 404))

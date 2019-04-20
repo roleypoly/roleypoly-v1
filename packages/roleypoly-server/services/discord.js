@@ -4,7 +4,7 @@ import type { AppContext } from '../Roleypoly'
 import Eris, { type Member, Role, type Guild, type Permission as ErisPermission } from 'eris'
 import LRU from 'lru-cache'
 // $FlowFixMe
-import { OrderedSet } from 'immutable'
+import { OrderedSet, OrderedMap } from 'immutable'
 import superagent from 'superagent'
 import type { AuthTokens } from './auth'
 import type { IFetcher } from './discord/types'
@@ -54,6 +54,8 @@ export type MemberExt = Member & {
 }
 
 export default class DiscordService extends Service {
+  static _guildExpiration = +(process.env.GUILD_INVALIDATION_TIME || 36e5)
+
   ctx: AppContext
   client: Eris
 
@@ -67,6 +69,8 @@ export default class DiscordService extends Service {
 
   fetcher: IFetcher
 
+  guilds: OrderedMap<Guild> = OrderedMap<Guild>()
+  _lastGuildFetch: number
   constructor (ctx: AppContext) {
     super(ctx)
     this.ctx = ctx
@@ -88,14 +92,15 @@ export default class DiscordService extends Service {
     })
 
     this.fetcher = new RestFetcher(this)
+    this.fetchGuilds(true)
   }
 
   isRoot (id: string): boolean {
     return this.cfg.rootUsers.has(id)
   }
 
-  getRelevantServers (user: string) {
-    return this.client.guilds.filter(guild => guild.members.has(user))
+  getRelevantServers (user: string): OrderedSet<Guild> {
+    return this.guilds.filter(guild => guild.members.has(user))
   }
 
   async gm (serverId: string, userId: string, { canFake = false }: { canFake: boolean } = {}): Promise<?MemberExt> {
@@ -278,6 +283,36 @@ export default class DiscordService extends Service {
   // MANAGE_ROLES is the only permission we really need.
   getBotJoinUrl (): string {
     return `https://discordapp.com/oauth2/authorize?client_id=${this.cfg.clientId}&scope=bot&permissions=268435456`
+  }
+
+  async fetchGuilds (force: boolean = false) {
+    if (
+      force ||
+      this.guilds.isEmpty() ||
+      this._lastGuildFetch + DiscordService._guildExpiration < Date.now()
+    ) {
+      const g = await this.fetcher.getGuilds()
+      this.guilds = OrderedMap(g.reduce((acc, g) => ({ ...acc, [g.id]: g }), {}))
+    }
+  }
+
+  async guild (id: string, invalidate: boolean = false): Promise<?Guild> {
+    // fetch if needed
+    await this.fetchGuilds()
+
+    // do we know about it?
+    // (also don't get this if we're invalidating)
+    if (invalidate === false && this.guilds.has(id)) {
+      return this.guilds.get(id)
+    }
+
+    // else let's fetch and cache.
+    const g = await this.fetcher.getGuild(id)
+    if (g != null) {
+      this.guilds = this.guilds.set(g.id, g)
+    }
+
+    return g
   }
 
   async issueChallenge (author: string) {

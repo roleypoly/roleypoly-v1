@@ -1,6 +1,5 @@
 // @flow
-import Eris, { type Message, type TextChannel } from 'eris'
-import logger from './logger.js'
+import Eris, { type Message, type TextChannel, type Guild } from 'eris'
 import RPCClient from '@roleypoly/rpc-client'
 import randomEmoji from './random-emoji'
 import DMCommands from './commands/dm'
@@ -8,6 +7,8 @@ import TextCommands from './commands/text'
 import RootCommands from './commands/root'
 import type { Command } from './commands/_types'
 import retry from 'async-retry'
+
+import logger from './logger'
 const log = logger(__filename)
 
 export type BotConfig = $Shape<{
@@ -228,8 +229,18 @@ export default class Bot {
     }
   }
 
+  async syncGuild (type: string, guild: Guild) {
+    await this.rpc.syncGuild(type, guild.id)
+  }
+
   async start () {
     this.client.on('messageCreate', this.handleMessage)
+
+    const guildSyncTriggers = ['guildCreate', 'guildDelete', 'guildRoleAdd', 'guildRoleDelete', 'guildRoleUpdate']
+    for (const trigger of guildSyncTriggers) {
+      this.client.on(trigger, this.syncGuild.bind(this, trigger))
+    }
+
     await this.client.connect()
     log.info('started bot')
   }

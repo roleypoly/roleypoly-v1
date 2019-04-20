@@ -11,4 +11,6 @@ export interface IFetcher {
   getGuild: (id: string) => Promise<?Guild>;
 
   getMember: (server: string, user: string) => Promise<?Member>;
+
+  getGuilds: () => Promise<Guild[]>;
 }

@@ -4,6 +4,8 @@ import type DiscordSvc from '../discord'
 import type ErisClient, { User, Member, Guild } from 'eris'
 import LRU from 'lru-cache'
 import logger from '../../logger'
+// $FlowFixMe
+import { OrderedSet } from 'immutable'
 const log = logger(__filename)
 
 export default class BotFetcher implements IFetcher {
@@ -70,5 +72,32 @@ export default class BotFetcher implements IFetcher {
     } catch (e) {
       return null
     }
+  }
+
+  getGuilds = async (): Promise<Guild[]> => {
+    const last: ?string = undefined
+    const limit: number = 100
+    let out = OrderedSet<Guild>()
+
+    try {
+      while (true) {
+        // $FlowFixMe -- last is optional, but typedef isn't.
+        const gl = await this.client.getRESTGuilds(limit, last)
+
+        out = out.union(gl)
+        if (gl.length !== limit) {
+          break
+        }
+      }
+    } catch (e) {
+      log.error('getAllGuilds failed', e)
+      throw e
+    }
+
+    return out.toArray()
+  }
+
+  invalidateGuild (id: string) {
+    this.cache.del(`G:${id}`)
   }
 }

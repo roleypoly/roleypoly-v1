@@ -11,3 +11,4 @@
 esproposal.optional_chaining=enable
 munge_underscores=true
 emoji=true
+esproposal.export_star_as=enable

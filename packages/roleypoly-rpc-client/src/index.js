@@ -1,7 +1,9 @@
 // @flow
 import superagent from 'superagent'
-import RPCError from './error'
+import RPCError from './error.js'
 import retry from 'async-retry'
+
+export { RPCError }
 
 export type RPCResponse = {
   response?: mixed,

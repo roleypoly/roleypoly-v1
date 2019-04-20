@@ -5,10 +5,10 @@ import type PresentationService from './presentation'
 import {
   type Guild
 } from 'eris'
-import { type ServerModel, type Category } from '../models/Server'
+import { type ServerModel, type Category } from '@roleypoly/types'
 
 export default class ServerService extends Service {
-  Server: any // Model<ServerModel> but flowtype is bugged
+  Server: * // Model<ServerModel> but flowtype is bugged
   P: PresentationService
   constructor (ctx: AppContext) {
     super(ctx)
