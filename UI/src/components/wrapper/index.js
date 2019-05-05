@@ -22,7 +22,8 @@ class Wrapper extends Component {
                 <li><div className='wrapper__nav__button'>
                   <a href="/oauth/bot/flow" target="_blank" className="uk-button rp-button discord-alt"><img src={discordLogo} className="rp-button-logo" alt=""/> Add Roleypoly</a>
                 </div></li>
-                <li><a href='https://discord.gg/PWQUVsd'>Support Discord</a></li>
+                <li><a href='https://discord.gg/PWQUVsd'>Join the Discord</a></li>
+                <li><a href='https://patreon.com/kata'>Patreon</a></li>
               </ul>
             </div>
           </nav>
