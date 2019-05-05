@@ -22,8 +22,6 @@ class SessionsService extends Service {
       session = this.Session.build({ id })
     }
 
-    console.log(maxAge)
-
     session.data = data
     session.maxAge = maxAge
 

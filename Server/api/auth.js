@@ -8,13 +8,11 @@ module.exports = (R, $) => {
       return
     }
 
-    console.log(ctx.session.expiresAt >= new Date(), ctx.session.expiresAt, new Date())
-
-    if (ctx.session.accessToken === undefined || ctx.session.expiresAt >= new Date()) {
+    if (ctx.session.accessToken === undefined || ctx.session.expiresAt < Date.now()) {
       const data = await $.discord.getAuthToken(token)
       ctx.session.accessToken = data.access_token
       ctx.session.refreshToken = data.refresh_token
-      ctx.session.expiresAt = new Date() + ctx.expires_in
+      ctx.session.expiresAt = Date.now() + (ctx.expires_in || 1000 * 60 * 60 * 24)
     }
 
     const user = await $.discord.getUser(ctx.session.accessToken)
