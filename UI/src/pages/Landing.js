@@ -27,7 +27,7 @@ const Landing = ({ root = false }) =>
         {/* role side */}
         <div className="uk-width-1-2">
           <RoleypolyDemo />
-          <p className="subtext">It's 2018. We can do better.</p>
+          <p className="subtext">It's {(new Date()).getUTCFullYear()}. We can do better.</p>
         </div>
       </section>
     </div>
