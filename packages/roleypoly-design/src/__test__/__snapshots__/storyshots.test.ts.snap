@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots Button Default 1`] = `
+<button
+  className="sc-bdVaJa hPnBtV"
+  disabled={false}
+  onClick={[Function]}
+>
+  Example
+</button>
+`;
+
+exports[`Storyshots Button Disabled 1`] = `
+<button
+  className="sc-bdVaJa hPnBtV"
+  disabled={true}
+  onClick={[Function]}
+>
+  Example
+</button>
+`;
+
+exports[`Storyshots Button Loading 1`] = `
+<button
+  className="sc-bdVaJa hPnBtV"
+  disabled={false}
+  onClick={[Function]}
+>
+  Example
+</button>
+`;
+
+exports[`Storyshots Button Primary 1`] = `
+<button
+  className="sc-bdVaJa hPnBtV"
+  disabled={false}
+  onClick={[Function]}
+>
+  Example
+</button>
+`;
+
+exports[`Storyshots Button Secondary 1`] = `
+<button
+  className="sc-bdVaJa hPnBtV"
+  disabled={false}
+  onClick={[Function]}
+>
+  Example
+</button>
+`;

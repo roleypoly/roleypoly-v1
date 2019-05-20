@@ -56,3 +56,25 @@ export const StyledButton = styled.button`
     }
   }
 `
+
+StyledButton.defaultProps = {
+  theme: {
+    actions: {
+      primary: '#46b646',
+      primaryText: '#efefef',
+      secondary: '#e95353',
+      secondaryText: '#efefef'
+    }
+  }
+}
+
+export const StyledPrimaryButton = styled(StyledButton)`
+  background-color: ${props => props.theme.actions.primary};
+  color: ${props => props.theme.actions.primaryText};
+`
+
+StyledPrimaryButton.defaultProps = StyledButton.defaultProps
+export const StyledSecondaryButton = styled(StyledButton)`
+  background-color: ${props => props.theme.actions.secondary};
+  color: ${props => props.theme.actions.secondaryText};
+`

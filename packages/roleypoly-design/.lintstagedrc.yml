@@ -1,0 +1,11 @@
+linters:
+  lib/*.{js,jsx}:
+    - standard --fix
+    - git add
+  lib/*.d.ts:
+    - tslint --fix
+  src/*.{ts,tsx}:
+    - tslint --fix
+    - stylelint --fix
+    - jest --bail --findRelatedTests
+    - git add
