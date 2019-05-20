@@ -11,9 +11,9 @@ exports[`Storyshots Button Default 1`] = `
     Object {
       "actions": Object {
         "primary": "#46b646",
-        "primaryText": "#efefef",
-        "secondary": "#e95353",
-        "secondaryText": "#efefef",
+      },
+      "button": Object {
+        "borderRadius": "2px",
       },
     }
   }
@@ -33,9 +33,9 @@ exports[`Storyshots Button Disabled 1`] = `
     Object {
       "actions": Object {
         "primary": "#46b646",
-        "primaryText": "#efefef",
-        "secondary": "#e95353",
-        "secondaryText": "#efefef",
+      },
+      "button": Object {
+        "borderRadius": "2px",
       },
     }
   }
@@ -55,9 +55,9 @@ exports[`Storyshots Button Loading 1`] = `
     Object {
       "actions": Object {
         "primary": "#46b646",
-        "primaryText": "#efefef",
-        "secondary": "#e95353",
-        "secondaryText": "#efefef",
+      },
+      "button": Object {
+        "borderRadius": "2px",
       },
     }
   }
@@ -96,44 +96,53 @@ exports[`Storyshots Button Primary 1`] = `
   padding: 1em 1.4em;
   font-weight: bold;
   border: 1px solid rgba(0,0,0,0.1);
+  border-radius: ",
+              [Function],
+              ";
 
-  &::after {
-    content: \\"\\";
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-
-    /* transparent by default */
-    background-color: transparent;
-
-    transition: background-color 0.05s ease-in-out;
-
-    /* put the overlay behind the text */
-    z-index: -1;
+  &:disabled {
+    cursor: not-allowed;
   }
 
-  /* on hover, raise, brighten and shadow */
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-
+  &:not(:disabled) {
     &::after {
-      background-color: rgba(255, 255, 255, 0.3);
+      content: \\"\\";
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+
+      /* transparent by default */
+      background-color: transparent;
+
+      transition: background-color 0.05s ease-in-out;
+
+      /* put the overlay behind the text */
+      z-index: -1;
     }
-  }
 
-  /* on click, lower and darken */
-  &:active {
-    outline: none;
-    box-shadow: none;
-    border-color: rgba(0,0,0,0.2);
+    /* on hover, raise, brighten and shadow */
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 
-    transform: translateY(0);
+      &::after {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+    }
 
-    &::after {
-      background-color: rgba(0, 0, 0, 0.1);
+    /* on click, lower and darken */
+    &:active {
+      outline: none;
+      box-shadow: none;
+      border-color: rgba(0,0,0,0.2);
+
+      transform: translateY(0);
+
+      &::after {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
     }
   }
 ",
@@ -151,9 +160,9 @@ exports[`Storyshots Button Primary 1`] = `
             "theme": Object {
               "actions": Object {
                 "primary": "#46b646",
-                "primaryText": "#efefef",
-                "secondary": "#e95353",
-                "secondaryText": "#efefef",
+              },
+              "button": Object {
+                "borderRadius": "2px",
               },
             },
           },
@@ -208,54 +217,71 @@ exports[`Storyshots Button Secondary 1`] = `
   padding: 1em 1.4em;
   font-weight: bold;
   border: 1px solid rgba(0,0,0,0.1);
+  border-radius: ",
+              [Function],
+              ";
 
-  &::after {
-    content: \\"\\";
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-
-    /* transparent by default */
-    background-color: transparent;
-
-    transition: background-color 0.05s ease-in-out;
-
-    /* put the overlay behind the text */
-    z-index: -1;
+  &:disabled {
+    cursor: not-allowed;
   }
 
-  /* on hover, raise, brighten and shadow */
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-
+  &:not(:disabled) {
     &::after {
-      background-color: rgba(255, 255, 255, 0.3);
+      content: \\"\\";
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+
+      /* transparent by default */
+      background-color: transparent;
+
+      transition: background-color 0.05s ease-in-out;
+
+      /* put the overlay behind the text */
+      z-index: -1;
     }
-  }
 
-  /* on click, lower and darken */
-  &:active {
-    outline: none;
-    box-shadow: none;
-    border-color: rgba(0,0,0,0.2);
+    /* on hover, raise, brighten and shadow */
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 
-    transform: translateY(0);
+      &::after {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+    }
 
-    &::after {
-      background-color: rgba(0, 0, 0, 0.1);
+    /* on click, lower and darken */
+    &:active {
+      outline: none;
+      box-shadow: none;
+      border-color: rgba(0,0,0,0.2);
+
+      transform: translateY(0);
+
+      &::after {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
     }
   }
 ",
               "
-  background-color: ",
+  background-color: transparent;
+  border-color: transparent;
+
+  &:hover {
+    border-color: ",
               [Function],
               ";
-  color: ",
+  }
+
+  &:active {
+    border-color: ",
               [Function],
               ";
+  }
 ",
             ],
           },
@@ -263,9 +289,9 @@ exports[`Storyshots Button Secondary 1`] = `
             "theme": Object {
               "actions": Object {
                 "primary": "#46b646",
-                "primaryText": "#efefef",
-                "secondary": "#e95353",
-                "secondaryText": "#efefef",
+              },
+              "button": Object {
+                "borderRadius": "2px",
               },
             },
           },
