@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "plugins": [
+      { "transform": "ts-optchain/transform" }
+    ]
+  },
+  "include": [
+    "./src"
+  ]
+}

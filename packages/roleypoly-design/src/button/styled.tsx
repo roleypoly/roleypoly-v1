@@ -1,7 +1,9 @@
 // import * as React from 'react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 
 import * as colorHelpers from '../helpers/colors'
+
+// import { ButtonProps } from './types'
 
 export const StyledButton = styled.button`
   /* reset some styles */
@@ -95,3 +97,37 @@ export const StyledSecondaryButton = styled(StyledButton)`
     border-color: ${props => colorHelpers.stepDown(props.theme.actions.primary)};
   }
 `
+
+const loadingAnim = keyframes`
+  0% {
+    background-image: linear-gradient(to right, 0px transparent, 1px red);
+  }
+
+  100% {
+    background-image: linear-gradient(to right, 0px transparent, 100% red);
+  }
+`
+export const StyledLoadingButton = styled(StyledButton)<{loadingPct?: number}>`
+  --right: 0%;
+  &::after {
+
+    content: "";
+    /* z-index: ; */
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: var(--right);
+    border-radius: ${props => props.theme.button.borderRadius};
+    position: absolute;
+    opacity: 0.5;
+    /* background-color: red; */
+    background-image: linear-gradient(to right, 0px rgba(0,0,0,1), 100% red);
+
+    animation: ${loadingAnim} forwards infinite 1s;
+  }
+`
+
+StyledLoadingButton.defaultProps = {
+  ...StyledButton.defaultProps,
+  loadingPct: 100
+}

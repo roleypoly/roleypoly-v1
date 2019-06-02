@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+message ServerSlug {
+  string id = 1;
+  string name = 2;
+  string ownerID = 3;
+  string icon = 4;
+}

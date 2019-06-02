@@ -5,11 +5,14 @@ import {
 import {
   StyledButton,
   StyledPrimaryButton,
-  StyledSecondaryButton
+  StyledSecondaryButton,
+  StyledLoadingButton
 } from './styled'
 import {
   ButtonProps
 } from './types'
+
+const clampPct = (i: number): number => Math.max(0, Math.min(100, i))
 
 export default class Button extends React.Component<ButtonProps> {
   static defaultProps: ButtonProps = {
@@ -62,5 +65,17 @@ export const PrimaryButton = (props: ButtonProps) => <Button {...props} override
 export const SecondaryButton = (props: ButtonProps) => <Button {...props} overrides={{
   BaseButton: {
     component: StyledSecondaryButton
+  }
+}} />
+
+export const LoadingButton = (props: ButtonProps & { loadingPct?: number }) => <Button {...props} overrides={{
+  BaseButton: {
+    component: StyledLoadingButton,
+    props: {
+      disabled: true,
+      style: {
+        '--right': `${clampPct(100 - (props.loadingPct || 0))}%`
+      }
+    }
   }
 }} />

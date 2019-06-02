@@ -1,5 +1,6 @@
 require('dotenv').config({ quiet: true })
-module.exports = {
+const withTypescript = require('@zeit/next-typescript')
+module.exports = withTypescript({
   publicRuntimeConfig: {
     BOT_HANDLE: process.env.BOT_HANDLE
   },
@@ -11,4 +12,4 @@ module.exports = {
 
     return config
   }
-}
+})

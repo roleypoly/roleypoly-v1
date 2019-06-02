@@ -11,6 +11,7 @@
   "files": [
     "lib"
   ],
+  "types": "./lib/index.d.ts",
   "devDependencies": {
     "@babel/core": "^7.4.4",
     "@babel/preset-typescript": "^7.3.3",
@@ -25,7 +26,7 @@
     "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/jest": "^24.0.13",
     "@types/node": "^12.0.2",
-    "@types/react": "^16.8.17",
+    "@types/react": "^16.8.19",
     "@types/react-dom": "^16.8.4",
     "@types/react-test-renderer": "^16.8.1",
     "@types/storybook__addon-actions": "^3.4.2",
@@ -36,16 +37,14 @@
     "@types/styled-components": "4.1.8",
     "awesome-typescript-loader": "^5.2.1",
     "babel-loader": "^8.0.6",
-    "babel-plugin-macros": "^2.5.1",
-    "babel-plugin-require-context-hook": "^1.0.0",
+    "lint-staged": "^8.1.7",
     "react-docgen-typescript-loader": "^3.1.0",
     "react-test-renderer": "^16.8.6",
-    "require-context.macro": "^1.0.4",
     "sinon": "^7.3.2",
     "stylelint": "^10.0.1",
-    "tslint": "^5.16.0",
+    "tslint": "^5.17.0",
     "tslint-config-standard": "^8.0.1",
-    "typescript": "^3.4.5"
+    "typescript": "^3.5.1"
   },
   "scripts": {
     "storybook": "start-storybook -p 6006",

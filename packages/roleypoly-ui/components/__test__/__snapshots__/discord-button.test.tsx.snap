@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<DiscordButton /> renders correctly 1`] = `
+<styled.a>
+  <styled.img
+    src="/static/discord-logo.svg"
+  />
+   
+  Hello!
+</styled.a>
+`;

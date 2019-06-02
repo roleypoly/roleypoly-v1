@@ -1,8 +1,11 @@
 import * as React from 'react'
 import { shallow } from 'enzyme'
 import * as sinon from 'sinon'
+import 'jest-styled-components'
 
 import Button from './Button'
+// import { StyledLoadingButton } from './styled'
+// import { ButtonProps } from './types'
 
 describe('<Button />', () => {
   it('calls onButtonPress when not disabled', () => {
@@ -20,4 +23,11 @@ describe('<Button />', () => {
 
     expect(spy.notCalled).toBeTruthy()
   })
+})
+
+describe('<StyledLoadingButton />', () => {
+  // it('clamps between 0-100%', () => {
+  //   const button = shallow<ButtonProps>(<StyledLoadingButton loadingPct={-100} />)
+
+  // })
 })

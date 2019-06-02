@@ -1,5 +1,13 @@
 {
   "name": "@roleypoly/types",
   "version": "2.0.0",
-  "private": true
+  "private": true,
+  "scripts": {
+    "precommit": "lint-staged"
+  },
+  "devDependencies": {
+    "lint-staged": "^8.1.7",
+    "tslint": "^5.17.0",
+    "typescript": "^3.5.1"
+  }
 }

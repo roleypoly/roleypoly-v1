@@ -1,6 +1,6 @@
 import * as Color from 'color'
 
-const color = (i: Color | string) => {
+export const color = (i: Color | string) => {
   return new Color(i)
 }
 

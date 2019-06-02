@@ -1,0 +1,31 @@
+syntax = "proto3";
+import "../proto-lib/types.proto";
+
+message void {
+  option render.exclude = true;
+};
+
+service Servers {
+  
+  rpc GetServerSlug (ServerQuery) returns (ServerSlug) {};
+
+  // for root only, get all servers for whatever reason
+  rpc RootGetAllServers (void) returns (RootServerOverview) {
+    option secureAs.root = true;
+  };
+};
+
+message ServerQuery {
+  required string id = 1;
+}
+
+message RootServerItem {
+  string url = 1;
+  string name = 2;
+  int32 members = 3;
+  int32 roles = 4;
+}
+
+message RootServerOverview {
+  repeated RootServerItem servers = 1;
+};

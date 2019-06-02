@@ -45,25 +45,155 @@ exports[`Storyshots Button Disabled 1`] = `
 `;
 
 exports[`Storyshots Button Loading 1`] = `
-<styled.button
+<Button
   disabled={false}
-  loadingPct={0}
-  onClick={[Function]}
-  primary={false}
-  secondary={false}
-  theme={
+  loading={false}
+  loadingPct={100}
+  onButtonPress={[Function]}
+  overrides={
     Object {
-      "actions": Object {
-        "primary": "#46b646",
-      },
-      "button": Object {
-        "borderRadius": "2px",
+      "BaseButton": Object {
+        "component": Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-bxivhb",
+            "isStatic": false,
+            "rules": Array [
+              "
+  /* reset some styles */
+  box-shadow: none;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  background-color: rgba(0,0,0,0.1);
+
+  /* real styles */
+  position: relative;
+  transition: all 0.05s ease-in-out;
+  padding: 1em 1.4em;
+  font-weight: bold;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: ",
+              [Function],
+              ";
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled) {
+    &::after {
+      content: \\"\\";
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+
+      /* transparent by default */
+      background-color: transparent;
+
+      transition: background-color 0.05s ease-in-out;
+
+      /* put the overlay behind the text */
+      z-index: -1;
+    }
+
+    /* on hover, raise, brighten and shadow */
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+
+      &::after {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+    }
+
+    /* on click, lower and darken */
+    &:active {
+      outline: none;
+      box-shadow: none;
+      border-color: rgba(0,0,0,0.2);
+
+      transform: translateY(0);
+
+      &::after {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+",
+              "
+  --right: 0%;
+  &::after {
+
+    content: \\"\\";
+    /* z-index: ; */
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: var(--right);
+    border-radius: ",
+              [Function],
+              ";
+    position: absolute;
+    opacity: 0.5;
+    /* background-color: red; */
+    background-image: linear-gradient(to right, 0px rgba(0,0,0,1), 100% red);
+
+    animation: ",
+              Keyframes {
+                "id": "sc-keyframes-cwUnhJ",
+                "inject": [Function],
+                "name": "cwUnhJ",
+                "rules": Array [
+                  "@-webkit-keyframes cwUnhJ{0%{background-image:linear-gradient(to right,0px transparent,1px red);}100%{background-image:linear-gradient(to right,0px transparent,100% red);}}",
+                  "@keyframes cwUnhJ{0%{background-image:linear-gradient(to right,0px transparent,1px red);}100%{background-image:linear-gradient(to right,0px transparent,100% red);}}",
+                ],
+                "toString": [Function],
+              },
+              " forwards infinite 1s;
+  }
+",
+            ],
+          },
+          "defaultProps": Object {
+            "loadingPct": 100,
+            "theme": Object {
+              "actions": Object {
+                "primary": "#46b646",
+              },
+              "button": Object {
+                "borderRadius": "2px",
+              },
+            },
+          },
+          "displayName": "Styled(styled.button)",
+          "foldedComponentIds": Array [
+            "sc-bdVaJa",
+          ],
+          "render": [Function],
+          "styledComponentId": "sc-bxivhb",
+          "target": "button",
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
+        },
+        "props": Object {
+          "disabled": true,
+          "style": Object {
+            "--right": "0%",
+          },
+        },
       },
     }
   }
+  primary={false}
+  secondary={false}
 >
   Example
-</styled.button>
+</Button>
 `;
 
 exports[`Storyshots Button Primary 1`] = `

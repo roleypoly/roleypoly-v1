@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Role /> renders correctly 1`] = `
+<styled.div
+  onClick={[Function]}
+  style={
+    Object {
+      "--role-color-active": "hsl(0, 0%, 100%)",
+      "--role-color-base": "hsl(0, 0%, 100%)",
+      "--role-color-outline": "hsla(0, 0%, 100%, 0.7)",
+      "--role-color-outline-alt": "hsla(0, 0%, 100%, 0.4)",
+    }
+  }
+>
+  Test Role
+</styled.div>
+`;
+
+exports[`<Role /> when disabled, does not trigger onToggle on click 1`] = `
+<styled.div
+  active={false}
+  disabled={true}
+  onTouchEnd={[Function]}
+  onTouchStart={[Function]}
+  style={
+    Object {
+      "--role-color-active": "hsl(0, 0%, 100%)",
+      "--role-color-base": "hsl(0, 0%, 100%)",
+      "--role-color-outline": "hsla(0, 0%, 100%, 0.7)",
+      "--role-color-outline-alt": "hsla(0, 0%, 100%, 0.4)",
+    }
+  }
+  title="This role has unsafe permissions."
+>
+  Test Role
+</styled.div>
+`;
+
+exports[`<Role /> when disabled, handles touch hover events 1`] = `
+<styled.div
+  disabled={true}
+  onTouchEnd={[Function]}
+  onTouchStart={[Function]}
+  style={
+    Object {
+      "--role-color-active": "hsl(0, 0%, 100%)",
+      "--role-color-base": "hsl(0, 0%, 100%)",
+      "--role-color-outline": "hsla(0, 0%, 100%, 0.7)",
+      "--role-color-outline-alt": "hsla(0, 0%, 100%, 0.4)",
+    }
+  }
+  title="This role has unsafe permissions."
+>
+  unsafe role
+  <styled.div>
+    This role has unsafe permissions.
+  </styled.div>
+</styled.div>
+`;

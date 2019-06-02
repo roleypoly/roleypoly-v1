@@ -1,11 +1,9 @@
 {
   "presets": [
     "next/babel",
-    "@babel/preset-typescript",
+    "@zeit/next-typescript/babel"
   ],
   "plugins": [
-    "@babel/plugin-syntax-dynamic-import",
-    "@babel/plugin-proposal-class-properties",
     [
       "@babel/plugin-transform-runtime",
       {
@@ -18,8 +16,6 @@
         "ssr": true
       }
     ],
-    "@babel/plugin-proposal-optional-chaining",
-    "macros"
   ],
   "env": {
     "test": {
@@ -32,10 +28,6 @@
             }
           }
         ]
-      ],
-      "plugins": [
-        "require-context-hook",
-        "macros"
       ]
     }
   }

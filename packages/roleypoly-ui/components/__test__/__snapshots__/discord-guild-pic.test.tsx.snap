@@ -1,0 +1,96 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<DiscordGuildPic /> falls-back to a default when things go bad. 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: var(--fallback-color);
+}
+
+<DiscordGuildPic
+  icon="aaa"
+  id="0000"
+  name="Mock"
+>
+  <styled.div
+    serverName="Mock"
+    style={
+      Object {
+        "--fallback-color": "hsl(77,50%,50%)",
+      }
+    }
+  >
+    <StyledComponent
+      forwardedComponent={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-bdVaJa",
+            "isStatic": true,
+            "lastClassName": "c0",
+            "rules": Array [
+              "
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--fallback-color);
+",
+            ],
+          },
+          "displayName": "styled.div",
+          "foldedComponentIds": Array [],
+          "render": [Function],
+          "styledComponentId": "sc-bdVaJa",
+          "target": "div",
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
+        }
+      }
+      forwardedRef={null}
+      serverName="Mock"
+      style={
+        Object {
+          "--fallback-color": "hsl(77,50%,50%)",
+        }
+      }
+    >
+      <div
+        className="c0"
+        style={
+          Object {
+            "--fallback-color": "hsl(77,50%,50%)",
+          }
+        }
+      >
+        M
+      </div>
+    </StyledComponent>
+  </styled.div>
+</DiscordGuildPic>
+`;
+
+exports[`<DiscordGuildPic /> renders a snapshot 1`] = `
+<DiscordGuildPic
+  icon="aaa"
+  id="0000"
+  name="Mock"
+>
+  <img
+    onError={[Function]}
+    onLoad={[Function]}
+    src="https://cdn.discordapp.com/icons/0000/aaa.png"
+  />
+</DiscordGuildPic>
+`;

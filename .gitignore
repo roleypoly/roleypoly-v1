@@ -10,3 +10,5 @@ yarn-error\.log
 \.next/
 coverage/
 packages/*/lib
+*/tsconfig.tsbuildinfo
+.pnp
