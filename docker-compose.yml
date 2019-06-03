@@ -11,3 +11,9 @@ services:
             POSTGRES_DB: roleypoly
             POSTGRES_USER: roleypoly
             POSTGRES_INITDB_ARGS: -A trust
+
+    nats:
+        image: nats:1.4.1-linux
+        container_name: roleypoly-nats
+        ports:
+            - 4222:4222

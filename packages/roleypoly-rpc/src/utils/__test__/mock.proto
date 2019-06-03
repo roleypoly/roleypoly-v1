@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+service MockBot {
+  rpc HelloBot (HelloMsg) returns (HelloReply) {};
+}
+
+service MockBackend {
+  rpc HelloBackend (HelloMsg) returns (HelloReply) {};
+}
+
+message HelloMsg {
+  string hello = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}

@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+// @bento-exclude
+
 message ServerSlug {
   string id = 1;
   string name = 2;
