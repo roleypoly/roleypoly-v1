@@ -2,7 +2,6 @@ linters:
   ./**/*.{ts,tsx}:
     - tslint --fix
     - stylelint --fix
-    - jest --bail --findRelatedTests
     - git add
 
     
