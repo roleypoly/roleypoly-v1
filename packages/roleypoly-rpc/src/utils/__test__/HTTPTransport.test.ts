@@ -31,6 +31,6 @@ describe('HTTPTransport', async () => {
     const { cc, spy } = getCC()
     const out = await cc.helloBackend({ hello: 'yes!' })
     expect(out.message).toBe(`hello, yes!! i'm bot!!`)
-    expect(spy.called).toBe(true) // oof
+    expect(spy.called).toBe(true)
   })
 })
