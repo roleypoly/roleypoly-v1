@@ -3,17 +3,17 @@
   "name": "@roleypoly/design",
   "version": "2.0.0",
   "dependencies": {
-    "color": "^3.1.1",
+    "color": "^3.1.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "styled-components": "^4.2.0"
+    "styled-components": "^4.2.1"
   },
   "files": [
     "lib"
   ],
   "types": "./lib/index.d.ts",
   "devDependencies": {
-    "@babel/core": "^7.4.4",
+    "@babel/core": "^7.4.5",
     "@babel/preset-typescript": "^7.3.3",
     "@storybook/addon-actions": "^5.0.11",
     "@storybook/addon-info": "^5.0.11",
@@ -25,7 +25,7 @@
     "@types/color": "^3.0.0",
     "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/jest": "^24.0.13",
-    "@types/node": "^12.0.2",
+    "@types/node": "^12.0.4",
     "@types/react": "^16.8.19",
     "@types/react-dom": "^16.8.4",
     "@types/react-test-renderer": "^16.8.1",
@@ -34,7 +34,7 @@
     "@types/storybook__addon-links": "^3.3.4",
     "@types/storybook__addon-storyshots": "^4.0.0",
     "@types/storybook__react": "^4.0.1",
-    "@types/styled-components": "4.1.8",
+    "@types/styled-components": "^4.1.16",
     "awesome-typescript-loader": "^5.2.1",
     "babel-loader": "^8.0.6",
     "lint-staged": "^8.1.7",

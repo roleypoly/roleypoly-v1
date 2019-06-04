@@ -19,7 +19,7 @@
     "koa-better-router": "^2.1.1",
     "koa-bodyparser": "^4.2.1",
     "koa-session": "^5.12.0",
-    "kompression": "^1.0.0",
+    "kompression": "richard-riverford/kompression#0d4480c",
     "ksuid": "^1.2.0",
     "lru-cache": "^5.1.1",
     "moniker": "^0.1.2",
