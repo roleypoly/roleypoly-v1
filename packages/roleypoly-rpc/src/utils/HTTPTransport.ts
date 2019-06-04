@@ -58,7 +58,7 @@ export default class HTTPTransport extends Transport {
     req.on('end', async () => {
       const o = await this.receiver({ buffer: txtEnc.encode(buf), ctx: this.getContext(req, res) })
       res.statusCode = 200
-      res.end(o)
+      res.end(txtDec.decode(o))
     })
   }
 
@@ -143,6 +143,7 @@ export default class HTTPTransport extends Transport {
     .set('User-Agent', 'roleypoly/2.0 bento http client (+https://roleypoly.com)')
     .withCredentials()
     .set(this.injectHeaders)
+    .ok(() => true)
 
     if (c.length > 0) {
       r.set('Cookie', c)
@@ -150,6 +151,6 @@ export default class HTTPTransport extends Transport {
 
     const res = await r
 
-    return Buffer.from(res.body)
+    return txtEnc.encode(res.text)
   }
 }
