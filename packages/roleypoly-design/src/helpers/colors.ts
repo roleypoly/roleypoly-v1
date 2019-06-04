@@ -1,4 +1,4 @@
-import * as Color from 'color'
+import Color from 'color'
 
 export const color = (i: Color | string) => {
   return new Color(i)

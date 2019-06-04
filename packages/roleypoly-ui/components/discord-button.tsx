@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 export type ButtonProps = {
   children: React.ReactChild
-  href: string
+  href?: string
 }
 
 const Button = styled.a`
