@@ -9,12 +9,16 @@ const getCC = () => {
   const bento2 = new Bento()
 
   const tt = new NATSTransport(bento, new JSONSerializer({ verbose: true }), 'nats://localhost:4222/', '' + NOW)
+  const tt2 = new NATSTransport(bento2, new JSONSerializer({ verbose: true }), 'nats://localhost:4222/', '' + NOW)
 
   bento.transport = tt
-  bento2.transport = tt
+  bento2.transport = tt2
 
   bento.service(MockBackendClient.__SERVICE__, MockBackendServer)
   const cc = bento2.client(MockBackendClient)
+
+  tt.hookHandlers()
+  tt2.hookHandlers()
 
   return cc
 }
