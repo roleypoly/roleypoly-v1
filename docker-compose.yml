@@ -1,6 +1,14 @@
 version: '2.1'
 services:
 
+    proxy:
+        image: katie/roleypoly-proxy:latest
+        ports:
+            - 6770:80
+        environment:
+            UI_ADDR: 172.17.0.1:6768
+            API_ADDR: 172.17.0.1:6769
+
     pg:
         image: postgres:10-alpine
         container_name: roleypoly-pg
