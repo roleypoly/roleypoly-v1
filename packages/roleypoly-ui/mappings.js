@@ -1,10 +1,12 @@
 module.exports = {
+
   '/s/add': {
     path: '/_internal/_server_add',
     custom (router) {
       router.get('/s/', ctx => ctx.redirect('/s/add'))
     }
   },
+
   '/s/:id': {
     path: '/_internal/_server',
     noAutoFix: true,
