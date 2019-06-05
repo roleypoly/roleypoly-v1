@@ -4,7 +4,6 @@
   "main": "index.js",
   "scripts": {
     "lerna": "lerna",
-    "start": "node packages/roleypoly-server/dist/index.js",
     "dev": "run-p dev:*",
     "dev:backend": "babel-node packages/roleypoly-server/index.js",
     "dev:bot": "babel-node packages/roleypoly-bot/index.js",
@@ -13,10 +12,7 @@
     "remotedebug": "remotedebug_ios_webkit_adapter --port=9000 > /dev/null",
     "test": "jest --color --coverage",
     "lint": "lerna run lint-staged",
-    "rpcrepl": "babel-node packages/roleypoly-server/util/rpcrepl.js",
-    "dev:up": "docker-compose up -d",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "dev:up": "docker-compose up -d"
   },
   "private": true,
   "workspaces": [
@@ -28,17 +24,9 @@
     }
   },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/plugin-transform-runtime": "^7.4.4",
-    "@babel/preset-react": "^7.0.0",
     "@types/enzyme": "^3.9.3",
-    "@types/sinon": "^7.0.12",
-    "@types/webpack-env": "^1.13.9",
-    "await-outside": "^2.1.2",
     "babel-jest": "^24.8.0",
     "babel-loader": "^8.0.6",
-    "babel-plugin-styled-components": "^1.10.0",
-    "chokidar": "^3.0.1",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "enzyme-to-json": "^3.3.5",
@@ -47,14 +35,8 @@
     "jest-styled-components": "^6.3.1",
     "lerna": "^3.14.1",
     "lint-staged": "^8.1.7",
-    "next": "^8.1.0",
     "npm-run-all": "^4.1.5",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-test-renderer": "^16.8.6",
-    "require-context.macro": "^1.0.4",
     "standard": "12.0.1",
-    "styled-components": "^4.2.1",
     "stylelint": "^10.0.1",
     "stylelint-config-standard": "^18.3.0",
     "stylelint-config-styled-components": "^0.1.1",
