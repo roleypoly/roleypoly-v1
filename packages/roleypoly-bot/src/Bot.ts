@@ -33,7 +33,7 @@ export default class Bot {
 
   // $RPC: RPCClient
 
-  // rpc: typeof RPCClient
+  rpc: {[x: string]: Function}
 
   commandCheck: RegExp = new RegExp(`^<@!?${process.env.DISCORD_CLIENT_ID}>`)
 

@@ -1,4 +1,3 @@
-// @flow
 import 'dotenv/config'
 import Bot from './Bot'
 

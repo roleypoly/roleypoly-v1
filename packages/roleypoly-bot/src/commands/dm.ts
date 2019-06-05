@@ -1,8 +1,7 @@
-// @flow
-import type { Command } from './_types'
+import { Command } from './_types'
 import { withTyping } from '../utils'
-import type Bot from '../Bot'
-import type { Message } from 'eris'
+import Bot from '../Bot'
+import { Message } from 'eris'
 
 const cmds: Command[] = [
   {
