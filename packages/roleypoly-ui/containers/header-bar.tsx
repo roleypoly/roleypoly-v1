@@ -1,16 +1,18 @@
 import * as React from 'react'
-import dynamic from 'next/dynamic'
-import { User } from '../stores/user'
-import HeaderBarAuthT from '../components/header/auth'
-import HeaderBarUnauthT from '../components/header/unauth'
+// import dynamic from 'next/dynamic'
+import HeaderBarAuth from '../components/header/auth'
+import HeaderBarUnauth from '../components/header/unauth'
+import { CommonProps } from '../components/header/common'
 type Props = {
-  user?: User
+  user?: any,
+  noBackground?: boolean
 }
 
-const HeaderBarAuth = dynamic<typeof HeaderBarAuthT>(() => import('../components/header/auth'))
-const HeaderBarUnauth = dynamic<typeof HeaderBarUnauthT>(() => import('../components/header/unauth'))
+// dynamic import machine broke
+// const HeaderBarAuth = dynamic<typeof HeaderBarAuthT>(() => import('../components/header/auth'))
+// const HeaderBarUnauth = dynamic(() => import('../components/header/unauth'))
 
-const HeaderBar = (props: Props) => {
+const HeaderBar = (props: Props & CommonProps) => {
   if (props.user === undefined) {
     return <HeaderBarUnauth {...props} />
   } else {
