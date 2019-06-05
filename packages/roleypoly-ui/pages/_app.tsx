@@ -28,27 +28,29 @@ class RoleypolyApp extends App {
   static async getInitialProps ({ Component, ctx, router }: any) {
     // Fix for next/error rendering instead of our error page.
     // Who knows why this would ever happen.
-    if (Component.constructor.name === 'ErrorPage') {
-      Component = ErrorP
-    }
+    // if (Component.constructor.name === 'ErrorPage') {
+    //   Component = ErrorP
+    // }
 
-    // console.log({ Component })
+    // // console.log({ Component })
 
+    // let pageProps = {}
+    // const rpc = withCookies()
+    // let user: UserPartial | undefined = undefined
+    // try {
+    //   user = undefined
+    //   ctx.user = user
+    // } catch (e) {
+    //   if (e.code === 403) {
+    //     console.error('user not found')
+    //     ctx.user = null
+    //   } else {
+    //     console.error(e)
+    //     throw e
+    //   }
+    // }
     let pageProps = {}
-    const rpc = withCookies()
-    let user: UserPartial | null = null
-    try {
-      user = await rpc.getCurrentUser()
-      ctx.user = user
-    } catch (e) {
-      if (e.code === 403) {
-        console.error('user not found')
-        ctx.user = null
-      } else {
-        console.error(e)
-        throw e
-      }
-    }
+
     ctx.robots = 'INDEX, FOLLOW'
 
     ctx.layout = {
@@ -56,12 +58,12 @@ class RoleypolyApp extends App {
     }
 
     if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx, rpc, router)
+      pageProps = await Component.getInitialProps(ctx, {}, router)
     }
 
     // console.log({ pageProps })
 
-    return { pageProps, user, layout: ctx.layout, robots: ctx.robots }
+    return { pageProps, layout: ctx.layout, robots: ctx.robots }
   }
 
   catchFOUC () {
