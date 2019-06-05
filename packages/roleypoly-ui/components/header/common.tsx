@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import * as logo from '../logo'
 
 export type CommonProps = {
-  children: React.Element<any>,
+  children: React.ReactElement<any>,
   noBackground: boolean
 }
 
