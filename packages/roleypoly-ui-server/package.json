@@ -5,9 +5,17 @@
   "scripts": {
     "build": "tsc",
     "precommit": "lint-staged",
-    "dev": "yarn build --watch"
+    "dev": "yarn build --watch",
+    "start": "node lib/index.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "koa": "^2.7.0",
+    "koa-better-router": "^2.1.1",
+    "kompression": "richard-riverford/kompression#0d4480c",
+    "@roleypoly/ui": "2.0.0",
+    "chalk": "^2.4.2",
+    "dotenv": "^8.0.0"
+  },
   "devDependencies": {
     "lint-staged": "^8.1.7",
     "tslint": "^5.17.0",

@@ -1,4 +1,7 @@
 linters:
+  ./**/*.{js,jsx}:
+    - standard --fix
+    - git add
   ./**/*.{ts,tsx}:
     - tslint --fix
     - stylelint --fix
