@@ -1,13 +1,14 @@
-// @flow
 import * as React from 'react'
 import HeaderBarCommon, { Logomark } from './common'
-import { type User } from '../../stores/user'
 import DiscordIcon from '../discord-guild-pic'
 import styled from 'styled-components'
 import { Hide } from '../../kit/media'
 import Link from 'next/link'
 import { connect } from 'react-redux'
-import { getCurrentServerState } from '../../stores/currentServer'
+import { UserPartial as User } from '@roleypoly/types'
+
+// import { User } from '../../stores/user'
+// import { getCurrentServerState } from '../../stores/currentServer'
 
 const temporaryServer = {
   id: '423497622876061707',
@@ -78,7 +79,13 @@ const Spacer = styled.div`
   flex: 1;
 `
 
-const HeaderBarAuth: React.StatelessFunctionalComponent<{ user: User, isOnServer: boolean, currentServer: * }> = ({ user, isOnServer, currentServer = temporaryServer }) => (
+type Props = {
+  user: User
+  isOnServer: boolean
+  currentServer: typeof temporaryServer
+}
+
+const HeaderBarAuth: React.FunctionComponent<Props> = ({ user, isOnServer, currentServer = temporaryServer }) => (
   <HeaderBarCommon noBackground={false}>
     <>
       <Link href='/'>
@@ -94,7 +101,7 @@ const HeaderBarAuth: React.StatelessFunctionalComponent<{ user: User, isOnServer
 
 const mapStateToProps = (state, { router }) => ({
   isOnServer: router.pathname === '/_internal/_server',
-  currentServer: router.pathname === '/_internal/_server' ? getCurrentServerState(state, router.query.id).server : {}
+  currentServer: router.pathname === '/_internal/_server' ? {} : {} // TODO: true state is state getter
 })
 
 export default connect(mapStateToProps)(HeaderBarAuth)
