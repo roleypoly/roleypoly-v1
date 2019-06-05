@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import Koa, { Context } from 'koa'
-import mappings from '@roleypoly/ui/mappings'
 import connector from '@roleypoly/ui/connector'
+import { Mappings } from '@roleypoly/ui/mappings'
 import betterRouter from 'koa-better-router'
 import compress from 'kompression'
 
@@ -17,42 +17,64 @@ export type Router = {
 
 const app = new Koa()
 
-async function start () {
+const isDev = process.env.NODE_ENV === 'development'
+
+function loadRoutes (next: any, routeMapping: Mappings): Function {
   const router: Router = betterRouter().loadMethods()
-
-  app.use(compress())
-
-  const next = connector({ dev: process.env.NODE_ENV === 'development' })
-  await next.prepare()
   const nextHandler = next.getRequestHandler()
 
   // UI dynamic mappings
-  for (let mapping in mappings) {
-    const { path, noAutoFix, custom } = mappings[mapping] as { path: string, noAutoFix?: boolean, custom?: (router: Router) => void }
+  for (let mapping in routeMapping) {
+    const { path, noAutoFix, custom } = routeMapping[mapping]
 
-    // render the path if mapping is GET-ted
+  // render the path if mapping is GET-ted
     router.get(mapping, (ctx: Context) => {
       ctx.status = 200
       return next.render(ctx.req, ctx.res, path, { ...ctx.query, ...ctx.params })
     })
 
-    // redirect the inverse path if there isn't a parameter
+  // redirect the inverse path if there isn't a parameter
     if (!noAutoFix) {
       router.get(path, (ctx: Context) => ctx.redirect(mapping))
     }
 
-    // all else, if custom exists, we call it.
-    // this solves edge cases per route.
+  // all else, if custom exists, we call it.
+  // this solves edge cases per route.
     if (custom !== undefined) {
-      custom(router)
+      custom(router as any)
     }
   }
 
-  // handle all else
+// handle all else
   router.get('*', async (ctx: Context) => {
     await nextHandler(ctx.req, ctx.res)
     ctx.respond = false
   })
+
+  return router.middleware()
+}
+
+async function start () {
+  app.use(compress())
+
+  const next = connector({ dev: isDev })
+  await next.prepare()
+
+  const mappings = require('@roleypoly/ui/mappings')
+  let mw = loadRoutes(next, mappings)
+
+  if (isDev) {
+    const { hotReloader } = require('./dev-server')
+    mw = hotReloader(
+      require.resolve('@roleypoly/ui/mappings'),
+      () => {
+        const newMappings = require('@roleypoly/ui/mappings')
+        return loadRoutes(next, newMappings)
+      }
+    )
+  }
+
+  app.use(mw as any)
 
   app.listen(process.env.UI_PORT || '6768')
 }

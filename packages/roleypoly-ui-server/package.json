@@ -9,14 +9,16 @@
     "start": "node lib/index.js"
   },
   "dependencies": {
-    "koa": "^2.7.0",
-    "koa-better-router": "^2.1.1",
-    "kompression": "richard-riverford/kompression#0d4480c",
     "@roleypoly/ui": "2.0.0",
     "chalk": "^2.4.2",
-    "dotenv": "^8.0.0"
+    "dotenv": "^8.0.0",
+    "koa": "^2.7.0",
+    "koa-better-router": "^2.1.1",
+    "kompression": "richard-riverford/kompression#0d4480c"
   },
   "devDependencies": {
+    "chalk": "^2.4.2",
+    "chokidar": "^3.0.1",
     "lint-staged": "^8.1.7",
     "tslint": "^5.17.0",
     "typescript": "^3.5.1"
