@@ -1,6 +1,5 @@
-// @flow
 import * as React from 'react'
-import HeaderBarCommon, { Logotype, type CommonProps } from './common'
+import HeaderBarCommon, { Logotype, CommonProps } from './common'
 import styled from 'styled-components'
 import Link from 'next/link'
 
@@ -35,7 +34,7 @@ const LoginButton = styled.a`
   }
 `
 
-const HeaderBarUnauth: React.StatelessFunctionalComponent<CommonProps> = (props) => (
+const HeaderBarUnauth: React.FunctionComponent<CommonProps> = (props) => (
   <HeaderBarCommon {...props}>
     <>
       <Link href='/' prefetch>
