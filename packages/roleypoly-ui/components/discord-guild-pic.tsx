@@ -25,7 +25,7 @@ export default class DiscordGuildPic extends React.Component<GuildPicProps, Guil
     ok: true
   }
 
-  static getDerivedStateFromProps (nextProps: GuildPicProps, prevState: GuildPicState): GuildPicState {
+  static getDerivedStateFromProps (nextProps: any, prevState: GuildPicState): GuildPicState {
     return {
       ...prevState,
       src: `https://cdn.discordapp.com/icons/${nextProps.id}/${nextProps.icon}.png`
