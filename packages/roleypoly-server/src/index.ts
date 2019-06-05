@@ -16,7 +16,7 @@ const app = new Koa()
 // Create the server and socket.io server
 const server = http.createServer(app.callback())
 
-const M = new Roleypoly(null, app) // eslint-disable-line no-unused-vars
+const M = new Roleypoly(undefined, app) // eslint-disable-line no-unused-vars
 
 const appKey = process.env.APP_KEY || ''
 if (appKey === '') {
