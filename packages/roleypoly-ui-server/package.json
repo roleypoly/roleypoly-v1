@@ -20,7 +20,7 @@
     "chalk": "^2.4.2",
     "chokidar": "^3.0.1",
     "lint-staged": "^8.1.7",
-    "tslint": "^5.17.0",
-    "typescript": "^3.5.1"
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.3"
   }
 }

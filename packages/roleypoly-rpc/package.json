@@ -2,17 +2,21 @@
   "name": "@roleypoly/rpc",
   "version": "2.0.0",
   "devDependencies": {
-    "@types/superagent": "^4.1.1",
     "@types/cookie": "^0.3.3",
+    "@types/superagent": "^4.1.1",
     "lint-staged": "^8.1.7",
-    "tslint": "^5.17.0",
-    "typescript": "^3.5.1"
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.3"
   },
   "scripts": {
     "generate": "bentoc ./**/*.proto",
     "build": "tsc",
     "precommit": "lint-staged"
   },
+  "files": [
+    "lib"
+  ],
+  "main": "lib/index.js",
   "private": true,
   "dependencies": {
     "@kayteh/bento": "^0.2.2",
