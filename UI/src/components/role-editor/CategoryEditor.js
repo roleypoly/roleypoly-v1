@@ -24,6 +24,28 @@ export default class CategoryEditor extends Component {
           <div className="uk-form-controls">
             <input type="text" className="uk-input" placeholder='' value={category.get('name')} onChange={this.props.onEdit('name', Symbol.for('edit: text'))} />
           </div>
+          <div className="role-editor__bumpers">
+            <div 
+              onClick={this.props.onBump(-1)}
+              className={
+                `role-editor__bumpers-bump 
+                ${category.get('position') === 0 ? 'yeet' : ''} 
+                `} 
+                uk-tooltip="delay: 1s" 
+                title="Move category up">
+                  <i uk-icon="icon: chevron-up"></i>
+            </div>
+            <div 
+              onClick={this.props.onBump(1)}
+              className={
+                `role-editor__bumpers-bump 
+                ${category.get('position') === this.props.arrMax - 1 ? 'yeet' : ''} 
+                `} 
+                uk-tooltip="delay: 1s" 
+                title="Move category down">
+                  <i uk-icon="icon: chevron-down"></i>
+            </div>
+          </div>
         </div>
         <div style={{ marginTop: 10 }}>
           <div className="uk-form-controls">

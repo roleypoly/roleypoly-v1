@@ -19,6 +19,7 @@ export const setup = id => async dispatch => {
 export const getViewMap = server => {
   const roles = server.get('roles')
   const categories = server.get('categories')
+  const categoriesIds = server.get('categories').keySeq()
 
   const allRoles = server.get('roles').filter(v => v.get('safe')).map(r => r.get('id')).toSet()
   const accountedRoles = categories.map(c => c.get('roles')).toSet().flatten()
@@ -31,7 +32,17 @@ export const getViewMap = server => {
     hidden: true,
     type: 'multi',
     name: 'Uncategorized'
-  })).map(c => {
+  }))
+  .map(
+    (cat, idx) => 
+      cat.set(
+        'position', 
+        cat.get('position', categoriesIds.findIndex(v => v === idx)
+      )
+    )
+  )
+  // .sortBy(cat => cat.get('position'))
+  .map(c => {
     const roles = c.get('roles')
       // fill in roles_map
       .map(r =>

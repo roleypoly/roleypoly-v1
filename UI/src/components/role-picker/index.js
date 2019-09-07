@@ -134,7 +134,7 @@ class RolePicker extends Component {
         </div>
         <div className="role-picker__categories">
           {
-            vm.map((c, name) => <Category key={name} name={name} category={c} isSelected={this.isSelected} onChange={(roles) => dispatch(Actions.updateRoles(roles))} />).toArray()
+            vm.sortBy(v => v.get('position')).map((c, name) => <Category key={name} name={name} category={c} isSelected={this.isSelected} onChange={(roles) => dispatch(Actions.updateRoles(roles))} />).toArray()
           }
         </div>
       </section>

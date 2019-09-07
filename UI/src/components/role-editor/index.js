@@ -107,6 +107,8 @@ class RoleEditor extends Component {
     dispatch(Actions.saveServer(server))
   }
 
+  onBump = (category, name) => (move) => () => this.props.dispatch(Actions.bumpCategory(category, name)(move))
+
   get hasChanged () {
     return this.props.editor.get('originalSnapshot').hashCode() !== this.props.editor.get('viewMap').hashCode()
   }
@@ -143,16 +145,19 @@ class RoleEditor extends Component {
           {
             vm
               .filter((_, k) => k !== 'Uncategorized')
-              .map((c, name) => <Category 
+              .sortBy(c => c.get('position'))
+              .map((c, name, arr) => <Category 
                 key={name} 
                 name={name} 
                 category={c} 
+                arrMax={arr.count()}
                 mode={c.get('mode')} 
                 onDrop={this.dropRole(c, name)} 
                 onEdit={this.editCategory(c, name)}
                 onEditOpen={this.openEditor(c, name)}
                 onSave={this.saveCategory(c, name)}
                 onDelete={this.deleteCategory(c, name)}
+                onBump={this.onBump(c, name)}
                 />)
               .toArray()
           }
