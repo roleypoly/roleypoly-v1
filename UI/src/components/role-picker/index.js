@@ -116,7 +116,7 @@ class RolePicker extends Component {
       <Prompt when={this.rolesHaveChanged} message="Are you sure you want to leave? You have unsaved changes that will be lost." />
       { this.renderServerMessage(server) }
       <section>
-        <div className="role-picker__header">
+        <div className="role-picker__header sticky">
           <h3>Roles</h3>
           { server.getIn(['perms', 'canManageRoles']) === true
             ? <Link to={`/s/${server.get('id')}/edit`} uk-tooltip='' title='Edit Categories' uk-icon="icon: file-edit"></Link> 
