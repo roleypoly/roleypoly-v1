@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import uuidv4 from 'uuid/v4'
 import { fetchServers } from '../../actions'
 
-@connect()
 class OauthCallback extends Component {
   state = {
     notReady: true,
@@ -83,4 +82,4 @@ class OauthCallback extends Component {
   }
 }
 
-export default OauthCallback
+export default connect(OauthCallback)

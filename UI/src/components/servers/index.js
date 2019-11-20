@@ -20,7 +20,6 @@ const mapState = ({ servers, user, appState }) => {
   }
 }
 
-@connect(mapState)
 class Servers extends Component {
   get defaultPath() {
     console.log(this.props.servers.toJS())
@@ -65,4 +64,4 @@ class Servers extends Component {
   }
 }
 
-export default Servers
+export default connect(mapState)(Servers)

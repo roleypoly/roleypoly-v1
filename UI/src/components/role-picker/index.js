@@ -14,7 +14,6 @@ const mapState = ({ rolePicker, servers }, ownProps) => {
   }
 }
 
-@connect(mapState)
 class RolePicker extends Component {
   componentWillMount() {
     const {
@@ -207,4 +206,4 @@ class RolePicker extends Component {
   }
 }
 
-export default RolePicker
+export default connect(mapState)(RolePicker)

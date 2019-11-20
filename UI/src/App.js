@@ -17,8 +17,7 @@ const store = configureStore(undefined, history)
 
 window.__APP_STORE__ = store
 
-@DragDropContext(HTML5Backend)
-class App extends Component {
+class _App extends Component {
   componentWillMount() {
     store.dispatch(userInit)
   }
@@ -36,4 +35,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default DragDropContext(HTML5Backend)(_App)
