@@ -9,10 +9,7 @@ import Servers from '../components/servers'
 import ServerLanding from '../components/servers/ServerLanding'
 import Pages, { Error404, Landing } from '../pages'
 
-export default
-@withRouter
-@connect(({ appState, user }) => ({ ready: appState.ready, user }))
-class AppRouter extends Component {
+class _AppRouter extends Component {
   render() {
     const isLoggedIn = this.props.user.get('isLoggedIn')
 
@@ -24,7 +21,7 @@ class AppRouter extends Component {
       <Switch>
         {isLoggedIn === true ? (
           // YES LOGGED IN
-          <Route path="/s" component={Servers} />
+          <Route path="/s" component={() => <Servers />} />
         ) : (
           // NOT LOGGED IN
           [
@@ -52,3 +49,7 @@ class AppRouter extends Component {
     )
   }
 }
+
+export default withRouter(
+  connect(({ appState, user }) => ({ ready: appState.ready, user }))(_AppRouter)
+)

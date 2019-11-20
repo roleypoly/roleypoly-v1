@@ -4,11 +4,10 @@ import superagent from 'superagent'
 import { connect } from 'react-redux'
 import { fetchServers } from '../../actions'
 
-@connect()
 class OauthCallback extends Component {
   state = {
     notReady: true,
-    message: 'chotto matte kudasai...',
+    message: 'shaking hands with discord...',
     redirect: '/s',
   }
 
@@ -84,4 +83,4 @@ class OauthCallback extends Component {
   }
 }
 
-export default OauthCallback
+export default connect()(OauthCallback)

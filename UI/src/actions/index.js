@@ -1,5 +1,5 @@
 import superagent from 'superagent'
-import { push } from 'react-router-redux'
+import { history } from '../router/history'
 
 export const fetchServers = async dispatch => {
   const rsp = await superagent.get('/api/servers')
@@ -79,7 +79,7 @@ const poll = (dispatch, getState) => {
       const upd = newServers.keySeq().toSet()
       const newSrv = upd.subtract(old)
       stopPolling()
-      dispatch(push(`/s/${newSrv.toJS()[0]}/edit`))
+      history.push(`/s/${newSrv.toJS()[0]}/edit`)
     }
   }
 

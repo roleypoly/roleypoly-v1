@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import { NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { NavLink } from 'react-router-dom'
 import * as Actions from '../../actions'
 import './UserCard.sass'
 
-@connect()
 class UserCard extends Component {
   static propTypes = {
     user: ImmutablePropTypes.map,
@@ -67,4 +66,4 @@ class UserCard extends Component {
   }
 }
 
-export default UserCard
+export default connect()(UserCard)

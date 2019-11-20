@@ -16,8 +16,7 @@ const mapState = ({ rolePicker, roleEditor, servers }, ownProps) => ({
   server: servers.get(ownProps.match.params.server),
 })
 
-@connect(mapState)
-@DropTarget(
+const dropTarget = DropTarget(
   Symbol.for('dnd: role'),
   {
     drop(props, monitor, element) {
@@ -36,7 +35,7 @@ const mapState = ({ rolePicker, roleEditor, servers }, ownProps) => ({
   })
 )
 class RoleEditor extends Component {
-  componentWillMount() {
+  componentDidMount() {
     const {
       dispatch,
       match: {
@@ -232,4 +231,4 @@ class RoleEditor extends Component {
   }
 }
 
-export default RoleEditor
+export default connect(mapState)(dropTarget(RoleEditor))

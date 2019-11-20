@@ -2,11 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import superagent from 'superagent'
 
-@connect()
 class OauthCallback extends Component {
   state = {
     notReady: true,
-    message: 'chotto matte kudasai...',
+    message: 'giving discord the good news...',
     url: null,
   }
 
@@ -29,4 +28,4 @@ class OauthCallback extends Component {
   }
 }
 
-export default OauthCallback
+export default connect()(OauthCallback)

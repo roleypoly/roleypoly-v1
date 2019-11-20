@@ -5,11 +5,10 @@ import { connect } from 'react-redux'
 import uuidv4 from 'uuid/v4'
 import { fetchServers } from '../../actions'
 
-@connect()
 class OauthCallback extends Component {
   state = {
     notReady: true,
-    message: 'chotto matte kudasai...',
+    message: 'sending you to discord...',
     redirect: '/s',
     url: null,
   }
@@ -83,4 +82,4 @@ class OauthCallback extends Component {
   }
 }
 
-export default OauthCallback
+export default connect()(OauthCallback)

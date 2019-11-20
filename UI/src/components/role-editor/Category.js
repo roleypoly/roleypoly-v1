@@ -1,29 +1,8 @@
 import React, { Component } from 'react'
 import { DropTarget } from 'react-dnd'
-
 import Role from '../role/draggable'
 import CategoryEditor from './CategoryEditor'
 
-@DropTarget(
-  Symbol.for('dnd: role'),
-  {
-    drop(props, monitor, element) {
-      props.onDrop(monitor.getItem())
-    },
-    canDrop(props, monitor) {
-      return (
-        props.mode !== Symbol.for('edit') && monitor.getItem().category !== props.name
-      )
-    },
-  },
-  (connect, monitor) => ({
-    connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver(),
-    isOverCurrent: monitor.isOver({ shallow: true }),
-    canDrop: monitor.canDrop(),
-    itemType: monitor.getItemType(),
-  })
-)
 class Category extends Component {
   render() {
     const {
@@ -66,4 +45,26 @@ class Category extends Component {
     )
   }
 }
-export default Category
+
+const dropTarget = DropTarget(
+  Symbol.for('dnd: role'),
+  {
+    drop(props, monitor, element) {
+      props.onDrop(monitor.getItem())
+    },
+    canDrop(props, monitor) {
+      return (
+        props.mode !== Symbol.for('edit') && monitor.getItem().category !== props.name
+      )
+    },
+  },
+  (connect, monitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver(),
+    isOverCurrent: monitor.isOver({ shallow: true }),
+    canDrop: monitor.canDrop(),
+    itemType: monitor.getItemType(),
+  })
+)
+
+export default dropTarget(Category)
