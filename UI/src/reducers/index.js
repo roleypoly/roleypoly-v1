@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux'
-
 import servers from './servers'
 import user from './user'
 import rolePicker from './role-picker'
