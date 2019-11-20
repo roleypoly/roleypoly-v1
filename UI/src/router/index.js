@@ -50,4 +50,6 @@ class _AppRouter extends Component {
   }
 }
 
-export default withRouter(connect(({ appState, user }) => ({ ready: appState.ready, user }))(_AppRouter))
+export default withRouter(
+  connect(({ appState, user }) => ({ ready: appState.ready, user }))(_AppRouter)
+)

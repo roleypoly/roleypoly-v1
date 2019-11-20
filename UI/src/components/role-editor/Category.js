@@ -3,7 +3,6 @@ import { DropTarget } from 'react-dnd'
 import Role from '../role/draggable'
 import CategoryEditor from './CategoryEditor'
 
-
 class Category extends Component {
   render() {
     const {

@@ -11,7 +11,7 @@ import AppRouter from './router'
 import { userInit } from './actions'
 import { history } from './router/history'
 
-const store = configureStore(undefined, history)
+const store = configureStore(undefined)
 
 window.__APP_STORE__ = store
 

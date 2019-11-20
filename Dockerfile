@@ -1,18 +1,32 @@
-FROM node:12-alpine AS builder
-# ENV NODE_ENV production
-COPY ./UI /src/UI
-RUN cd /src/UI && npm ci && npm run build
+FROM node:12-alpine AS base
 
-COPY ./Server /src/Server
-RUN cd /src/Server && npm ci
+FROM base AS uibase
+WORKDIR /src/UI
 
-RUN cp -r /src/UI/build /src/Server/public
+FROM base AS serverbase
+WORKDIR /src/Server
+RUN apk add --no-cache git python build-base
 
+FROM uibase AS uideps
+COPY ./UI/package-lock.json ./UI/package.json ./
+RUN npm ci
 
-FROM node:12-alpine
+FROM serverbase AS serverdeps
+COPY ./Server/package-lock.json ./Server/package.json ./
+RUN npm ci
+
+FROM uideps AS uibuild
+COPY ./UI .
+RUN npm run build
+
+FROM scratch AS combined
+COPY ./Server/ /src/Server
+COPY --from=serverdeps /src/Server/node_modules /src/Server/node_modules
+COPY --from=uibuild /src/UI/build /src/Server/public
+
+FROM base
 ENV NODE_ENV production
 WORKDIR /dist
 EXPOSE 6769
-RUN npm i -g pm2
-COPY --from=builder /src/Server /dist
-CMD pm2-docker index.js
+COPY --from=combined /src/Server /dist
+CMD node index.js
