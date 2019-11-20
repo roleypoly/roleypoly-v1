@@ -1,16 +1,13 @@
-import React, { Component, Fragment } from 'react'
-import { Route, Switch, Redirect } from 'react-router-dom'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-
-import Servers from '../components/servers'
+import { Redirect, Route, Switch } from 'react-router-dom'
+import OauthBotFlow from '../components/oauth-bot-flow'
 import OauthCallback from '../components/oauth-callback'
 import OauthFlow from '../components/oauth-flow'
-import OauthBotFlow from '../components/oauth-bot-flow'
-import Pages, { Landing, Error404 } from '../pages'
+import Servers from '../components/servers'
 import ServerLanding from '../components/servers/ServerLanding'
-
-const aaa = props => <div>{JSON.stringify(props)}</div>
+import Pages, { Error404, Landing } from '../pages'
 
 export default
 @withRouter

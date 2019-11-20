@@ -1,12 +1,9 @@
-import React, { Component, Fragment } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
-import Scrollbars from 'react-custom-scrollbars'
-import Typist from 'react-typist'
-import moment from 'moment'
-import './landing.sass'
-import discordLogo from './images/discord-logo.svg'
 import RoleypolyDemo from '../components/demos/roleypoly'
 import TypingDemo from '../components/demos/typing'
+import discordLogo from './images/discord-logo.svg'
+import './landing.sass'
 
 const Landing = ({ root = false }) => (
   <div className="landing uk-width-1-1 uk-text-center">

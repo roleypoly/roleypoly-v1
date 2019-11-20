@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
-import superagent from 'superagent'
 import { connect } from 'react-redux'
-import { push } from 'react-router-redux'
-import { fetchServers } from '../../actions'
+import superagent from 'superagent'
 
 @connect()
 class OauthCallback extends Component {

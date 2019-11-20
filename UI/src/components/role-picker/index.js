@@ -1,15 +1,11 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Prompt } from 'react-router-dom'
-import superagent from 'superagent'
-import * as Actions from './actions'
+import { Link, Prompt } from 'react-router-dom'
 import * as UIActions from '../../actions/ui'
 import { msgToReal } from '../../utils'
-import './RolePicker.sass'
-
+import * as Actions from './actions'
 import Category from './Category'
-import { Scrollbars } from 'react-custom-scrollbars'
-import { Link } from 'react-router-dom'
+import './RolePicker.sass'
 
 const mapState = ({ rolePicker, servers }, ownProps) => {
   return {

@@ -1,17 +1,14 @@
-import React, { Component } from 'react'
 import { Set } from 'immutable'
-import { connect } from 'react-redux'
-import { DropTarget } from 'react-dnd'
-import { Link, Prompt, Redirect } from 'react-router-dom'
+import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
-import * as Actions from './actions'
-import * as PickerActions from '../role-picker/actions'
+import { DropTarget } from 'react-dnd'
+import { connect } from 'react-redux'
+import { Link, Prompt, Redirect } from 'react-router-dom'
 import * as UIActions from '../../actions/ui'
-import './RoleEditor.sass'
-
-import Category from './Category'
-import CategoryEditor from './CategoryEditor'
 import Role from '../role/draggable'
+import * as Actions from './actions'
+import Category from './Category'
+import './RoleEditor.sass'
 
 const mapState = ({ rolePicker, roleEditor, servers }, ownProps) => ({
   rp: rolePicker,
