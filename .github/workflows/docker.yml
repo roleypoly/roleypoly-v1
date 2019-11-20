@@ -8,28 +8,20 @@ name: Docker Workflow
 
 jobs:
   build_publish:
-    name: Build and Publish
+    name: Build and Push
     runs-on: ubuntu-latest
-    container:
-      image: jonoh/docker-buildx-qemu
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-      env:
-        DOCKER_CLI_EXPERIMENTAL: enabled
-        BUILDX: /root/.docker/cli-plugins/docker-buildx
-      options: --privileged
     steps:
       - uses: actions/checkout@v1
 
       - name: Docker Login
         run: |
           echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-      - name: Buildx Setup
+  
+      - name: Docker Build
         run: |
-          update-binfmts --enable
-          $BUILDX create --name build --use
-          $BUILDX inspect --bootstrap
-      - name: Buildx Build
-        run: |
-          $BUILDX build --platform linux/arm64,linux/arm/v7,linux/amd64 --pull -t katie/roleypoly:${{ github.sha }} --push .
+          docker build . -t katie/roleypoly:${{ github.sha }}
+      
+      - name: Docker Push
+        run: | 
+          docker push katie/roleypoly:${{ github.sha }}
     
