@@ -1,16 +1,16 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
 
-import servers from './servers'
-import user from './user'
-import rolePicker from './role-picker'
-import roleEditor from './role-editor'
-import { routerMiddleware } from 'react-router-redux'
+import servers from './servers';
+import user from './user';
+import rolePicker from './role-picker';
+import roleEditor from './role-editor';
+import { routerMiddleware } from 'react-router-redux';
 // import roles from './roles'
 
 const initialState = {
   ready: false,
-  fade: true
-}
+  fade: true,
+};
 
 const appState = (state = initialState, { type, data }) => {
   switch (type) {
@@ -18,19 +18,19 @@ const appState = (state = initialState, { type, data }) => {
       return {
         ...state,
         ready: true,
-        fade: false
-      }
+        fade: false,
+      };
 
     case Symbol.for('app fade'):
       return {
         ...state,
-        fade: data
-      }
+        fade: data,
+      };
 
     default:
-      return state
+      return state;
   }
-}
+};
 
 const rootReducer = combineReducers({
   appState,
@@ -39,7 +39,7 @@ const rootReducer = combineReducers({
   router: routerMiddleware,
   // roles,
   rolePicker,
-  roleEditor
-})
+  roleEditor,
+});
 
-export default rootReducer
+export default rootReducer;

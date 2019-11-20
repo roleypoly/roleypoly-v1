@@ -1,19 +1,20 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "source-han-sans-japanese", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: 'source-han-sans-japanese', sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol';
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 .font-sans-serif {
-  font-family: sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
 :root {
   --c-white: #efefef;
-  --c-9: #EBD6D4;
+  --c-9: #ebd6d4;
   --c-7: #ab9b9a;
   --c-5: #756867;
   --c-3: #5d5352;
@@ -47,11 +48,16 @@ body {
   overflow-y: hidden;
 }
 
-h1,h2,h3,h4,h5,h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: var(--c-9);
 }
 
-.uk-navbar-nav>li>a {
+.uk-navbar-nav > li > a {
   color: var(--c-7);
 }
 
