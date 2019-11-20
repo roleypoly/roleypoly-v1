@@ -1,15 +1,15 @@
-FROM node:10 AS builder
+FROM node:12-alpine AS builder
 # ENV NODE_ENV production
 COPY ./UI /src/UI
-RUN cd /src/UI && yarn && yarn build
+RUN cd /src/UI && npm ci && npm run build
 
 COPY ./Server /src/Server
-RUN cd /src/Server && yarn
+RUN cd /src/Server && npm ci
 
 RUN cp -r /src/UI/build /src/Server/public
 
 
-FROM mhart/alpine-node:10
+FROM node:12-alpine
 ENV NODE_ENV production
 WORKDIR /dist
 EXPOSE 6769

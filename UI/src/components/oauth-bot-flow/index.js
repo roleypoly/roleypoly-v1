@@ -5,7 +5,7 @@ import superagent from 'superagent'
 class OauthCallback extends Component {
   state = {
     notReady: true,
-    message: 'chotto matte kudasai...',
+    message: 'giving discord the good news...',
     url: null,
   }
 
@@ -28,4 +28,4 @@ class OauthCallback extends Component {
   }
 }
 
-export default connect(OauthCallback)
+export default connect()(OauthCallback)

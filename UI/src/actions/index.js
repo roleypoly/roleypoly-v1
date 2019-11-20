@@ -1,5 +1,5 @@
 import superagent from 'superagent'
-import { history } from './router/history'
+import { history } from '../router/history'
 
 export const fetchServers = async dispatch => {
   const rsp = await superagent.get('/api/servers')

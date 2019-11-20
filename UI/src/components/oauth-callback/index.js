@@ -7,7 +7,7 @@ import { fetchServers } from '../../actions'
 class OauthCallback extends Component {
   state = {
     notReady: true,
-    message: 'chotto matte kudasai...',
+    message: 'shaking hands with discord...',
     redirect: '/s',
   }
 
@@ -83,4 +83,4 @@ class OauthCallback extends Component {
   }
 }
 
-export default connect(OauthCallback)
+export default connect()(OauthCallback)
