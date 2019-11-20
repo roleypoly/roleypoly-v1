@@ -10,8 +10,8 @@ export const setup = id => async dispatch => {
     type: Symbol.for('server: set'),
     data: {
       id,
-      ...data
-    }
+      ...data,
+    },
   })
   dispatch(constructView(id))
 }
@@ -21,48 +21,62 @@ export const getViewMap = server => {
   const categories = server.get('categories')
   const categoriesIds = server.get('categories').keySeq()
 
-  const allRoles = server.get('roles').filter(v => v.get('safe')).map(r => r.get('id')).toSet()
-  const accountedRoles = categories.map(c => c.get('roles')).toSet().flatten()
+  const allRoles = server
+    .get('roles')
+    .filter(v => v.get('safe'))
+    .map(r => r.get('id'))
+    .toSet()
+  const accountedRoles = categories
+    .map(c => c.get('roles'))
+    .toSet()
+    .flatten()
   const unaccountedRoles = allRoles.subtract(accountedRoles)
 
   // console.log('roles', allRoles.toJS(), accountedRoles.toJS(), unaccountedRoles.toJS())
 
-  const viewMap = categories.set('Uncategorized', fromJS({
-    roles: unaccountedRoles,
-    hidden: true,
-    type: 'multi',
-    name: 'Uncategorized'
-  }))
-  .map(
-    (cat, idx) => 
+  const viewMap = categories
+    .set(
+      'Uncategorized',
+      fromJS({
+        roles: unaccountedRoles,
+        hidden: true,
+        type: 'multi',
+        name: 'Uncategorized',
+      })
+    )
+    .map((cat, idx) =>
       cat.set(
-        'position', 
-        cat.get('position', categoriesIds.findIndex(v => v === idx)
+        'position',
+        cat.get(
+          'position',
+          categoriesIds.findIndex(v => v === idx)
+        )
       )
     )
-  )
-  // .sortBy(cat => cat.get('position'))
-  .map(c => {
-    const roles = c.get('roles')
-      // fill in roles_map
-      .map(r =>
-        server.get('roles').find(sr => sr.get('id') === r)
-      )
-      .filter(r => r != null)
-      // sort by server position, backwards.
-      .sort((a, b) => a.position > b.position)
-    // force data to sets
-    return c.set('roles_map', Set(roles)).set('roles', Set(c.get('roles')))
-  })
+    // .sortBy(cat => cat.get('position'))
+    .map(c => {
+      const roles = c
+        .get('roles')
+        // fill in roles_map
+        .map(r => server.get('roles').find(sr => sr.get('id') === r))
+        .filter(r => r != null)
+        // sort by server position, backwards.
+        .sort((a, b) => a.position > b.position)
+      // force data to sets
+      return c.set('roles_map', Set(roles)).set('roles', Set(c.get('roles')))
+    })
 
-  const selected = roles.reduce((acc, r) => acc.set(r.get('id'), r.get('selected')), Map())
+  const selected = roles.reduce(
+    (acc, r) => acc.set(r.get('id'), r.get('selected')),
+    Map()
+  )
 
   const hasSafeRoles = allRoles.size > 0
 
   return {
     viewMap,
     selected,
-    hasSafeRoles
+    hasSafeRoles,
   }
 }
 
@@ -79,16 +93,16 @@ export const constructView = id => (dispatch, getState) => {
       originalRolesSelected: selected,
       hidden: false,
       isEditingMessage: false,
-      messageBuffer: ''
-    }
+      messageBuffer: '',
+    },
   })
 
   dispatch(UIActions.fadeIn)
 }
 
-export const resetSelected = (dispatch) => {
+export const resetSelected = dispatch => {
   dispatch({
-    type: Symbol.for('rp: reset selected')
+    type: Symbol.for('rp: reset selected'),
   })
 }
 
@@ -113,13 +127,13 @@ export const submitSelected = serverId => async (dispatch, getState) => {
   await superagent.patch(`/api/servers/${serverId}/roles`).send(diff.toJS())
 
   dispatch({
-    type: Symbol.for('rp: sync selected roles')
+    type: Symbol.for('rp: sync selected roles'),
   })
 }
 
 export const updateRoles = roles => ({
   type: Symbol.for('rp: update selected roles'),
-  data: roles
+  data: roles,
 })
 
 export const openMessageEditor = id => (dispatch, getState) => {
@@ -127,7 +141,7 @@ export const openMessageEditor = id => (dispatch, getState) => {
   dispatch(editServerMessage(id, message))
   dispatch({
     type: Symbol.for('rp: set message editor state'),
-    data: true
+    data: true,
   })
 }
 
@@ -141,17 +155,17 @@ export const saveServerMessage = id => async (dispatch, getState) => {
     type: Symbol.for('server: edit message'),
     data: {
       id,
-      message
-    }
+      message,
+    },
   })
 }
 
 export const editServerMessage = (id, message) => ({
   type: Symbol.for('rp: edit message buffer'),
-  data: message
+  data: message,
 })
 
-export const closeMessageEditor = ({
+export const closeMessageEditor = {
   type: Symbol.for('rp: set message editor state'),
-  data: false
-})
+  data: false,
+}

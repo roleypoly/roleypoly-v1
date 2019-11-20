@@ -1,7 +1,7 @@
 export const fadeOut = cb => dispatch => {
   dispatch({
     type: Symbol.for('app fade'),
-    data: true
+    data: true,
   })
 
   setTimeout(cb, 300)
@@ -9,5 +9,5 @@ export const fadeOut = cb => dispatch => {
 
 export const fadeIn = {
   type: Symbol.for('app fade'),
-  data: false
+  data: false,
 }

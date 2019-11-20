@@ -7,7 +7,7 @@ const initialState = Map({
   messageBuffer: '',
   viewMap: OrderedMap({}), // roles in categories
   originalRolesSelected: Map({}), // Map<role id, bool> -- original roles for diffing against selected
-  rolesSelected: Map({}) // Map<role id, bool> -- new roles for diffing
+  rolesSelected: Map({}), // Map<role id, bool> -- new roles for diffing
 })
 
 export default (state = initialState, { type, data }) => {
@@ -32,11 +32,11 @@ export default (state = initialState, { type, data }) => {
 
     case Symbol.for('rp: set message editor state'):
       return state.set('isEditingMessage', data)
-    
+
     case Symbol.for('rp: edit message buffer'):
       return state.set('messageBuffer', data)
     // case Symbol.for('rp: zero role picker'):
-      // return initialState
+    // return initialState
 
     default:
       return state

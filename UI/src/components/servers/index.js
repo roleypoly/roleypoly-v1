@@ -17,13 +17,13 @@ const mapState = ({ servers, user, appState }) => {
   return {
     servers,
     user,
-    fade: appState.fade
+    fade: appState.fade,
   }
 }
 
 @connect(mapState)
 class Servers extends Component {
-  get defaultPath () {
+  get defaultPath() {
     console.log(this.props.servers.toJS())
 
     const first = this.props.servers.first()
@@ -34,21 +34,35 @@ class Servers extends Component {
     return 'add'
   }
 
-  render () {
-    return <div className="servers">
-      <Navigation className="servers__nav" servers={this.props.servers} user={this.props.user} />
-      <div className='servers__content'>
-        <Scrollbars className={`fade-element ${(this.props.fade) ? 'fade' : ''}`} autoHeight autoHeightMax='calc(100vh - 80px)'>
-          <Switch>
-            <Route path='/s/add' component={AddServer} exact />
-            <Route path='/s/:server/edit' component={RoleEditor} />
-            <Route path='/s/:server' component={RolePicker} />
-            <Route path='/s' exact render={() => <Redirect to={`/s/${this.defaultPath}`} />} />
-            <Route component={Error404} />
-          </Switch>
-        </Scrollbars>
+  render() {
+    return (
+      <div className="servers">
+        <Navigation
+          className="servers__nav"
+          servers={this.props.servers}
+          user={this.props.user}
+        />
+        <div className="servers__content">
+          <Scrollbars
+            className={`fade-element ${this.props.fade ? 'fade' : ''}`}
+            autoHeight
+            autoHeightMax="calc(100vh - 80px)"
+          >
+            <Switch>
+              <Route path="/s/add" component={AddServer} exact />
+              <Route path="/s/:server/edit" component={RoleEditor} />
+              <Route path="/s/:server" component={RolePicker} />
+              <Route
+                path="/s"
+                exact
+                render={() => <Redirect to={`/s/${this.defaultPath}`} />}
+              />
+              <Route component={Error404} />
+            </Switch>
+          </Scrollbars>
+        </div>
       </div>
-    </div>
+    )
   }
 }
 

@@ -4,13 +4,13 @@ const fetchModels = require('./models')
 const fetchApis = require('./api')
 
 class Roleypoly {
-  constructor (router, io, app) {
+  constructor(router, io, app) {
     this.router = router
     this.io = io
     this.ctx = {}
 
     this.ctx.config = {
-      appUrl: process.env.APP_URL
+      appUrl: process.env.APP_URL,
     }
 
     this.ctx.io = io
@@ -21,12 +21,14 @@ class Roleypoly {
     this.__initialized = this._mountServices()
   }
 
-  async awaitServices () {
+  async awaitServices() {
     await this.__initialized
   }
 
-  async _mountServices () {
-    const sequelize = new Sequelize(process.env.DB_URL, { logging: log.sql.bind(log, log) })
+  async _mountServices() {
+    const sequelize = new Sequelize(process.env.DB_URL, {
+      logging: log.sql.bind(log, log),
+    })
     this.ctx.sql = sequelize
     this.M = fetchModels(sequelize)
     this.ctx.M = this.M
@@ -46,7 +48,7 @@ class Roleypoly {
     this.ctx.P = new (require('./services/presentation'))(this.ctx)
   }
 
-  async mountRoutes () {
+  async mountRoutes() {
     fetchApis(this.router, this.ctx)
     this.__app.use(this.router.middleware())
   }

@@ -1,14 +1,15 @@
 module.exports = (sql, DataTypes) => {
   return sql.define('server', {
-    id: { // discord snowflake
+    id: {
+      // discord snowflake
       type: DataTypes.TEXT,
-      primaryKey: true
+      primaryKey: true,
     },
     categories: {
-      type: DataTypes.JSON
+      type: DataTypes.JSON,
     },
     message: {
-      type: DataTypes.TEXT
-    }
+      type: DataTypes.TEXT,
+    },
   })
 }

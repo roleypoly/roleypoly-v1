@@ -1,4 +1,4 @@
-require('dotenv').config({silent: true})
+require('dotenv').config({ silent: true })
 const log = new (require('./logger'))('index')
 
 const http = require('http')
@@ -12,7 +12,8 @@ const Roleypoly = require('./Roleypoly')
 const ksuid = require('ksuid')
 
 // monkey patch async-reduce because F U T U R E
-Array.prototype.areduce = async function (predicate, acc = []) { // eslint-disable-line
+Array.prototype.areduce = async function(predicate, acc = []) {
+  // eslint-disable-line
   for (let i of this) {
     acc = await predicate(acc, i)
   }
@@ -20,9 +21,11 @@ Array.prototype.areduce = async function (predicate, acc = []) { // eslint-disab
   return acc
 }
 
-Array.prototype.filterNot = Array.prototype.filterNot || function (predicate) {
-  return this.filter(v => !predicate(v))
-}
+Array.prototype.filterNot =
+  Array.prototype.filterNot ||
+  function(predicate) {
+    return this.filter(v => !predicate(v))
+  }
 
 // Create the server and socket.io server
 const server = http.createServer(app.callback())
@@ -30,11 +33,11 @@ const io = _io(server, { transports: ['websocket'], path: '/api/socket.io' })
 
 const M = new Roleypoly(router, io, app) // eslint-disable-line no-unused-vars
 
-app.keys = [ process.env.APP_KEY ]
+app.keys = [process.env.APP_KEY]
 
 const DEVEL = process.env.NODE_ENV === 'development'
 
-async function start () {
+async function start() {
   await M.awaitServices()
 
   // body parser
@@ -95,7 +98,6 @@ async function start () {
       // } catch (e) {
       //   send(ctx, 'index.html', { root: pub })
       // }
-
     })
     // const sendOpts = {root: pub, index: 'index.html'}
     // // const sendOpts = {}
@@ -131,24 +133,33 @@ async function start () {
         ctx.body = ctx.body || e.stack
       } else {
         ctx.body = {
-          err: 'something terrible happened.'
+          err: 'something terrible happened.',
         }
       }
     }
     let timeElapsed = new Date() - timeStart
 
-    log.request(`${ctx.status} ${ctx.method} ${ctx.url} - ${ctx.ip} - took ${timeElapsed}ms`)
+    log.request(
+      `${ctx.status} ${ctx.method} ${ctx.url} - ${ctx.ip} - took ${timeElapsed}ms`
+    )
     // return null
   })
 
   const session = require('koa-session')
-  app.use(session({
-    key: 'roleypoly:sess',
-    maxAge: 'session',
-    siteOnly: true,
-    store: M.ctx.sessions,
-    genid: () => { return ksuid.randomSync().string }
-  }, app))
+  app.use(
+    session(
+      {
+        key: 'roleypoly:sess',
+        maxAge: 'session',
+        siteOnly: true,
+        store: M.ctx.sessions,
+        genid: () => {
+          return ksuid.randomSync().string
+        },
+      },
+      app
+    )
+  )
 
   await M.mountRoutes()
 

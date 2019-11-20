@@ -16,20 +16,20 @@ export const constructView = id => async (dispatch, getState) => {
     data: {
       hasSafeRoles,
       viewMap,
-      originalSnapshot: viewMap
-    }
+      originalSnapshot: viewMap,
+    },
   })
 
   dispatch(UIActions.fadeIn)
 }
 
-export const addRoleToCategory = (id, oldId, role, flip = true) => (dispatch) => {
+export const addRoleToCategory = (id, oldId, role, flip = true) => dispatch => {
   dispatch({
     type: Symbol.for('re: add role to category'),
     data: {
       id,
-      role
-    }
+      role,
+    },
   })
 
   if (flip) {
@@ -37,13 +37,13 @@ export const addRoleToCategory = (id, oldId, role, flip = true) => (dispatch) =>
   }
 }
 
-export const removeRoleFromCategory = (id, oldId, role, flip = true) => (dispatch) => {
+export const removeRoleFromCategory = (id, oldId, role, flip = true) => dispatch => {
   dispatch({
     type: Symbol.for('re: remove role from category'),
     data: {
       id,
-      role
-    }
+      role,
+    },
   })
 
   if (flip) {
@@ -57,12 +57,12 @@ export const editCategory = ({ id, key, value }) => dispatch => {
     data: {
       id,
       key,
-      value
-    }
+      value,
+    },
   })
 }
 
-export const saveCategory = (id, category) => (dispatch) => {
+export const saveCategory = (id, category) => dispatch => {
   if (category.get('name') === '') {
     return
   }
@@ -71,17 +71,17 @@ export const saveCategory = (id, category) => (dispatch) => {
     type: Symbol.for('re: switch category mode'),
     data: {
       id,
-      mode: Symbol.for('drop')
-    }
+      mode: Symbol.for('drop'),
+    },
   })
 }
 
-export const openEditor = (id) => ({
+export const openEditor = id => ({
   type: Symbol.for('re: switch category mode'),
   data: {
     id,
-    mode: Symbol.for('edit')
-  }
+    mode: Symbol.for('edit'),
+  },
 })
 
 export const deleteCategory = (id, category) => (dispatch, getState) => {
@@ -99,13 +99,13 @@ export const deleteCategory = (id, category) => (dispatch, getState) => {
       roles_map: uncategorized.get('roles_map').union(rolesMap),
       hidden: true,
       type: 'multi',
-      mode: null
-    }
+      mode: null,
+    },
   })
 
   dispatch({
     type: Symbol.for('re: delete category'),
-    data: id
+    data: id,
   })
 }
 
@@ -133,14 +133,14 @@ export const createCategory = (dispatch, getState) => {
       hidden: true,
       type: 'multi',
       position: idx,
-      mode: Symbol.for('edit')
-    }
+      mode: Symbol.for('edit'),
+    },
   })
 }
 
 export const bumpCategory = (category, name) => move => async (dispatch, getState) => {
   const { roleEditor } = getState()
-  const vm = roleEditor.get('viewMap')  
+  const vm = roleEditor.get('viewMap')
 
   const position = category.get('position')
   const nextPos = position + move
@@ -152,8 +152,8 @@ export const bumpCategory = (category, name) => move => async (dispatch, getStat
     data: {
       id: name,
       key: 'position',
-      value: nextPos
-    }
+      value: nextPos,
+    },
   })
 
   if (!!replaceThisOne) {
@@ -162,25 +162,34 @@ export const bumpCategory = (category, name) => move => async (dispatch, getStat
       data: {
         id: replaceThisOne,
         key: 'position',
-        value: position
-      }
+        value: position,
+      },
     })
   }
-
 }
 
 export const saveServer = id => async (dispatch, getState) => {
-  const viewMap = getState().roleEditor.get('viewMap')
+  const viewMap = getState()
+    .roleEditor.get('viewMap')
     .filterNot((_, k) => k === 'Uncategorized')
-    .map(v => v.delete('roles_map').delete('mode').delete('id'))
+    .map(v =>
+      v
+        .delete('roles_map')
+        .delete('mode')
+        .delete('id')
+    )
 
   viewMap.map((v, idx) => {
     if (v.has('position')) {
       return v
     }
 
-    console.warn('category position wasnt set, so fake ones are being made', {cat: v.toJS(), idx, position: viewMap.count()+idx})
-    return v.set('position', viewMap.count()+idx)
+    console.warn('category position wasnt set, so fake ones are being made', {
+      cat: v.toJS(),
+      idx,
+      position: viewMap.count() + idx,
+    })
+    return v.set('position', viewMap.count() + idx)
   })
 
   await superagent.patch(`/api/server/${id}`).send({ categories: viewMap.toJS() })

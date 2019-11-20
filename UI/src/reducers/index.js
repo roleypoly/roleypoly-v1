@@ -9,7 +9,7 @@ import { routerMiddleware } from 'react-router-redux'
 
 const initialState = {
   ready: false,
-  fade: true
+  fade: true,
 }
 
 const appState = (state = initialState, { type, data }) => {
@@ -18,13 +18,13 @@ const appState = (state = initialState, { type, data }) => {
       return {
         ...state,
         ready: true,
-        fade: false
+        fade: false,
       }
 
     case Symbol.for('app fade'):
       return {
         ...state,
-        fade: data
+        fade: data,
       }
 
     default:
@@ -39,7 +39,7 @@ const rootReducer = combineReducers({
   router: routerMiddleware,
   // roles,
   rolePicker,
-  roleEditor
+  roleEditor,
 })
 
 export default rootReducer

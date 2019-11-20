@@ -5,10 +5,11 @@ import thunk from 'redux-thunk'
 // import api from '../middleware/api'
 import rootReducer from '../reducers'
 
-const configureStore = (preloadedState, history) => createStore(
-  rootReducer,
-  preloadedState,
-  applyMiddleware(thunk, routerMiddleware(history))
-)
+const configureStore = (preloadedState, history) =>
+  createStore(
+    rootReducer,
+    preloadedState,
+    applyMiddleware(thunk, routerMiddleware(history))
+  )
 
 export default configureStore

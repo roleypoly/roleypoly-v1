@@ -6,11 +6,11 @@ export const fetchServers = async dispatch => {
 
   dispatch({
     type: Symbol.for('update servers'),
-    data: rsp.body
+    data: rsp.body,
   })
 
   dispatch({
-    type: Symbol.for('app ready')
+    type: Symbol.for('app ready'),
   })
 }
 
@@ -21,19 +21,19 @@ export const userInit = async dispatch => {
 
       dispatch({
         type: Symbol.for('set user'),
-        data: rsp.body
+        data: rsp.body,
       })
-      
+
       dispatch(fetchServers)
     } catch (e) {
       dispatch({
-        type: Symbol.for('app ready')
+        type: Symbol.for('app ready'),
       })
       // window.location.href = '/oauth/flow'
     }
   } else {
     dispatch({
-      type: Symbol.for('app ready')
+      type: Symbol.for('app ready'),
     })
   }
 }
@@ -41,11 +41,10 @@ export const userInit = async dispatch => {
 export const userLogout = async dispatch => {
   try {
     await superagent.post('/api/auth/logout')
-  } catch (e) {
-  }
+  } catch (e) {}
 
   dispatch({
-    type: Symbol.for('reset user')
+    type: Symbol.for('reset user'),
   })
 
   window.location.href = '/'
@@ -58,7 +57,9 @@ export const startServerPolling = dispatch => {
 const poll = (dispatch, getState) => {
   const { servers } = getState()
   let stop = false
-  const stopPolling = () => { stop = true }
+  const stopPolling = () => {
+    stop = true
+  }
   const pollFunc = async () => {
     if (stop) {
       return
@@ -76,7 +77,7 @@ const poll = (dispatch, getState) => {
     } else {
       const old = servers.keySeq().toSet()
       const upd = newServers.keySeq().toSet()
-      const newSrv = upd.subtract(old) 
+      const newSrv = upd.subtract(old)
       stopPolling()
       dispatch(push(`/s/${newSrv.toJS()[0]}/edit`))
     }

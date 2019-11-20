@@ -1,5 +1,5 @@
 module.exports = (R, $) => {
-  R.post('/api/auth/token', async (ctx) => {
+  R.post('/api/auth/token', async ctx => {
     const { token } = ctx.request.body
 
     if (token == null || token === '') {
@@ -23,7 +23,7 @@ module.exports = (R, $) => {
       id: user.id,
       avatar: user.avatar,
       username: user.username,
-      discriminator: user.discriminator
+      discriminator: user.discriminator,
     }
   })
 
@@ -42,7 +42,7 @@ module.exports = (R, $) => {
       id: user.id,
       avatar: user.avatar,
       username: user.username,
-      discriminator: user.discriminator
+      discriminator: user.discriminator,
     }
   })
 
@@ -69,7 +69,6 @@ module.exports = (R, $) => {
 
     ctx.redirect(url)
   })
-
 
   R.get('/api/oauth/bot/callback', ctx => {
     console.log(ctx.request)

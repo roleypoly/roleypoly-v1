@@ -9,25 +9,25 @@ class OauthCallback extends Component {
   state = {
     notReady: true,
     message: 'chotto matte kudasai...',
-    redirect: '/s'
+    redirect: '/s',
   }
 
   stopped = false
 
-  componentDidUnmount () {
+  componentDidUnmount() {
     this.stopped = true
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     // handle stuff in the url
     const sp = new URLSearchParams(this.props.location.search)
     const token = sp.get('code')
-    
+
     if (token === '' || token == null) {
       this.setState({ message: 'token missing, what are you trying to do?!' })
       return
-    } 
-    
+    }
+
     const stateToken = sp.get('state')
     const state = JSON.parse(window.sessionStorage.getItem('state') || 'null')
 
@@ -36,7 +36,7 @@ class OauthCallback extends Component {
     }
 
     this.props.history.replace(this.props.location.pathname)
-    
+
     let counter = 0
     const retry = async () => {
       if (this.stopped) return
@@ -44,7 +44,7 @@ class OauthCallback extends Component {
         const rsp = await superagent.get('/api/auth/user')
         this.props.dispatch({
           type: Symbol.for('set user'),
-          data: rsp.body
+          data: rsp.body,
         })
         this.props.dispatch(fetchServers)
         this.setState({ notReady: false })
@@ -53,7 +53,9 @@ class OauthCallback extends Component {
         if (counter > 10) {
           this.setState({ message: "i couldn't log you in. :c" })
         } else {
-          setTimeout(() => { retry() }, 250) 
+          setTimeout(() => {
+            retry()
+          }, 250)
         }
       }
     }
@@ -62,21 +64,23 @@ class OauthCallback extends Component {
     try {
       await superagent.post('/api/auth/token').send({ token })
       // this.props.onLogin(rsp.body)
-      
-      retry()
 
+      retry()
     } catch (e) {
       console.error('token pass error', e)
       this.setState({ message: 'g-gomen nasai... i broke it...' })
       return
-    } 
-    
+    }
 
     // update user stuff here
   }
 
-  render () {
-    return (this.state.notReady) ? this.state.message : <Redirect to={this.state.redirect} />
+  render() {
+    return this.state.notReady ? (
+      this.state.message
+    ) : (
+      <Redirect to={this.state.redirect} />
+    )
   }
 }
 

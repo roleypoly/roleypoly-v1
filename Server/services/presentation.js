@@ -2,7 +2,7 @@ const Service = require('./Service')
 const LRU = require('lru-cache')
 
 class PresentationService extends Service {
-  constructor (ctx) {
+  constructor(ctx) {
     super(ctx)
     this.M = ctx.M
     this.discord = ctx.discord
@@ -10,16 +10,16 @@ class PresentationService extends Service {
     this.cache = new LRU({ max: 500, maxAge: 100 * 60 * 5 })
   }
 
-  serverSlug (server) {
+  serverSlug(server) {
     return {
       id: server.id,
       name: server.name,
       ownerID: server.ownerID,
-      icon: server.icon
+      icon: server.icon,
     }
   }
 
-  async oldPresentableServers (collection, userId) {
+  async oldPresentableServers(collection, userId) {
     let servers = []
 
     for (let server of collection.array()) {
@@ -31,7 +31,7 @@ class PresentationService extends Service {
     return servers
   }
 
-  async presentableServers (collection, userId) {
+  async presentableServers(collection, userId) {
     return collection.array().areduce(async (acc, server) => {
       const gm = server.members.get(userId)
       acc.push(await this.presentableServer(server, gm, { incRoles: false }))
@@ -39,24 +39,29 @@ class PresentationService extends Service {
     })
   }
 
-  async presentableServer (server, gm, { incRoles = true } = {}) {
+  async presentableServer(server, gm, { incRoles = true } = {}) {
     const sd = await this.ctx.server.get(server.id)
 
     return {
       id: server.id,
       gm: {
         nickname: gm.nickname,
-        color: gm.displayHexColor
+        color: gm.displayHexColor,
       },
       server: this.serverSlug(server),
-      roles: (incRoles) ? (await this.rolesByServer(server, sd)).map(r => ({ ...r, selected: gm.roles.has(r.id) })) : [],
+      roles: incRoles
+        ? (await this.rolesByServer(server, sd)).map(r => ({
+            ...r,
+            selected: gm.roles.has(r.id),
+          }))
+        : [],
       message: sd.message,
       categories: sd.categories,
-      perms: this.discord.getPermissions(gm)
+      perms: this.discord.getPermissions(gm),
     }
   }
 
-  async rolesByServer (server) {
+  async rolesByServer(server) {
     return server.roles
       .filter(r => r.id !== server.id) // get rid of @everyone
       .map(r => ({
@@ -64,7 +69,7 @@ class PresentationService extends Service {
         color: r.color,
         name: r.name,
         position: r.position,
-        safe: this.discord.safeRole(server.id, r.id)
+        safe: this.discord.safeRole(server.id, r.id),
       }))
   }
 }

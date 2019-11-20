@@ -1,12 +1,12 @@
 const Service = require('./Service')
 
 class SessionsService extends Service {
-  constructor (ctx) {
+  constructor(ctx) {
     super(ctx)
     this.Session = ctx.M.Session
   }
 
-  async get (id, {rolling}) {
+  async get(id, { rolling }) {
     const user = await this.Session.findOne({ where: { id } })
 
     if (user === null) {
@@ -16,7 +16,7 @@ class SessionsService extends Service {
     return user.data
   }
 
-  async set (id, data, {maxAge, rolling, changed}) {
+  async set(id, data, { maxAge, rolling, changed }) {
     let session = await this.Session.findOne({ where: { id } })
     if (session === null) {
       session = this.Session.build({ id })
@@ -28,7 +28,7 @@ class SessionsService extends Service {
     return session.save()
   }
 
-  async destroy (id) {
+  async destroy(id) {
     const sess = await this.Session.findOne({ where: { id } })
 
     if (sess != null) {

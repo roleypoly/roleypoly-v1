@@ -19,11 +19,11 @@ window.__APP_STORE__ = store
 
 @DragDropContext(HTML5Backend)
 class App extends Component {
-  componentWillMount () {
+  componentWillMount() {
     store.dispatch(userInit)
   }
 
-  render () {
+  render() {
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>

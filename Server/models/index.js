@@ -3,12 +3,12 @@ const glob = require('glob')
 const path = require('path')
 const util = require('../util/model-methods')
 
-module.exports = (sql) => {
+module.exports = sql => {
   const models = {}
   const modelFiles = glob.sync('./models/**/!(index).js')
   log.debug('found models', modelFiles)
 
-  modelFiles.forEach((v) => {
+  modelFiles.forEach(v => {
     let name = path.basename(v).replace('.js', '')
     if (v === './models/index.js') {
       log.debug('index.js hit, skipped')
@@ -24,7 +24,7 @@ module.exports = (sql) => {
     }
   })
 
-  Object.keys(models).forEach((v) => {
+  Object.keys(models).forEach(v => {
     if (models[v].hasOwnProperty('__associations')) {
       models[v].__associations(models)
     }

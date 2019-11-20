@@ -1,7 +1,7 @@
 const Logger = require('../logger')
 
 class Service {
-  constructor (ctx) {
+  constructor(ctx) {
     this.ctx = ctx
     this.log = new Logger(this.constructor.name)
   }

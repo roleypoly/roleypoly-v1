@@ -1,5 +1,5 @@
 module.exports = (R, $) => {
-  R.get('/api/servers', async (ctx) => {
+  R.get('/api/servers', async ctx => {
     try {
       const { userId } = ctx.session
       const srv = $.discord.getRelevantServers(userId)
@@ -11,7 +11,7 @@ module.exports = (R, $) => {
     }
   })
 
-  R.get('/api/server/:id', async (ctx) => {
+  R.get('/api/server/:id', async ctx => {
     const { userId } = ctx.session
     const { id } = ctx.params
 
@@ -38,7 +38,7 @@ module.exports = (R, $) => {
     ctx.body = server
   })
 
-  R.get('/api/server/:id/slug', async (ctx) => {
+  R.get('/api/server/:id/slug', async ctx => {
     const { userId } = ctx.session
     const { id } = ctx.params
 
@@ -55,7 +55,7 @@ module.exports = (R, $) => {
     ctx.body = await $.P.serverSlug(srv)
   })
 
-  R.patch('/api/server/:id', async (ctx) => {
+  R.patch('/api/server/:id', async ctx => {
     const { userId } = ctx.session
     const { id } = ctx.params
 
@@ -75,8 +75,8 @@ module.exports = (R, $) => {
 
     // todo make less nasty
     await $.server.update(id, {
-      ...((message != null) ? { message } : {}),
-      ...((categories != null) ? { categories } : {})
+      ...(message != null ? { message } : {}),
+      ...(categories != null ? { categories } : {}),
     })
 
     ctx.body = { ok: true }
@@ -88,7 +88,12 @@ module.exports = (R, $) => {
       return
     }
 
-    ctx.body = $.discord.client.guilds.map(g => ({ url: `${process.env.APP_URL}/s/${g.id}`, name: g.name, members: g.members.array().length, roles: g.roles.array().length }))
+    ctx.body = $.discord.client.guilds.map(g => ({
+      url: `${process.env.APP_URL}/s/${g.id}`,
+      name: g.name,
+      members: g.members.array().length,
+      roles: g.roles.array().length,
+    }))
   })
 
   R.patch('/api/servers/:server/roles', async ctx => {

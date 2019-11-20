@@ -5,42 +5,41 @@ import { connect } from 'react-redux'
 import uuidv4 from 'uuid/v4'
 import { fetchServers } from '../../actions'
 
-
 @connect()
 class OauthCallback extends Component {
   state = {
     notReady: true,
     message: 'chotto matte kudasai...',
     redirect: '/s',
-    url: null
+    url: null,
   }
 
-  async fetchUser () {
+  async fetchUser() {
     const rsp = await superagent.get('/api/auth/user')
     sessionStorage.setItem('user', JSON.stringify(rsp.body))
     sessionStorage.setItem('user.update', JSON.stringify(Date.now()))
     this.props.dispatch({
       type: Symbol.for('set user'),
-      data: rsp.body
+      data: rsp.body,
     })
   }
 
-  setupUser () {
+  setupUser() {
     const userUpdateTime = sessionStorage.getItem('user.update') || 0
-    if (+userUpdateTime + (1000 * 60 * 10) > Date.now()) {
+    if (+userUpdateTime + 1000 * 60 * 10 > Date.now()) {
       const user = sessionStorage.getItem('user')
       if (user != null && user !== '') {
         this.props.dispatch({
           type: Symbol.for('set user'),
-          data: JSON.parse(user)
+          data: JSON.parse(user),
         })
       }
     }
 
-    return this.fetchUser()    
+    return this.fetchUser()
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     const state = uuidv4()
 
     const oUrl = new URL(window.location.href)
@@ -48,7 +47,10 @@ class OauthCallback extends Component {
       this.setState({ redirect: oUrl.searchParams.get('r') })
     }
 
-    window.sessionStorage.setItem('state', JSON.stringify({ state, redirect: oUrl.searchParams.get('r') }))
+    window.sessionStorage.setItem(
+      'state',
+      JSON.stringify({ state, redirect: oUrl.searchParams.get('r') })
+    )
 
     try {
       await this.setupUser()
@@ -56,7 +58,9 @@ class OauthCallback extends Component {
       this.props.dispatch(fetchServers)
       this.setState({ notReady: false })
     } catch (e) {
-      const { body: { url } } = await superagent.get('/api/auth/redirect?url=✔️')
+      const {
+        body: { url },
+      } = await superagent.get('/api/auth/redirect?url=✔️')
       const nUrl = new URL(url)
 
       nUrl.searchParams.set('state', state)
@@ -65,8 +69,17 @@ class OauthCallback extends Component {
     }
   }
 
-  render () {
-    return (this.state.notReady) ? this.state.message : <><Redirect to={this.state.redirect} /><a style={{zIndex: 10000}} href={this.state.url}>Something oopsed, click me to get to where you meant.</a></>
+  render() {
+    return this.state.notReady ? (
+      this.state.message
+    ) : (
+      <>
+        <Redirect to={this.state.redirect} />
+        <a style={{ zIndex: 10000 }} href={this.state.url}>
+          Something oopsed, click me to get to where you meant.
+        </a>
+      </>
+    )
   }
 }
 

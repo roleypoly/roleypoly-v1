@@ -10,30 +10,33 @@ class ServersNavigation extends Component {
   static propTypes = {
     user: ImmutablePropTypes.map.isRequired,
     servers: ImmutablePropTypes.orderedMapOf(ImmutablePropTypes.map).isRequired,
-    className: PropTypes.string
+    className: PropTypes.string,
   }
 
-  render () {
+  render() {
     // console.log(this.props.servers)
-    return <Fragment>
-      <UserCard user={this.props.user} />
-      <div className={this.props.className}>
-        <Scrollbars autoHeight autoHeightMax='calc(100vh - 180px)'>
-          { 
-            this.props.servers.reduce((acc, s, i) => {
+    return (
+      <Fragment>
+        <UserCard user={this.props.user} />
+        <div className={this.props.className}>
+          <Scrollbars autoHeight autoHeightMax="calc(100vh - 180px)">
+            {this.props.servers.reduce((acc, s, i) => {
               acc.push(<ServerCard server={s} user={this.props.user} key={i} />)
               return acc
-            }, [])
-          }
-          <NavLink className='server-list__item add-new' activeClassName='active' to={`/s/add`}>
-            <div className='server-list__item__info'>
-              <i uk-icon="icon: plus; ratio: 0.9"></i>&nbsp;
-              Add to your server
-            </div>
-          </NavLink>
-        </Scrollbars>
-      </div>
-    </Fragment>
+            }, [])}
+            <NavLink
+              className="server-list__item add-new"
+              activeClassName="active"
+              to={`/s/add`}
+            >
+              <div className="server-list__item__info">
+                <i uk-icon="icon: plus; ratio: 0.9"></i>&nbsp; Add to your server
+              </div>
+            </NavLink>
+          </Scrollbars>
+        </div>
+      </Fragment>
+    )
   }
 }
 
