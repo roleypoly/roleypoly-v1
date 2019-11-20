@@ -6,10 +6,12 @@
     "start": "standard && node index.js",
     "fix": "standard --fix",
     "dev": "pm2 start index.js --watch",
+    "lint:prettier": "prettier -c '**/*.{ts,tsx,css,yml,yaml,md,json,js,jsx}'",
     "pm2": "pm2"
   },
   "dependencies": {
     "@discordjs/uws": "^11.149.1",
+    "@roleypoly/rpc": "^3.0.0-alpha.12",
     "chalk": "^2.4.2",
     "discord.js": "^11.4.2",
     "dotenv": "^7.0.0",
@@ -34,5 +36,8 @@
     "socket.io": "^2.2.0",
     "superagent": "^5.0.2",
     "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "prettier": "^1.19.1"
   }
 }
