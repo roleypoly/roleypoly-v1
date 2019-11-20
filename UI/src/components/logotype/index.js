@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const Logotype = ({
   fill = 'var(--c-7)',
@@ -39,6 +39,6 @@ const Logotype = ({
       ></use>
     </g>
   </svg>
-);
+)
 
-export default Logotype;
+export default Logotype

@@ -1,7 +1,7 @@
-import React from 'react';
-import moment from 'moment';
-import Typist from 'react-typist';
-import './typing.sass';
+import React from 'react'
+import moment from 'moment'
+import Typist from 'react-typist'
+import './typing.sass'
 
 const Typing = () => (
   <div className="demo__discord rp-discord">
@@ -26,6 +26,6 @@ const Typing = () => (
       </Typist>
     </div>
   </div>
-);
+)
 
-export default Typing;
+export default Typing

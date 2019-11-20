@@ -1,12 +1,12 @@
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import Scrollbars from 'react-custom-scrollbars';
-import './pages.sass';
+import React from 'react'
+import { Route, Switch } from 'react-router-dom'
+import Scrollbars from 'react-custom-scrollbars'
+import './pages.sass'
 
-import WhyNoRoles from './WhyNoRoles';
-import Error404 from './Error404';
-export { default as Landing } from './Landing';
-export { default as Error404 } from './Error404';
+import WhyNoRoles from './WhyNoRoles'
+import Error404 from './Error404'
+export { default as Landing } from './Landing'
+export { default as Error404 } from './Error404'
 
 const Pages = props => {
   return (
@@ -21,7 +21,7 @@ const Pages = props => {
         </div>
       </Scrollbars>
     </div>
-  );
-};
+  )
+}
 
-export default Pages;
+export default Pages

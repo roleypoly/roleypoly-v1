@@ -11,5 +11,5 @@ module.exports = (sql, DataTypes) => {
     message: {
       type: DataTypes.TEXT,
     },
-  });
-};
+  })
+}

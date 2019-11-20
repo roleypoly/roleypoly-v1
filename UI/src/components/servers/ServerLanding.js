@@ -1,35 +1,35 @@
-import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import superagent from 'superagent';
-import discordLogo from '../../pages/images/discord-logo.svg';
+import React, { Component } from 'react'
+import { Link, Redirect } from 'react-router-dom'
+import superagent from 'superagent'
+import discordLogo from '../../pages/images/discord-logo.svg'
 
 export default class ServerLanding extends Component {
   state = {
     server: null,
     exit: false,
-  };
+  }
 
   async componentWillMount() {
-    console.log(this.props);
+    console.log(this.props)
 
     try {
       const rsp = await superagent.get(
         `/api/server/${this.props.match.params.server}/slug`
-      );
-      this.setState({ server: rsp.body });
+      )
+      this.setState({ server: rsp.body })
     } catch (e) {
-      this.setState({ exit: true });
-      return;
+      this.setState({ exit: true })
+      return
     }
   }
 
   render() {
     if (this.state.exit === true) {
-      return <Redirect to="/" />;
+      return <Redirect to="/" />
     }
 
     if (this.state.server === null) {
-      return null; //SPINNER
+      return null //SPINNER
     }
 
     return (
@@ -54,6 +54,6 @@ export default class ServerLanding extends Component {
           </section>
         </div>
       </div>
-    );
+    )
   }
 }

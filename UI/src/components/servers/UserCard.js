@@ -1,30 +1,30 @@
-import React, { Component } from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
-import { NavLink } from 'react-router-dom';
-import { connect } from 'react-redux';
-import * as Actions from '../../actions';
-import './UserCard.sass';
+import React, { Component } from 'react'
+import ImmutablePropTypes from 'react-immutable-proptypes'
+import { NavLink } from 'react-router-dom'
+import { connect } from 'react-redux'
+import * as Actions from '../../actions'
+import './UserCard.sass'
 
 @connect()
 class UserCard extends Component {
   static propTypes = {
     user: ImmutablePropTypes.map,
-  };
+  }
 
   get avatar() {
-    const { user } = this.props;
-    const avatar = user.get('avatar');
+    const { user } = this.props
+    const avatar = user.get('avatar')
 
     if (avatar === '' || avatar == null) {
       return `https://cdn.discordapp.com/embed/avatars/${Math.ceil(Math.random() * 9999) %
-        5}.png`;
+        5}.png`
     }
 
-    return `https://cdn.discordapp.com/avatars/${user.get('id')}/${avatar}.png`;
+    return `https://cdn.discordapp.com/avatars/${user.get('id')}/${avatar}.png`
   }
 
   render() {
-    const { user } = this.props;
+    const { user } = this.props
 
     // console.log(this.props)
 
@@ -45,7 +45,7 @@ class UserCard extends Component {
                 title="Sign out"
                 uk-icon="icon: sign-out"
                 onClick={() => {
-                  this.props.dispatch(Actions.userLogout);
+                  this.props.dispatch(Actions.userLogout)
                 }}
               />
             </li>
@@ -63,8 +63,8 @@ class UserCard extends Component {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default UserCard;
+export default UserCard

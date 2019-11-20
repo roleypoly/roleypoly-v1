@@ -1,7 +1,7 @@
-import React, { Fragment } from 'react';
+import React, { Fragment } from 'react'
 
-import goodImg from './images/whynoroles-good.png';
-import badImg from './images/whynoroles-bad.png';
+import goodImg from './images/whynoroles-good.png'
+import badImg from './images/whynoroles-bad.png'
 
 const WhyNoRoles = props => {
   return (
@@ -27,7 +27,7 @@ const WhyNoRoles = props => {
         In this example, Roleypoly is above other roles, and will be able to assign them.
       </p>
     </Fragment>
-  );
-};
+  )
+}
 
-export default WhyNoRoles;
+export default WhyNoRoles

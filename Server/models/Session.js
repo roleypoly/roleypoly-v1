@@ -3,5 +3,5 @@ module.exports = (sequelize, DataTypes) => {
     id: { type: DataTypes.TEXT, primaryKey: true },
     maxAge: DataTypes.BIGINT,
     data: DataTypes.JSONB,
-  });
-};
+  })
+}

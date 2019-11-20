@@ -1,26 +1,26 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import ImmutablePropTypes from 'react-immutable-proptypes';
-import { NavLink } from 'react-router-dom';
-import './ServerCard.sass';
-import { withRouter } from 'react-router';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import ImmutablePropTypes from 'react-immutable-proptypes'
+import { NavLink } from 'react-router-dom'
+import './ServerCard.sass'
+import { withRouter } from 'react-router'
 
 class ServerCard extends Component {
   static propTypes = {
     user: ImmutablePropTypes.map.isRequired,
     server: ImmutablePropTypes.map.isRequired,
-  };
+  }
 
   render() {
-    const { server, user } = this.props;
+    const { server, user } = this.props
 
-    let icon = '';
+    let icon = ''
 
-    console.log(__filename, server);
+    console.log(__filename, server)
 
-    const s = server.get('server');
-    const gm = server.get('gm');
-    const perms = server.get('perms');
+    const s = server.get('server')
+    const gm = server.get('gm')
+    const perms = server.get('perms')
 
     if (perms.get('canManageRoles')) {
       icon = (
@@ -32,7 +32,7 @@ class ServerCard extends Component {
           className="server-list__item__tag"
           uk-icon="icon: bolt; ratio: 0.7"
         />
-      );
+      )
     }
 
     if (perms.get('isAdmin')) {
@@ -45,7 +45,7 @@ class ServerCard extends Component {
           className="server-list__item__tag"
           uk-icon="icon: star; ratio: 0.7"
         />
-      );
+      )
     }
 
     return (
@@ -69,8 +69,8 @@ class ServerCard extends Component {
           {icon}
         </div>
       </NavLink>
-    );
+    )
   }
 }
 
-export default ServerCard;
+export default ServerCard

@@ -1,4 +1,4 @@
-import { Set, OrderedMap, Map, fromJS } from 'immutable';
+import { Set, OrderedMap, Map, fromJS } from 'immutable'
 
 const blankServer = Map({
   id: '386659935687147521',
@@ -19,14 +19,14 @@ const blankServer = Map({
     isAdmin: true,
     canManageRoles: true,
   },
-});
+})
 
-const initialState = OrderedMap({});
+const initialState = OrderedMap({})
 
 export default (state = initialState, { type, data }) => {
   switch (type) {
     case Symbol.for('update servers'):
-      return data.reduce((acc, s) => acc.set(s.id, fromJS(s)), OrderedMap());
+      return data.reduce((acc, s) => acc.set(s.id, fromJS(s)), OrderedMap())
 
     // case Symbol.for('update server roles'):
     //   return state.set(data.id,
@@ -34,15 +34,15 @@ export default (state = initialState, { type, data }) => {
     //   )
 
     case Symbol.for('server: set'):
-      return state.set(data.id, fromJS(data));
+      return state.set(data.id, fromJS(data))
 
     case Symbol.for('server: edit message'):
-      return state.setIn([data.id, 'message'], data.message);
+      return state.setIn([data.id, 'message'], data.message)
 
     case Symbol.for('add debug server'):
-      return state.set('0', blankServer);
+      return state.set('0', blankServer)
 
     default:
-      return state;
+      return state
   }
-};
+}

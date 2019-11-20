@@ -1,26 +1,26 @@
-import React, { Component } from 'react';
-import { Provider } from 'react-redux';
-import { ConnectedRouter } from 'react-router-redux';
-import { DragDropContext } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
-import createHistory from 'history/createBrowserHistory';
-import configureStore from './store/configureStore';
-import './App.css';
-import './generic.sass';
+import React, { Component } from 'react'
+import { Provider } from 'react-redux'
+import { ConnectedRouter } from 'react-router-redux'
+import { DragDropContext } from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
+import createHistory from 'history/createBrowserHistory'
+import configureStore from './store/configureStore'
+import './App.css'
+import './generic.sass'
 
-import Wrapper from './components/wrapper';
-import AppRouter from './router';
-import { userInit } from './actions';
+import Wrapper from './components/wrapper'
+import AppRouter from './router'
+import { userInit } from './actions'
 
-const history = createHistory();
-const store = configureStore(undefined, history);
+const history = createHistory()
+const store = configureStore(undefined, history)
 
-window.__APP_STORE__ = store;
+window.__APP_STORE__ = store
 
 @DragDropContext(HTML5Backend)
 class App extends Component {
   componentWillMount() {
-    store.dispatch(userInit);
+    store.dispatch(userInit)
   }
 
   render() {
@@ -32,8 +32,8 @@ class App extends Component {
           </Wrapper>
         </ConnectedRouter>
       </Provider>
-    );
+    )
   }
 }
 
-export default App;
+export default App

@@ -1,17 +1,17 @@
-import React, { Component, Fragment } from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
-import PropTypes from 'prop-types';
-import ServerCard from './ServerCard';
-import UserCard from './UserCard';
-import { Scrollbars } from 'react-custom-scrollbars';
-import { NavLink } from 'react-router-dom';
+import React, { Component, Fragment } from 'react'
+import ImmutablePropTypes from 'react-immutable-proptypes'
+import PropTypes from 'prop-types'
+import ServerCard from './ServerCard'
+import UserCard from './UserCard'
+import { Scrollbars } from 'react-custom-scrollbars'
+import { NavLink } from 'react-router-dom'
 
 class ServersNavigation extends Component {
   static propTypes = {
     user: ImmutablePropTypes.map.isRequired,
     servers: ImmutablePropTypes.orderedMapOf(ImmutablePropTypes.map).isRequired,
     className: PropTypes.string,
-  };
+  }
 
   render() {
     // console.log(this.props.servers)
@@ -21,8 +21,8 @@ class ServersNavigation extends Component {
         <div className={this.props.className}>
           <Scrollbars autoHeight autoHeightMax="calc(100vh - 180px)">
             {this.props.servers.reduce((acc, s, i) => {
-              acc.push(<ServerCard server={s} user={this.props.user} key={i} />);
-              return acc;
+              acc.push(<ServerCard server={s} user={this.props.user} key={i} />)
+              return acc
             }, [])}
             <NavLink
               className="server-list__item add-new"
@@ -36,8 +36,8 @@ class ServersNavigation extends Component {
           </Scrollbars>
         </div>
       </Fragment>
-    );
+    )
   }
 }
 
-export default ServersNavigation;
+export default ServersNavigation

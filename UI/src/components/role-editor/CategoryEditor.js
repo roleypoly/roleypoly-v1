@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
 export default class CategoryEditor extends Component {
   onKeyPress = e => {
-    const { onSave } = this.props;
+    const { onSave } = this.props
 
     switch (e.key) {
       case 'Enter':
       case 'Escape':
-        return onSave();
+        return onSave()
     }
-  };
+  }
 
   render() {
-    const { category } = this.props;
+    const { category } = this.props
 
     return (
       <div className="role-editor__category editor" onKeyDown={this.onKeyPress}>
@@ -104,6 +104,6 @@ export default class CategoryEditor extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }

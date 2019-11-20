@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { Map } from 'immutable';
+import React, { Component } from 'react'
+import { Map } from 'immutable'
 
-import Role from '../role';
+import Role from '../role'
 
 class Category extends Component {
   toggleRoleMulti(id, next) {
-    this.props.onChange(Map({ [id]: next }));
+    this.props.onChange(Map({ [id]: next }))
   }
 
   toggleRoleSingle(id, next) {
@@ -14,31 +14,31 @@ class Category extends Component {
         .get('roles')
         .reduce((acc, i) => acc.set(i, false), Map())
         .set(id, next)
-    );
+    )
   }
 
   onRoleToggle = id => (next, old) => {
-    const type = this.props.category.get('type');
+    const type = this.props.category.get('type')
 
     switch (type) {
       case 'single':
-        return this.toggleRoleSingle(id, next);
+        return this.toggleRoleSingle(id, next)
       case 'multi':
-        return this.toggleRoleMulti(id, next);
+        return this.toggleRoleMulti(id, next)
       default:
-        console.warn('DEFAULTING TO MULTI', id, next, old);
-        return this.toggleRoleMulti(id, next);
+        console.warn('DEFAULTING TO MULTI', id, next, old)
+        return this.toggleRoleMulti(id, next)
     }
-  };
+  }
 
   render() {
-    const { category, name, isSelected } = this.props;
+    const { category, name, isSelected } = this.props
     if (category.get('hidden')) {
-      return null;
+      return null
     }
 
     if (category.get('roles').count() === 0) {
-      return null;
+      return null
     }
 
     return (
@@ -49,7 +49,7 @@ class Category extends Component {
           .sortBy(r => r.get('position'))
           .reverse()
           .map((r, k) => {
-            const id = r.get('id');
+            const id = r.get('id')
             return (
               <Role
                 key={k}
@@ -58,11 +58,11 @@ class Category extends Component {
                 selected={isSelected(id)}
                 onToggle={this.onRoleToggle(id)}
               />
-            );
+            )
           })
           .toArray()}
       </div>
-    );
+    )
   }
 }
-export default Category;
+export default Category

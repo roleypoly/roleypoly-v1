@@ -1,33 +1,33 @@
-import React, { Component } from 'react';
-import { Set } from 'immutable';
-import { connect } from 'react-redux';
-import { DropTarget } from 'react-dnd';
-import { Link, Prompt, Redirect } from 'react-router-dom';
-import { Scrollbars } from 'react-custom-scrollbars';
-import * as Actions from './actions';
-import * as PickerActions from '../role-picker/actions';
-import * as UIActions from '../../actions/ui';
-import './RoleEditor.sass';
+import React, { Component } from 'react'
+import { Set } from 'immutable'
+import { connect } from 'react-redux'
+import { DropTarget } from 'react-dnd'
+import { Link, Prompt, Redirect } from 'react-router-dom'
+import { Scrollbars } from 'react-custom-scrollbars'
+import * as Actions from './actions'
+import * as PickerActions from '../role-picker/actions'
+import * as UIActions from '../../actions/ui'
+import './RoleEditor.sass'
 
-import Category from './Category';
-import CategoryEditor from './CategoryEditor';
-import Role from '../role/draggable';
+import Category from './Category'
+import CategoryEditor from './CategoryEditor'
+import Role from '../role/draggable'
 
 const mapState = ({ rolePicker, roleEditor, servers }, ownProps) => ({
   rp: rolePicker,
   editor: roleEditor,
   server: servers.get(ownProps.match.params.server),
-});
+})
 
 @connect(mapState)
 @DropTarget(
   Symbol.for('dnd: role'),
   {
     drop(props, monitor, element) {
-      element.dropRole({}, 'Uncategorized')(monitor.getItem());
+      element.dropRole({}, 'Uncategorized')(monitor.getItem())
     },
     canDrop(props, monitor) {
-      return monitor.getItem().category !== 'Uncategorized';
+      return monitor.getItem().category !== 'Uncategorized'
     },
   },
   (connect, monitor) => ({
@@ -45,75 +45,75 @@ class RoleEditor extends Component {
       match: {
         params: { server },
       },
-    } = this.props;
-    dispatch(Actions.constructView(server));
+    } = this.props
+    dispatch(Actions.constructView(server))
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.match.params.server !== nextProps.match.params.server) {
-      const { dispatch } = this.props;
+      const { dispatch } = this.props
       dispatch(
         UIActions.fadeOut(() =>
           dispatch(Actions.constructView(nextProps.match.params.server))
         )
-      );
+      )
     }
   }
 
   dropRole = (category, name) => ({ role, category }) => {
-    const { dispatch } = this.props;
-    console.log(role);
-    dispatch(Actions.addRoleToCategory(name, category, role));
-  };
+    const { dispatch } = this.props
+    console.log(role)
+    dispatch(Actions.addRoleToCategory(name, category, role))
+  }
 
   createCategory = () => {
-    const { dispatch } = this.props;
-    dispatch(Actions.createCategory);
-  };
+    const { dispatch } = this.props
+    dispatch(Actions.createCategory)
+  }
 
   saveCategory = (category, name) => () => {
-    const { dispatch } = this.props;
-    dispatch(Actions.saveCategory(name, category));
-  };
+    const { dispatch } = this.props
+    dispatch(Actions.saveCategory(name, category))
+  }
 
   deleteCategory = (category, id) => () => {
-    const { dispatch } = this.props;
-    dispatch(Actions.deleteCategory(id, category));
-  };
+    const { dispatch } = this.props
+    dispatch(Actions.deleteCategory(id, category))
+  }
 
   openEditor = (category, name) => () => {
-    const { dispatch } = this.props;
-    dispatch(Actions.openEditor(name));
-  };
+    const { dispatch } = this.props
+    dispatch(Actions.openEditor(name))
+  }
 
   editCategory = (category, id) => (key, type) => event => {
-    const { dispatch } = this.props;
-    let value;
+    const { dispatch } = this.props
+    let value
 
     switch (type) {
       case Symbol.for('edit: text'):
-        value = event.target.value;
-        break;
+        value = event.target.value
+        break
 
       case Symbol.for('edit: bool'):
-        value = event.target.checked;
-        break;
+        value = event.target.checked
+        break
 
       case Symbol.for('edit: select'):
-        value = event.target.value;
-        break;
+        value = event.target.value
+        break
 
       default:
-        value = null;
+        value = null
     }
 
-    dispatch(Actions.editCategory({ category, id, key, type, value }));
-  };
+    dispatch(Actions.editCategory({ category, id, key, type, value }))
+  }
 
   resetServer = () => {
-    const { dispatch } = this.props;
-    dispatch({ type: Symbol.for('re: reset') });
-  };
+    const { dispatch } = this.props
+    dispatch({ type: Symbol.for('re: reset') })
+  }
 
   saveServer = () => {
     const {
@@ -121,32 +121,32 @@ class RoleEditor extends Component {
       match: {
         params: { server },
       },
-    } = this.props;
-    dispatch(Actions.saveServer(server));
-  };
+    } = this.props
+    dispatch(Actions.saveServer(server))
+  }
 
   onBump = (category, name) => move => () =>
-    this.props.dispatch(Actions.bumpCategory(category, name)(move));
+    this.props.dispatch(Actions.bumpCategory(category, name)(move))
 
   get hasChanged() {
     return (
       this.props.editor.get('originalSnapshot').hashCode() !==
       this.props.editor.get('viewMap').hashCode()
-    );
+    )
   }
 
   render() {
-    const { server } = this.props;
+    const { server } = this.props
 
     if (server == null) {
-      return null;
+      return null
     }
 
     if (server.getIn(['perms', 'canManageRoles']) !== true) {
-      return <Redirect to={`/s/${server.get('id')}`} />;
+      return <Redirect to={`/s/${server.get('id')}`} />
     }
 
-    const vm = this.props.editor.get('viewMap');
+    const vm = this.props.editor.get('viewMap')
     return (
       <div className="inner role-editor">
         <Prompt
@@ -231,8 +231,8 @@ class RoleEditor extends Component {
           )}
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default RoleEditor;
+export default RoleEditor

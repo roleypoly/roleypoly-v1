@@ -1,5 +1,5 @@
-import React from 'react';
-import './landing.sass';
+import React from 'react'
+import './landing.sass'
 
 const Error404 = ({ root = false }) => (
   <div className="landing uk-width-1-1 uk-text-center">
@@ -14,6 +14,6 @@ const Error404 = ({ root = false }) => (
       </section>
     </div>
   </div>
-);
+)
 
-export default Error404;
+export default Error404

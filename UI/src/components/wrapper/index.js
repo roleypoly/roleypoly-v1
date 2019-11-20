@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import Scrollbars from 'react-custom-scrollbars';
-import Logotype from '../logotype';
-import './wrapper.sass';
-import discordLogo from '../../pages/images/discord-logo.svg';
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import Scrollbars from 'react-custom-scrollbars'
+import Logotype from '../logotype'
+import './wrapper.sass'
+import discordLogo from '../../pages/images/discord-logo.svg'
 
 class Wrapper extends Component {
   render() {
@@ -45,8 +45,8 @@ class Wrapper extends Component {
           </div>
         </Scrollbars>
       </div>
-    );
+    )
   }
 }
 
-export default Wrapper;
+export default Wrapper

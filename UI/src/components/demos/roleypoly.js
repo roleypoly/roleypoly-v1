@@ -1,5 +1,5 @@
-import React from 'react';
-import RoleDemo from '../role/demo';
+import React from 'react'
+import RoleDemo from '../role/demo'
 
 const RoleypolyDemo = () => (
   <div className="demo__roleypoly">
@@ -9,6 +9,6 @@ const RoleypolyDemo = () => (
     <RoleDemo name="a proud role ♡" color="#5C8B88" />
     <RoleDemo name="a wonderful role ♡" color="#D6B3C7" />
   </div>
-);
+)
 
-export default RoleypolyDemo;
+export default RoleypolyDemo

@@ -1,23 +1,23 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import TypingDemo from '../demos/typing';
-import RoleypolyDemo from '../demos/roleypoly';
-import * as Actions from '../../actions';
-import './styles.sass';
-import discordLogo from '../../pages/images/discord-logo.svg';
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import TypingDemo from '../demos/typing'
+import RoleypolyDemo from '../demos/roleypoly'
+import * as Actions from '../../actions'
+import './styles.sass'
+import discordLogo from '../../pages/images/discord-logo.svg'
 
 export default class AddServer extends Component {
-  polling = null;
+  polling = null
 
   componentDidMount() {
     if (this.props.match.params.server !== undefined) {
-      this.pollingStop = Actions.startServerPolling(this.props.dispatch);
+      this.pollingStop = Actions.startServerPolling(this.props.dispatch)
     }
   }
 
   componentWillUnmount() {
     if (this.pollingStop != null) {
-      this.pollingStop();
+      this.pollingStop()
     }
   }
 
@@ -59,6 +59,6 @@ export default class AddServer extends Component {
           </a>
         </div>
       </div>
-    );
+    )
   }
 }

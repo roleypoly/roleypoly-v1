@@ -1,15 +1,15 @@
-import { Set } from 'immutable';
-import * as UIActions from '../../actions/ui';
-import { getViewMap, setup } from '../role-picker/actions';
-import uuidv4 from 'uuid/v4';
-import superagent from 'superagent';
+import { Set } from 'immutable'
+import * as UIActions from '../../actions/ui'
+import { getViewMap, setup } from '../role-picker/actions'
+import uuidv4 from 'uuid/v4'
+import superagent from 'superagent'
 
 export const constructView = id => async (dispatch, getState) => {
-  await setup(id)(dispatch);
-  const server = getState().servers.get(id);
+  await setup(id)(dispatch)
+  const server = getState().servers.get(id)
 
-  let { viewMap, hasSafeRoles } = getViewMap(server);
-  viewMap = viewMap.map((c, idx) => c.set('mode', Symbol.for('drop')));
+  let { viewMap, hasSafeRoles } = getViewMap(server)
+  viewMap = viewMap.map((c, idx) => c.set('mode', Symbol.for('drop')))
 
   dispatch({
     type: Symbol.for('re: setup'),
@@ -18,10 +18,10 @@ export const constructView = id => async (dispatch, getState) => {
       viewMap,
       originalSnapshot: viewMap,
     },
-  });
+  })
 
-  dispatch(UIActions.fadeIn);
-};
+  dispatch(UIActions.fadeIn)
+}
 
 export const addRoleToCategory = (id, oldId, role, flip = true) => dispatch => {
   dispatch({
@@ -30,12 +30,12 @@ export const addRoleToCategory = (id, oldId, role, flip = true) => dispatch => {
       id,
       role,
     },
-  });
+  })
 
   if (flip) {
-    dispatch(removeRoleFromCategory(oldId, id, role, false));
+    dispatch(removeRoleFromCategory(oldId, id, role, false))
   }
-};
+}
 
 export const removeRoleFromCategory = (id, oldId, role, flip = true) => dispatch => {
   dispatch({
@@ -44,12 +44,12 @@ export const removeRoleFromCategory = (id, oldId, role, flip = true) => dispatch
       id,
       role,
     },
-  });
+  })
 
   if (flip) {
-    dispatch(addRoleToCategory(oldId, id, role, false));
+    dispatch(addRoleToCategory(oldId, id, role, false))
   }
-};
+}
 
 export const editCategory = ({ id, key, value }) => dispatch => {
   dispatch({
@@ -59,12 +59,12 @@ export const editCategory = ({ id, key, value }) => dispatch => {
       key,
       value,
     },
-  });
-};
+  })
+}
 
 export const saveCategory = (id, category) => dispatch => {
   if (category.get('name') === '') {
-    return;
+    return
   }
 
   dispatch({
@@ -73,8 +73,8 @@ export const saveCategory = (id, category) => dispatch => {
       id,
       mode: Symbol.for('drop'),
     },
-  });
-};
+  })
+}
 
 export const openEditor = id => ({
   type: Symbol.for('re: switch category mode'),
@@ -82,13 +82,13 @@ export const openEditor = id => ({
     id,
     mode: Symbol.for('edit'),
   },
-});
+})
 
 export const deleteCategory = (id, category) => (dispatch, getState) => {
-  const roles = category.get('roles');
-  const rolesMap = category.get('roles_map');
+  const roles = category.get('roles')
+  const rolesMap = category.get('roles_map')
 
-  let uncategorized = getState().roleEditor.getIn(['viewMap', 'Uncategorized']);
+  let uncategorized = getState().roleEditor.getIn(['viewMap', 'Uncategorized'])
 
   dispatch({
     type: Symbol.for('re: set category'),
@@ -101,27 +101,27 @@ export const deleteCategory = (id, category) => (dispatch, getState) => {
       type: 'multi',
       mode: null,
     },
-  });
+  })
 
   dispatch({
     type: Symbol.for('re: delete category'),
     data: id,
-  });
-};
+  })
+}
 
 export const createCategory = (dispatch, getState) => {
-  const { roleEditor } = getState();
-  const vm = roleEditor.get('viewMap');
+  const { roleEditor } = getState()
+  const vm = roleEditor.get('viewMap')
 
-  let name = 'New Category';
-  let idx = 1;
-  const pred = c => c.get('name') === name;
+  let name = 'New Category'
+  let idx = 1
+  const pred = c => c.get('name') === name
   while (vm.find(pred) !== undefined) {
-    idx++;
-    name = `New Category ${idx}`;
+    idx++
+    name = `New Category ${idx}`
   }
 
-  const id = uuidv4();
+  const id = uuidv4()
 
   dispatch({
     type: Symbol.for('re: set category'),
@@ -135,17 +135,17 @@ export const createCategory = (dispatch, getState) => {
       position: idx,
       mode: Symbol.for('edit'),
     },
-  });
-};
+  })
+}
 
 export const bumpCategory = (category, name) => move => async (dispatch, getState) => {
-  const { roleEditor } = getState();
-  const vm = roleEditor.get('viewMap');
+  const { roleEditor } = getState()
+  const vm = roleEditor.get('viewMap')
 
-  const position = category.get('position');
-  const nextPos = position + move;
+  const position = category.get('position')
+  const nextPos = position + move
 
-  const replaceThisOne = vm.findKey(category => category.get('position') === nextPos);
+  const replaceThisOne = vm.findKey(category => category.get('position') === nextPos)
 
   dispatch({
     type: Symbol.for('re: edit category'),
@@ -154,7 +154,7 @@ export const bumpCategory = (category, name) => move => async (dispatch, getStat
       key: 'position',
       value: nextPos,
     },
-  });
+  })
 
   if (!!replaceThisOne) {
     dispatch({
@@ -164,9 +164,9 @@ export const bumpCategory = (category, name) => move => async (dispatch, getStat
         key: 'position',
         value: position,
       },
-    });
+    })
   }
-};
+}
 
 export const saveServer = id => async (dispatch, getState) => {
   const viewMap = getState()
@@ -177,21 +177,21 @@ export const saveServer = id => async (dispatch, getState) => {
         .delete('roles_map')
         .delete('mode')
         .delete('id')
-    );
+    )
 
   viewMap.map((v, idx) => {
     if (v.has('position')) {
-      return v;
+      return v
     }
 
     console.warn('category position wasnt set, so fake ones are being made', {
       cat: v.toJS(),
       idx,
       position: viewMap.count() + idx,
-    });
-    return v.set('position', viewMap.count() + idx);
-  });
+    })
+    return v.set('position', viewMap.count() + idx)
+  })
 
-  await superagent.patch(`/api/server/${id}`).send({ categories: viewMap.toJS() });
-  dispatch({ type: Symbol.for('re: swap original state') });
-};
+  await superagent.patch(`/api/server/${id}`).send({ categories: viewMap.toJS() })
+  dispatch({ type: Symbol.for('re: swap original state') })
+}

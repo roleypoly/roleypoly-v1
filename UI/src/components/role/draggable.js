@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { DragSource } from 'react-dnd';
+import React, { Component } from 'react'
+import { DragSource } from 'react-dnd'
 
-import Role from './index';
+import Role from './index'
 
 // @DragSource(Symbol.for('dnd: role'), {
 //   beginDrag ({ role, categoryId }) {
@@ -17,7 +17,7 @@ export default
   Symbol.for('dnd: role'),
   {
     beginDrag({ role, categoryId }) {
-      return { role, category: categoryId };
+      return { role, category: categoryId }
     },
   },
   (connect, monitor) => ({
@@ -27,6 +27,6 @@ export default
 )
 class DraggableRole extends Component {
   render() {
-    return <Role {...this.props} type="drag" />;
+    return <Role {...this.props} type="drag" />
   }
 }

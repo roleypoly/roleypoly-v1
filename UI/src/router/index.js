@@ -1,26 +1,26 @@
-import React, { Component, Fragment } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import React, { Component, Fragment } from 'react'
+import { Route, Switch, Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 
-import Servers from '../components/servers';
-import OauthCallback from '../components/oauth-callback';
-import OauthFlow from '../components/oauth-flow';
-import OauthBotFlow from '../components/oauth-bot-flow';
-import Pages, { Landing, Error404 } from '../pages';
-import ServerLanding from '../components/servers/ServerLanding';
+import Servers from '../components/servers'
+import OauthCallback from '../components/oauth-callback'
+import OauthFlow from '../components/oauth-flow'
+import OauthBotFlow from '../components/oauth-bot-flow'
+import Pages, { Landing, Error404 } from '../pages'
+import ServerLanding from '../components/servers/ServerLanding'
 
-const aaa = props => <div>{JSON.stringify(props)}</div>;
+const aaa = props => <div>{JSON.stringify(props)}</div>
 
 export default
 @withRouter
 @connect(({ appState, user }) => ({ ready: appState.ready, user }))
 class AppRouter extends Component {
   render() {
-    const isLoggedIn = this.props.user.get('isLoggedIn');
+    const isLoggedIn = this.props.user.get('isLoggedIn')
 
     if (!this.props.ready) {
-      return null;
+      return null
     }
 
     return (
@@ -52,6 +52,6 @@ class AppRouter extends Component {
 
         <Route component={Error404} />
       </Switch>
-    );
+    )
   }
 }

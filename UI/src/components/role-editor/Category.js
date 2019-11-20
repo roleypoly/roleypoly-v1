@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
-import { DropTarget } from 'react-dnd';
+import React, { Component } from 'react'
+import { DropTarget } from 'react-dnd'
 
-import Role from '../role/draggable';
-import CategoryEditor from './CategoryEditor';
+import Role from '../role/draggable'
+import CategoryEditor from './CategoryEditor'
 
 @DropTarget(
   Symbol.for('dnd: role'),
   {
     drop(props, monitor, element) {
-      props.onDrop(monitor.getItem());
+      props.onDrop(monitor.getItem())
     },
     canDrop(props, monitor) {
       return (
         props.mode !== Symbol.for('edit') && monitor.getItem().category !== props.name
-      );
+      )
     },
   },
   (connect, monitor) => ({
@@ -35,10 +35,10 @@ class Category extends Component {
       mode,
       onEditOpen,
       ...rest
-    } = this.props;
+    } = this.props
 
     if (mode === Symbol.for('edit')) {
-      return <CategoryEditor category={category} name={name} {...rest} />;
+      return <CategoryEditor category={category} name={name} {...rest} />
     }
 
     return connectDropTarget(
@@ -63,7 +63,7 @@ class Category extends Component {
           .map((r, k) => <Role key={k} role={r} categoryId={name} />)
           .toArray()}
       </div>
-    );
+    )
   }
 }
-export default Category;
+export default Category

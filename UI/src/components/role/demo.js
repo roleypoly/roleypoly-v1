@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { Map } from 'immutable';
+import React, { Component } from 'react'
+import { Map } from 'immutable'
 
-import Role from './index';
+import Role from './index'
 
 export default class DemoRole extends Component {
   state = {
     isSelected: false,
-  };
+  }
 
   handleToggle = () => {
-    this.setState({ isSelected: !this.state.isSelected });
-  };
+    this.setState({ isSelected: !this.state.isSelected })
+  }
 
   render() {
     return (
@@ -20,6 +20,6 @@ export default class DemoRole extends Component {
         onToggle={this.handleToggle}
         type="button"
       />
-    );
+    )
   }
 }

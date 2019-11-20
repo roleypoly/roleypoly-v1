@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Color from 'color';
-import './Role.sass';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import Color from 'color'
+import './Role.sass'
 
-const whiteColor = Color('#efefef');
+const whiteColor = Color('#efefef')
 
 class Role extends Component {
   static propTypes = {
@@ -12,28 +12,28 @@ class Role extends Component {
     type: PropTypes.string,
     selected: PropTypes.bool,
     disabled: PropTypes.bool,
-  };
+  }
 
   render() {
-    let { role, selected, disabled, type, isDragging } = this.props;
-    type = type || 'button';
+    let { role, selected, disabled, type, isDragging } = this.props
+    type = type || 'button'
 
     // console.log(this.props)
 
-    let color = Color(role.get('color'));
+    let color = Color(role.get('color'))
 
     if (color.rgbNumber() === 0) {
-      color = whiteColor;
+      color = whiteColor
     }
 
-    const c = color;
-    let hc = color.lighten(0.1);
+    const c = color
+    let hc = color.lighten(0.1)
 
     const out = (
       <div
         onClick={() => {
           if (!disabled && this.props.onToggle != null) {
-            this.props.onToggle(!selected, selected);
+            this.props.onToggle(!selected, selected)
           }
         }}
         {...(disabled
@@ -52,14 +52,14 @@ class Role extends Component {
         <div className={`role__option ${selected ? 'selected' : ''}`} />
         <div className="role__name">{role.get('name')}</div>
       </div>
-    );
+    )
 
     if (type === 'drag' && this.props.connectDragSource != null) {
-      return this.props.connectDragSource(out);
+      return this.props.connectDragSource(out)
     }
 
-    return out;
+    return out
   }
 }
 
-export default Role;
+export default Role

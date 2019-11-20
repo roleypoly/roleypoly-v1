@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
-import { Scrollbars } from 'react-custom-scrollbars';
-import { connect } from 'react-redux';
-import { withRouter, Redirect } from 'react-router';
-import './index.sass';
+import React, { Component } from 'react'
+import { Route, Switch } from 'react-router-dom'
+import { Scrollbars } from 'react-custom-scrollbars'
+import { connect } from 'react-redux'
+import { withRouter, Redirect } from 'react-router'
+import './index.sass'
 
-import Navigation from './Navigation';
-import RolePicker from '../role-picker';
-import RoleEditor from '../role-editor';
-import AddServer from '../add-server';
-import Error404 from '../../pages/Error404';
+import Navigation from './Navigation'
+import RolePicker from '../role-picker'
+import RoleEditor from '../role-editor'
+import AddServer from '../add-server'
+import Error404 from '../../pages/Error404'
 
 // import mockData from './mockData'
 
@@ -18,20 +18,20 @@ const mapState = ({ servers, user, appState }) => {
     servers,
     user,
     fade: appState.fade,
-  };
-};
+  }
+}
 
 @connect(mapState)
 class Servers extends Component {
   get defaultPath() {
-    console.log(this.props.servers.toJS());
+    console.log(this.props.servers.toJS())
 
-    const first = this.props.servers.first();
+    const first = this.props.servers.first()
     if (first != null) {
-      return first.get('id');
+      return first.get('id')
     }
 
-    return 'add';
+    return 'add'
   }
 
   render() {
@@ -62,8 +62,8 @@ class Servers extends Component {
           </Scrollbars>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default Servers;
+export default Servers

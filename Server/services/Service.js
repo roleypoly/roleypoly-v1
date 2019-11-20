@@ -1,10 +1,10 @@
-const Logger = require('../logger');
+const Logger = require('../logger')
 
 class Service {
   constructor(ctx) {
-    this.ctx = ctx;
-    this.log = new Logger(this.constructor.name);
+    this.ctx = ctx
+    this.log = new Logger(this.constructor.name)
   }
 }
 
-module.exports = Service;
+module.exports = Service

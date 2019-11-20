@@ -1,22 +1,22 @@
-import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
-import { Prompt } from 'react-router-dom';
-import superagent from 'superagent';
-import * as Actions from './actions';
-import * as UIActions from '../../actions/ui';
-import { msgToReal } from '../../utils';
-import './RolePicker.sass';
+import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
+import { Prompt } from 'react-router-dom'
+import superagent from 'superagent'
+import * as Actions from './actions'
+import * as UIActions from '../../actions/ui'
+import { msgToReal } from '../../utils'
+import './RolePicker.sass'
 
-import Category from './Category';
-import { Scrollbars } from 'react-custom-scrollbars';
-import { Link } from 'react-router-dom';
+import Category from './Category'
+import { Scrollbars } from 'react-custom-scrollbars'
+import { Link } from 'react-router-dom'
 
 const mapState = ({ rolePicker, servers }, ownProps) => {
   return {
     data: rolePicker,
     server: servers.get(ownProps.match.params.server),
-  };
-};
+  }
+}
 
 @connect(mapState)
 class RolePicker extends Component {
@@ -26,59 +26,59 @@ class RolePicker extends Component {
       match: {
         params: { server },
       },
-    } = this.props;
-    dispatch(Actions.setup(server));
+    } = this.props
+    dispatch(Actions.setup(server))
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.match.params.server !== nextProps.match.params.server) {
-      const { dispatch } = this.props;
+      const { dispatch } = this.props
       dispatch(
         UIActions.fadeOut(() => dispatch(Actions.setup(nextProps.match.params.server)))
-      );
+      )
     }
   }
 
   get serverId() {
-    return this.props.server.get('id');
+    return this.props.server.get('id')
   }
 
   isSelected = id => {
-    return this.props.data.getIn(['rolesSelected', id]);
-  };
+    return this.props.data.getIn(['rolesSelected', id])
+  }
 
   get rolesHaveChanged() {
-    const { data } = this.props;
-    return !data.get('rolesSelected').equals(data.get('originalRolesSelected'));
+    const { data } = this.props
+    return !data.get('rolesSelected').equals(data.get('originalRolesSelected'))
   }
 
   editServerMessage = e => {
-    const { dispatch } = this.props;
-    dispatch(Actions.editServerMessage(this.serverId, e.target.value));
-  };
+    const { dispatch } = this.props
+    dispatch(Actions.editServerMessage(this.serverId, e.target.value))
+  }
 
   saveServerMessage = e => {
-    const { dispatch } = this.props;
-    dispatch(Actions.saveServerMessage(this.serverId));
-  };
+    const { dispatch } = this.props
+    dispatch(Actions.saveServerMessage(this.serverId))
+  }
 
   openMessageEditor = () => {
-    const { dispatch } = this.props;
-    dispatch(Actions.openMessageEditor(this.serverId));
-  };
+    const { dispatch } = this.props
+    dispatch(Actions.openMessageEditor(this.serverId))
+  }
 
   closeMessageEditor = () => {
-    const { dispatch } = this.props;
-    dispatch(Actions.closeMessageEditor);
-  };
+    const { dispatch } = this.props
+    dispatch(Actions.closeMessageEditor)
+  }
 
   renderServerMessage(server) {
-    const isEditing = this.props.data.get('isEditingMessage');
-    const roleManager = server.getIn(['perms', 'canManageRoles']);
-    const msg = server.get('message');
-    const msgBuffer = this.props.data.get('messageBuffer');
+    const isEditing = this.props.data.get('isEditingMessage')
+    const roleManager = server.getIn(['perms', 'canManageRoles'])
+    const msg = server.get('message')
+    const msgBuffer = this.props.data.get('messageBuffer')
 
-    console.log(msg, roleManager, isEditing, this.props.data.toJS());
+    console.log(msg, roleManager, isEditing, this.props.data.toJS())
 
     if (!roleManager && msg !== '') {
       return (
@@ -86,7 +86,7 @@ class RolePicker extends Component {
           <h3>Server Message</h3>
           <p dangerouslySetInnerHTML={{ __html: msgToReal(msg) }}></p>
         </section>
-      );
+      )
     }
 
     if (roleManager && !isEditing) {
@@ -107,7 +107,7 @@ class RolePicker extends Component {
             }}
           ></p>
         </section>
-      );
+      )
     }
 
     if (roleManager && isEditing) {
@@ -137,18 +137,18 @@ class RolePicker extends Component {
             value={msgBuffer}
           />
         </section>
-      );
+      )
     }
 
-    return null;
+    return null
   }
 
   render() {
-    const { data, server, dispatch } = this.props;
-    const vm = data.get('viewMap');
+    const { data, server, dispatch } = this.props
+    const vm = data.get('viewMap')
 
     if (server === undefined) {
-      return null;
+      return null
     }
 
     return (
@@ -207,8 +207,8 @@ class RolePicker extends Component {
           </div>
         </section>
       </div>
-    );
+    )
   }
 }
 
-export default RolePicker;
+export default RolePicker
