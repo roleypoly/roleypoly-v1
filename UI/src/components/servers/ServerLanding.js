@@ -9,7 +9,7 @@ export default class ServerLanding extends Component {
     exit: false,
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     console.log(this.props)
 
     try {

@@ -15,7 +15,7 @@ const mapState = ({ rolePicker, servers }, ownProps) => {
 }
 
 class RolePicker extends Component {
-  componentWillMount() {
+  componentDidMount() {
     const {
       dispatch,
       match: {

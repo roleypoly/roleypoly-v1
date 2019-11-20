@@ -21,7 +21,7 @@ class _AppRouter extends Component {
       <Switch>
         {isLoggedIn === true ? (
           // YES LOGGED IN
-          <Route path="/s" component={Servers} />
+          <Route path="/s" component={() => <Servers />} />
         ) : (
           // NOT LOGGED IN
           [

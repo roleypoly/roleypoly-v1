@@ -3,12 +3,12 @@
 docker-compose up -d 
 
 pushd Server
-npm ci
-yarn dev
+npm i
+npm run dev
 
 popd
 
 pushd UI
-npm ci
-yarn start
+npm i
+npm start
 popd

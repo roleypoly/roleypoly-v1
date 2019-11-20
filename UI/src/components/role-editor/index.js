@@ -35,7 +35,7 @@ const dropTarget = DropTarget(
   })
 )
 class RoleEditor extends Component {
-  componentWillMount() {
+  componentDidMount() {
     const {
       dispatch,
       match: {
@@ -231,4 +231,4 @@ class RoleEditor extends Component {
   }
 }
 
-export default dropTarget(connect(mapState)(RoleEditor))
+export default connect(mapState)(dropTarget(RoleEditor))

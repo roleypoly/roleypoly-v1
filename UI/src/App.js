@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
-import { ConnectedRouter } from 'react-router-redux'
 import { DragDropContext } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import createHistory from 'history/createBrowserHistory'
 import configureStore from './store/configureStore'
 import './App.css'
 import './generic.sass'
-
+import { Router } from 'react-router-dom'
 import Wrapper from './components/wrapper'
 import AppRouter from './router'
 import { userInit } from './actions'
@@ -18,18 +17,18 @@ const store = configureStore(undefined, history)
 window.__APP_STORE__ = store
 
 class _App extends Component {
-  componentWillMount() {
+  componentDidMount() {
     store.dispatch(userInit)
   }
 
   render() {
     return (
       <Provider store={store}>
-        <ConnectedRouter history={history}>
+        <Router history={history}>
           <Wrapper>
             <AppRouter />
           </Wrapper>
-        </ConnectedRouter>
+        </Router>
       </Provider>
     )
   }

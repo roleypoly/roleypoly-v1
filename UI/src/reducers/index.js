@@ -4,7 +4,6 @@ import servers from './servers'
 import user from './user'
 import rolePicker from './role-picker'
 import roleEditor from './role-editor'
-import { routerMiddleware } from 'react-router-redux'
 // import roles from './roles'
 
 const initialState = {
@@ -36,7 +35,6 @@ const rootReducer = combineReducers({
   appState,
   servers,
   user,
-  router: routerMiddleware,
   // roles,
   rolePicker,
   roleEditor,
