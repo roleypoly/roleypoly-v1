@@ -39,7 +39,6 @@ module.exports = (R, $) => {
   })
 
   R.get('/api/server/:id/slug', async ctx => {
-    const { userId } = ctx.session
     const { id } = ctx.params
 
     const srv = $.discord.client.guilds.get(id)

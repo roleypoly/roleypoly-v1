@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
-import { Route, Switch } from 'react-router-dom'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { connect } from 'react-redux'
-import { withRouter, Redirect } from 'react-router'
-import './index.sass'
-
-import Navigation from './Navigation'
-import RolePicker from '../role-picker'
-import RoleEditor from '../role-editor'
-import AddServer from '../add-server'
+import { Redirect } from 'react-router'
+import { Route, Switch } from 'react-router-dom'
 import Error404 from '../../pages/Error404'
+import AddServer from '../add-server'
+import RoleEditor from '../role-editor'
+import RolePicker from '../role-picker'
+import './index.sass'
+import Navigation from './Navigation'
 
 // import mockData from './mockData'
 

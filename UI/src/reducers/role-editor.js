@@ -1,4 +1,4 @@
-import { Map, OrderedMap, fromJS } from 'immutable'
+import { Map, OrderedMap } from 'immutable'
 
 const initialState = Map({
   viewMap: OrderedMap({}),

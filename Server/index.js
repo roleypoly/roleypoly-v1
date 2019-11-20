@@ -53,10 +53,6 @@ async function start() {
     const pub = path.resolve(path.join(__dirname, 'public'))
     log.info('public path', pub)
 
-    const staticFiles = require('koa-static')
-    // app.use(staticFiles(pub, { defer: true, gzip: true, br: true }))
-
-    const send = require('koa-send')
     app.use(async (ctx, next) => {
       if (ctx.path.startsWith('/api')) {
         log.info('api breakout')
@@ -85,40 +81,15 @@ async function start() {
         try {
           ctx.body = fs.readFileSync(path.join(pub, 'index.html'), { encoding: 'utf-8' })
         } catch (e) {
-          ctx.body = e.stack || e.trace
+          ctx.body = "A problem occured."
           ctx.status = 500
+          console.error(e)
         }
         log.info('index sent')
         ctx.status = 200
         return next()
       }
-
-      // try {
-      //   await next()
-      // } catch (e) {
-      //   send(ctx, 'index.html', { root: pub })
-      // }
     })
-    // const sendOpts = {root: pub, index: 'index.html'}
-    // // const sendOpts = {}
-    // app.use(async (ctx, next) => {
-    //   if (ctx.path.startsWith('/api')) {
-    //     return await next()
-    //   }
-
-    //   try {
-    //     log.info('pass 1', ctx.path, __dirname+'/public'+ctx.path)
-    //     await send(ctx, __dirname+'/public'+ctx.path, sendOpts)
-    //   } catch (error) {
-    //     try {
-    //       log.info('pass 2 /', ctx.path, __dirname+'/public/index.html')
-    //       await send(ctx, __dirname+'/public/index.html', sendOpts)
-    //     } catch (error) {
-    //       log.info('exit to next', ctx.path)
-    //       await next()
-    //     }
-    //   }
-    // })
   }
 
   // Request logger
@@ -129,20 +100,21 @@ async function start() {
     } catch (e) {
       log.error(e)
       ctx.status = ctx.status || 500
+      
       if (DEVEL) {
-        ctx.body = ctx.body || e.stack
-      } else {
-        ctx.body = {
-          err: 'something terrible happened.',
-        }
+        console.error(e)
+      } 
+      
+      ctx.body = {
+        err: 'something terrible happened.',
       }
+
     }
     let timeElapsed = new Date() - timeStart
 
     log.request(
       `${ctx.status} ${ctx.method} ${ctx.url} - ${ctx.ip} - took ${timeElapsed}ms`
     )
-    // return null
   })
 
   const session = require('koa-session')
@@ -164,7 +136,6 @@ async function start() {
   await M.mountRoutes()
 
   // SPA server
-
   log.info(`starting HTTP server on ${process.env.APP_PORT || 6769}`)
   server.listen(process.env.APP_PORT || 6769)
 }

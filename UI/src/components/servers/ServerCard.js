@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { NavLink } from 'react-router-dom'
 import './ServerCard.sass'
-import { withRouter } from 'react-router'
 
 class ServerCard extends Component {
   static propTypes = {

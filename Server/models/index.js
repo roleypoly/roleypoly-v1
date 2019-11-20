@@ -1,7 +1,6 @@
 const log = new (require('../logger'))('models/index')
 const glob = require('glob')
 const path = require('path')
-const util = require('../util/model-methods')
 
 module.exports = sql => {
   const models = {}
