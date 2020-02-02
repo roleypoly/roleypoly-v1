@@ -31,6 +31,9 @@ class DiscordService extends Service {
       Authorization: `Shared ${this.rpcSecret}`,
     }
 
+    this.bootstrapRetries = 0
+    this.bootstrapRetriesMax = 10
+
     this.bootstrap().catch(e => {
       console.error(`bootstrap failure`, e)
       process.exit(-1)
@@ -38,11 +41,22 @@ class DiscordService extends Service {
   }
 
   async bootstrap() {
-    const ownUser = await this.rpc.ownUser(new Empty(), this.sharedHeaders)
-    this.ownUser = ownUser.toObject()
-
-    const listGuilds = await this.rpc.listGuilds(new Empty(), this.sharedHeaders)
-    this.syncGuilds(listGuilds.toObject().guildsList)
+    setTimeout(() => {
+      try {
+        const ownUser = await this.rpc.ownUser(new Empty(), this.sharedHeaders)
+        this.ownUser = ownUser.toObject()
+        
+        const listGuilds = await this.rpc.listGuilds(new Empty(), this.sharedHeaders)
+        this.syncGuilds(listGuilds.toObject().guildsList)
+      } catch (e) {
+        this.bootstrapRetries++
+        if (this.bootstrapRetries < this.bootstrapRetriesMax) {
+          return this.bootstrap()
+        } else {
+          throw e
+        }
+      }
+    }, 1000)
   }
 
   ownGm(server) {
