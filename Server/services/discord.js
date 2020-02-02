@@ -152,7 +152,7 @@ class DiscordService extends Service {
   async updateRoles(memberObj, newRoles) {
     memberObj.rolesList = newRoles
     const member = this.memberToProto(memberObj)
-    await this.rpc.updateMember(member)
+    await this.rpc.updateMember(member, this.sharedHeaders)
   }
 
   memberToProto(member) {
