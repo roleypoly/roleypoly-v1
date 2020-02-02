@@ -126,7 +126,7 @@ class DiscordService extends Service {
 
     const matchFor = permissionInt =>
       !!gm.rolesList
-        .map(id => guildRoles.find(role => role.id))
+        .map(id => guildRoles.find(role => role.id === id))
         .filter(x => !!x)
         .find(role => (role.permissions & permissionInt) === permissionInt)
 
