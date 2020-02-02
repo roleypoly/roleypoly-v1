@@ -41,22 +41,20 @@ class DiscordService extends Service {
   }
 
   async bootstrap() {
-    setTimeout(() => {
-      try {
-        const ownUser = await this.rpc.ownUser(new Empty(), this.sharedHeaders)
-        this.ownUser = ownUser.toObject()
-        
-        const listGuilds = await this.rpc.listGuilds(new Empty(), this.sharedHeaders)
-        this.syncGuilds(listGuilds.toObject().guildsList)
-      } catch (e) {
-        this.bootstrapRetries++
-        if (this.bootstrapRetries < this.bootstrapRetriesMax) {
-          return this.bootstrap()
-        } else {
-          throw e
-        }
+    try {
+      const ownUser = await this.rpc.ownUser(new Empty(), this.sharedHeaders)
+      this.ownUser = ownUser.toObject()
+      
+      const listGuilds = await this.rpc.listGuilds(new Empty(), this.sharedHeaders)
+      this.syncGuilds(listGuilds.toObject().guildsList)
+    } catch (e) {
+      this.bootstrapRetries++
+      if (this.bootstrapRetries < this.bootstrapRetriesMax) {
+        return setTimeout(() => this.bootstrap(), 1000)
+      } else {
+        throw e
       }
-    }, 1000)
+    }
   }
 
   ownGm(server) {
