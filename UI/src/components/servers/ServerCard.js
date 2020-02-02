@@ -60,7 +60,7 @@ class ServerCard extends Component {
           <b>{s.get('name')}</b>
           <br />
           <span style={{ color: gm.get('color') }}>
-            {gm.get('nickname') || user.get('username')}
+            {gm.get('nick') || user.get('username')}
           </span>{' '}
           {icon}
         </div>
