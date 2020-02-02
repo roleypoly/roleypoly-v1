@@ -23,7 +23,7 @@
     "redux": "^4.0.4",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "superagent": "^5.1.1",
+    "superagent": "^5.2.1",
     "uuid": "^3.3.3"
   },
   "scripts": {
