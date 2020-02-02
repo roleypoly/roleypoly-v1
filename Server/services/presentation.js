@@ -58,7 +58,7 @@ class PresentationService extends Service {
         roles: serverRoles,
         message: serverData.message,
         categories: serverData.categories,
-        perms: this.discord.getPermissions(member, serverRoles),
+        perms: this.discord.getPermissions(member, serverRoles, server),
       }
     })
   }

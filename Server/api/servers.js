@@ -71,10 +71,11 @@ module.exports = (R, $) => {
       return
     }
 
+    const guild = await $.discord.getServer(id)
     const guildRoles = await $.discord.getRoles(id)
 
     // check perms
-    if (!$.discord.getPermissions(gm, guildRoles).canManageRoles) {
+    if (!$.discord.getPermissions(gm, guildRoles, guild).canManageRoles) {
       ctx.status = 403
       ctx.body = { err: 'cannot_manage_roles' }
       return

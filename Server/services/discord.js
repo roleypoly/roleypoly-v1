@@ -116,7 +116,7 @@ class DiscordService extends Service {
     })
   }
 
-  getPermissions(gm, guildRoles) {
+  getPermissions(gm, guildRoles, guild) {
     if (this.isRoot(gm.user.id)) {
       return {
         isAdmin: true,
@@ -130,7 +130,7 @@ class DiscordService extends Service {
         .filter(x => !!x)
         .find(role => (role.permissions & permissionInt) === permissionInt)
 
-    const isAdmin = matchFor(0x00000008)
+    const isAdmin = guild.ownerid === gm.user.id || matchFor(0x00000008)
     const canManageRoles = isAdmin || matchFor(0x10000000)
 
     return {
