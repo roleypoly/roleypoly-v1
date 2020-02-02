@@ -98,7 +98,7 @@ async function start() {
     try {
       await next()
     } catch (e) {
-      log.error(e)
+      log.error(e, e.stack || e.trace)
       ctx.status = ctx.status || 500
 
       if (DEVEL) {
