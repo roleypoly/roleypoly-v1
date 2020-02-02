@@ -44,7 +44,7 @@ class PresentationService extends Service {
       const serverRoles = await this.discord.getRoles(server.id)
       const memberRoles = member.rolesList
         .map(id => serverRoles.find(role => role.id === id))
-        .sort((a, b) => (a.position < b.position ? -1 : 1))
+        .sort((a, b) => (a.position > b.position ? -1 : 1))
 
       const color = memberRoles.length > 0 ? memberRoles[0].color : 0
 
