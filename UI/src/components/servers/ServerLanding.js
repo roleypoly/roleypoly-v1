@@ -10,8 +10,6 @@ export default class ServerLanding extends Component {
   }
 
   async componentDidMount() {
-    console.log(this.props)
-
     try {
       const rsp = await superagent.get(
         `/api/server/${this.props.match.params.server}/slug`

@@ -70,7 +70,5 @@ module.exports = (R, $) => {
     ctx.redirect(url)
   })
 
-  R.get('/api/oauth/bot/callback', ctx => {
-    console.log(ctx.request)
-  })
+  R.get('/api/oauth/bot/callback', ctx => {})
 }

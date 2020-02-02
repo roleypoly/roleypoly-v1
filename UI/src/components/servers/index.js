@@ -10,8 +10,6 @@ import RolePicker from '../role-picker'
 import './index.sass'
 import Navigation from './Navigation'
 
-// import mockData from './mockData'
-
 const mapState = ({ servers, user, appState }) => {
   return {
     servers,
@@ -22,8 +20,6 @@ const mapState = ({ servers, user, appState }) => {
 
 class Servers extends Component {
   get defaultPath() {
-    console.log(this.props.servers.toJS())
-
     const first = this.props.servers.first()
     if (first != null) {
       return first.get('id')

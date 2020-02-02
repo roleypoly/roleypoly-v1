@@ -10,15 +10,14 @@
     "pm2": "pm2"
   },
   "dependencies": {
-    "@discordjs/uws": "^10.149.0",
-    "@roleypoly/rpc": "^3.0.0-alpha.12",
+    "@improbable-eng/grpc-web-node-http-transport": "^0.12.0",
+    "@roleypoly/rpc": "^1.5.0",
     "chalk": "^3.0.0",
-    "discord.js": "^11.5.1",
     "dotenv": "^8.2.0",
-    "erlpack": "github:discordapp/erlpack",
     "eslint": "^6.6.0",
     "eslint-config-standard": "^14.1.0",
     "glob": "^7.1.6",
+    "google-protobuf": "^3.11.2",
     "immutable": "^4.0.0-rc.12",
     "koa": "^2.11.0",
     "koa-better-router": "^2.1.1",
@@ -35,8 +34,7 @@
     "sequelize": "^5.21.2",
     "socket.io": "^2.3.0",
     "superagent": "^5.1.1",
-    "uuid": "^3.3.3",
-    "zucc": "^0.1.2"
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "prettier": "^1.19.1"

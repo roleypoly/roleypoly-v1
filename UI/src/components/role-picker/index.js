@@ -73,8 +73,6 @@ class RolePicker extends Component {
     const msg = server.get('message')
     const msgBuffer = this.props.data.get('messageBuffer')
 
-    console.log(msg, roleManager, isEditing, this.props.data.toJS())
-
     if (!roleManager && msg !== '') {
       return (
         <section>

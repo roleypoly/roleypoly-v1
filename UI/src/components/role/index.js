@@ -18,8 +18,6 @@ class Role extends Component {
     let { role, selected, disabled, type, isDragging } = this.props
     type = type || 'button'
 
-    // console.log(this.props)
-
     let color = Color(role.get('color'))
 
     if (color.rgbNumber() === 0) {

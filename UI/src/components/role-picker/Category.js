@@ -26,7 +26,6 @@ class Category extends Component {
       case 'multi':
         return this.toggleRoleMulti(id, next)
       default:
-        console.warn('DEFAULTING TO MULTI', id, next, old)
         return this.toggleRoleMulti(id, next)
     }
   }
@@ -54,7 +53,7 @@ class Category extends Component {
               <Role
                 key={k}
                 role={r}
-                disabled={!r.get('safe')}
+                disabled={r.get('safety') !== 0}
                 selected={isSelected(id)}
                 onToggle={this.onRoleToggle(id)}
               />

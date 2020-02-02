@@ -17,13 +17,14 @@ export const setup = id => async dispatch => {
 }
 
 export const getViewMap = server => {
+  const gmRoles = server.get('gm').get('rolesList')
   const roles = server.get('roles')
   const categories = server.get('categories')
   const categoriesIds = server.get('categories').keySeq()
 
   const allRoles = server
     .get('roles')
-    .filter(v => v.get('safe'))
+    .filter(v => v.get('safety') === 0)
     .map(r => r.get('id'))
     .toSet()
   const accountedRoles = categories
@@ -31,8 +32,6 @@ export const getViewMap = server => {
     .toSet()
     .flatten()
   const unaccountedRoles = allRoles.subtract(accountedRoles)
-
-  // console.log('roles', allRoles.toJS(), accountedRoles.toJS(), unaccountedRoles.toJS())
 
   const viewMap = categories
     .set(
@@ -67,7 +66,7 @@ export const getViewMap = server => {
     })
 
   const selected = roles.reduce(
-    (acc, r) => acc.set(r.get('id'), r.get('selected')),
+    (acc, r) => acc.set(r.get('id'), gmRoles.includes(r.get('id'))),
     Map()
   )
 

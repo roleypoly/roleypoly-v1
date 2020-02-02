@@ -1,6 +1,10 @@
 const Service = require('./Service')
-const discord = require('discord.js')
 const superagent = require('superagent')
+const { DiscordClient, Member } = require('@roleypoly/rpc/discord')
+const { IDQuery, DiscordUser } = require('@roleypoly/rpc/shared')
+const { Empty } = require('google-protobuf/google/protobuf/empty_pb')
+const { NodeHttpTransport } = require('@improbable-eng/grpc-web-node-http-transport')
+const LRU = require('lru-cache')
 
 class DiscordService extends Service {
   constructor(ctx) {
@@ -12,32 +16,55 @@ class DiscordService extends Service {
     this.oauthCallback = process.env.OAUTH_AUTH_CALLBACK
     this.botCallback = `${ctx.config.appUrl}/api/oauth/bot/callback`
     this.appUrl = process.env.APP_URL
-    this.isBot = process.env.IS_BOT === 'true' || false
     this.rootUsers = new Set((process.env.ROOT_USERS || '').split(','))
 
-    this.client = new discord.Client()
-    this.client.options.disableEveryone = true
+    this.rpcAddr = process.env.DISCORD_SVC_ADDR
+    this.rpcSecret = process.env.SHARED_SECRET
+    this.rpc = new DiscordClient(this.rpcAddr, { transport: NodeHttpTransport() })
 
-    this.cmds = this._cmds()
+    this.cache = new LRU({
+      max: 500,
+      maxAge: 2 /* minutes */ * 60 * 1000,
+    })
 
-    this.startBot()
+    this.sharedHeaders = {
+      Authorization: `Shared ${this.rpcSecret}`,
+    }
+
+    this.bootstrap().catch(e => {
+      console.error(`bootstrap failure`, e)
+      process.exit(-1)
+    })
+  }
+
+  async bootstrap() {
+    const ownUser = await this.rpc.ownUser(new Empty(), this.sharedHeaders)
+    this.ownUser = ownUser.toObject()
+
+    const listGuilds = await this.rpc.listGuilds(new Empty(), this.sharedHeaders)
+    this.syncGuilds(listGuilds.toObject().guildsList)
   }
 
   ownGm(server) {
-    return this.gm(server, this.client.user.id)
+    return this.gm(server, this.ownUser.id)
   }
 
-  fakeGm({ id = 0, nickname = '[none]', displayHexColor = '#ffffff' }) {
+  /**
+   * @returns Member.AsObject
+   */
+  fakeGm({ guildID, id = '0', nickname = '[none]', displayHexColor = '#ffffff' }) {
     return {
-      id,
-      nickname,
-      displayHexColor,
-      __faked: true,
-      roles: {
-        has() {
-          return false
-        },
+      guildID: guildID,
+      roles: [],
+      nick: nickname,
+      user: {
+        ID: id,
+        username: nickname,
+        discriminator: '0000',
+        avatar: '',
+        bot: false,
       },
+      displayHexColor: 0,
     }
   }
 
@@ -45,50 +72,94 @@ class DiscordService extends Service {
     return this.rootUsers.has(id)
   }
 
-  async startBot() {
-    await this.client.login(this.botToken)
+  async getRelevantServers(userId) {
+    return this.cacheCurry(`grs:${userId}`, async () => {
+      const q = new IDQuery()
+      q.setMemberid('' + userId)
 
-    // not all roleypolys are bots.
-    if (this.isBot) {
-      this.log.info('this roleypoly is a bot')
-      this.client.on('message', this.handleMessage.bind(this))
-      this.client.on('guildCreate', this.handleJoin.bind(this))
-    }
-
-    for (let server of this.client.guilds.array()) {
-      await this.ctx.server.ensure(server)
-    }
-  }
-
-  getRelevantServers(userId) {
-    return this.client.guilds.filter(g => g.members.has(userId))
+      const guilds = await this.rpc.getGuildsByMember(q, this.sharedHeaders)
+      this.syncGuilds(guilds.toObject().guildsList)
+      return guilds.toObject().guildsList
+    })
   }
 
   gm(serverId, userId) {
-    return this.client.guilds.get(serverId).members.get(userId)
+    return this.cacheCurry(`gm:${serverId}-${userId}`, async () => {
+      const q = new IDQuery()
+      q.setGuildid(serverId)
+      q.setMemberid(userId)
+
+      const member = await this.rpc.getMember(q, this.sharedHeaders)
+      return member.toObject()
+    })
   }
 
-  getRoles(server) {
-    return this.client.guilds.get(server).roles
+  getRoles(serverId) {
+    return this.cacheCurry(`roles:${serverId}`, async () => {
+      const q = new IDQuery()
+      q.setGuildid(serverId)
+
+      const roles = await this.rpc.getGuildRoles(q, this.sharedHeaders)
+      return roles.toObject().rolesList.filter(role => role.id !== serverId)
+    })
   }
 
-  getPermissions(gm) {
-    if (this.isRoot(gm.id)) {
+  getPermissions(gm, guildRoles) {
+    if (this.isRoot(gm.user.id)) {
       return {
         isAdmin: true,
         canManageRoles: true,
       }
     }
 
+    const matchFor = permissionInt =>
+      !!gm.roles
+        .map(id => guildRoles.find(role => role.id))
+        .filter(x => !!x)
+        .find(role => (role.permissions & permissionInt) === permissionInt)
+
+    const isAdmin = matchFor(0x00000008)
+    const canManageRoles = isAdmin || matchFor(0x10000000)
+
     return {
-      isAdmin: gm.permissions.hasPermission('ADMINISTRATOR'),
-      canManageRoles: gm.permissions.hasPermission('MANAGE_ROLES', false, true),
+      isAdmin,
+      canManageRoles,
     }
   }
 
-  safeRole(server, role) {
-    const r = this.getRoles(server).get(role)
-    return r.editable && !r.hasPermission('MANAGE_ROLES', false, true)
+  getServer(serverId) {
+    return this.cacheCurry(`g:${serverId}`, async () => {
+      const q = new IDQuery()
+      q.setGuildid(serverId)
+
+      const guild = await this.rpc.getGuild(q, this.sharedHeaders)
+      return guild.toObject()
+    })
+  }
+
+  async updateRoles(memberObj, newRoles) {
+    memberObj.rolesList = newRoles
+    const member = this.memberToProto(memberObj)
+    await this.rpc.updateMember(member)
+  }
+
+  memberToProto(member) {
+    const memberProto = new Member()
+    memberProto.setGuildid(member.guildid)
+    memberProto.setRolesList(member.rolesList)
+    memberProto.setNick(member.nick)
+    memberProto.setUser(this.userToProto(member.user))
+    return memberProto
+  }
+
+  userToProto(user) {
+    const userProto = new DiscordUser()
+    userProto.setId(user.id)
+    userProto.setUsername(user.username)
+    userProto.setDiscriminator(user.discriminator)
+    userProto.setAvatar(user.avatar)
+    userProto.setBot(user.bot)
+    return userProto
   }
 
   // oauth step 2 flow, grab the auth token via code
@@ -128,28 +199,6 @@ class DiscordService extends Service {
     }
   }
 
-  // on sign out, we revoke the token we had.
-  // async revokeAuthToken (code, state) {
-  //   const url = 'https://discordapp.com/api/oauth2/revoke'
-  //   try {
-  //     const rsp =
-  //       await superagent
-  //         .post(url)
-  //         .send({
-  //           client_id: this.clientId,
-  //           client_secret: this.clientSecret,
-  //           grant_type: 'authorization_code',
-  //           code: code,
-  //           redirect_uri: this.oauthCallback
-  //         })
-
-  //     return rsp.body
-  //   } catch (e) {
-  //     this.log.error('getAuthToken failed', e)
-  //     throw e
-  //   }
-  // }
-
   // returns oauth authorize url with IDENTIFY permission
   // we only need IDENTIFY because we only use it for matching IDs from the bot
   getAuthUrl(state) {
@@ -162,97 +211,20 @@ class DiscordService extends Service {
     return `https://discordapp.com/oauth2/authorize?client_id=${this.clientId}&scope=bot&permissions=268435456`
   }
 
-  mentionResponse(message) {
-    message.channel.send(
-      `🔰 Assign your roles here! <${this.appUrl}/s/${message.guild.id}>`,
-      { disableEveryone: true }
-    )
+  async syncGuilds(guilds) {
+    guilds.forEach(guild => this.ctx.server.ensure(guild))
   }
 
-  _cmds() {
-    const cmds = [
-      {
-        regex: /say (.*)/,
-        handler(message, matches, r) {
-          r(matches[0])
-        },
-      },
-      {
-        regex: /set username (.*)/,
-        async handler(message, matches) {
-          const { username } = this.client.user
-          await this.client.user.setUsername(matches[0])
-          message.channel.send(`Username changed from ${username} to ${matches[0]}`)
-        },
-      },
-      {
-        regex: /stats/,
-        async handler(message, matches) {
-          const t = [
-            `**Stats** 📈`,
-            '',
-            `👩‍❤️‍👩 **Users Served:** ${this.client.guilds.reduce(
-              (acc, g) => acc + g.memberCount,
-              0
-            )}`,
-            `🔰 **Servers:** ${this.client.guilds.size}`,
-            `💮 **Roles Seen:** ${this.client.guilds.reduce(
-              (acc, g) => acc + g.roles.size,
-              0
-            )}`,
-          ]
-          message.channel.send(t.join('\n'))
-        },
-      },
-    ]
-      // prefix regex with ^ for ease of code
-      .map(({ regex, ...rest }) => ({
-        regex: new RegExp(`^${regex.source}`, regex.flags),
-        ...rest,
-      }))
-
-    return cmds
-  }
-
-  async handleCommand(message) {
-    const cmd = message.content.replace(`<@${this.client.user.id}> `, '')
-    this.log.debug(`got command from ${message.author.username}`, cmd)
-    for (let { regex, handler } of this.cmds) {
-      const match = regex.exec(cmd)
-      if (match !== null) {
-        this.log.debug('command accepted', { cmd, match })
-        try {
-          await handler.call(this, message, match.slice(1))
-          return
-        } catch (e) {
-          this.log.error('command errored', { e, cmd, message })
-          message.channel.send(`❌ **An error occured.** ${e}`)
-          return
-        }
-      }
+  async cacheCurry(key, func) {
+    if (this.cache.has(key)) {
+      return this.cache.get(key)
     }
 
-    // nothing matched?
-    this.mentionResponse(message)
-  }
+    const returnVal = await func()
 
-  handleMessage(message) {
-    if (message.author.bot && message.channel.type !== 'text') {
-      // drop bot messages and dms
-      return
-    }
+    this.cache.set(key, returnVal)
 
-    if (message.mentions.users.has(this.client.user.id)) {
-      if (this.rootUsers.has(message.author.id)) {
-        this.handleCommand(message)
-      } else {
-        this.mentionResponse(message)
-      }
-    }
-  }
-
-  async handleJoin(guild) {
-    await this.ctx.server.ensure(guild)
+    return returnVal
   }
 }
 

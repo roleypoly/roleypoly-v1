@@ -25,8 +25,6 @@ class UserCard extends Component {
   render() {
     const { user } = this.props
 
-    // console.log(this.props)
-
     return (
       <div className="user-card">
         <div className="user-card__icon">

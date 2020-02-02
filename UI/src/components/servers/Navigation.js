@@ -14,7 +14,6 @@ class ServersNavigation extends Component {
   }
 
   render() {
-    // console.log(this.props.servers)
     return (
       <Fragment>
         <UserCard user={this.props.user} />

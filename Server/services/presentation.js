@@ -1,5 +1,6 @@
 const Service = require('./Service')
 const LRU = require('lru-cache')
+const { Role } = require('@roleypoly/rpc/shared')
 
 class PresentationService extends Service {
   constructor(ctx) {
@@ -7,7 +8,10 @@ class PresentationService extends Service {
     this.M = ctx.M
     this.discord = ctx.discord
 
-    this.cache = new LRU({ max: 500, maxAge: 100 * 60 * 5 })
+    this.cache = new LRU({
+      max: 500,
+      maxAge: 1000 * 60 * 1,
+    })
   }
 
   serverSlug(server) {
@@ -19,58 +23,56 @@ class PresentationService extends Service {
     }
   }
 
-  async oldPresentableServers(collection, userId) {
-    let servers = []
+  presentableServers(userId) {
+    return this.cacheCurry(`pss:${userId}`, async () => {
+      const servers = await this.discord.getRelevantServers(userId)
+      const transformedServers = []
 
-    for (let server of collection.array()) {
-      const gm = server.members.get(userId)
+      for (let server of servers) {
+        const member = await this.discord.gm(server.id, userId)
+        const transformedServer = await this.presentableServer(server, member)
+        transformedServers.push(transformedServer)
+      }
 
-      servers.push(await this.presentableServer(server, gm))
-    }
-
-    return servers
-  }
-
-  async presentableServers(collection, userId) {
-    return collection.array().areduce(async (acc, server) => {
-      const gm = server.members.get(userId)
-      acc.push(await this.presentableServer(server, gm, { incRoles: false }))
-      return acc
+      return transformedServers
     })
   }
 
-  async presentableServer(server, gm, { incRoles = true } = {}) {
-    const sd = await this.ctx.server.get(server.id)
+  presentableServer(server, member) {
+    return this.cacheCurry(`ps:${server.id}-${member.user.id}`, async () => {
+      const serverData = await this.ctx.server.get(server.id)
+      const serverRoles = await this.discord.getRoles(server.id)
+      const memberRoles = member.rolesList
+        .map(id => serverRoles.find(role => role.id === id))
+        .sort((a, b) => (a.position < b.position ? -1 : 1))
 
-    return {
-      id: server.id,
-      gm: {
-        nickname: gm.nickname,
-        color: gm.displayHexColor,
-      },
-      server: this.serverSlug(server),
-      roles: incRoles
-        ? (await this.rolesByServer(server, sd)).map(r => ({
-            ...r,
-            selected: gm.roles.has(r.id),
-          }))
-        : [],
-      message: sd.message,
-      categories: sd.categories,
-      perms: this.discord.getPermissions(gm),
-    }
+      const color = memberRoles.length > 0 ? memberRoles[0].color : 0
+
+      return {
+        id: server.id,
+        gm: {
+          ...member,
+          color,
+        },
+        server: server,
+        roles: serverRoles,
+        message: serverData.message,
+        categories: serverData.categories,
+        perms: this.discord.getPermissions(member, serverRoles),
+      }
+    })
   }
 
-  async rolesByServer(server) {
-    return server.roles
-      .filter(r => r.id !== server.id) // get rid of @everyone
-      .map(r => ({
-        id: r.id,
-        color: r.color,
-        name: r.name,
-        position: r.position,
-        safe: this.discord.safeRole(server.id, r.id),
-      }))
+  async cacheCurry(key, func) {
+    if (this.cache.has(key)) {
+      return this.cache.get(key)
+    }
+
+    const returnVal = await func()
+
+    this.cache.set(key, returnVal)
+
+    return returnVal
   }
 }
 

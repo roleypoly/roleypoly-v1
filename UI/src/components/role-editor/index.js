@@ -58,7 +58,6 @@ class RoleEditor extends Component {
 
   dropRole = (category, name) => ({ role, category }) => {
     const { dispatch } = this.props
-    console.log(role)
     dispatch(Actions.addRoleToCategory(name, category, role))
   }
 

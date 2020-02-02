@@ -1,21 +1,32 @@
 module.exports = (R, $) => {
-  R.get('/api/servers', async ctx => {
-    try {
-      const { userId } = ctx.session
-      const srv = $.discord.getRelevantServers(userId)
-      const presentable = await $.P.presentableServers(srv, userId)
+  const getGm = async (id, userId) => {
+    let gm
 
-      ctx.body = presentable
+    try {
+      gm = await $.discord.gm(id, userId)
     } catch (e) {
-      console.error(e.trace || e.stack)
+      if ($.discord.isRoot(userId)) {
+        gm = $.discord.fakeGm({ id: userId })
+      }
     }
+
+    return gm
+  }
+
+  R.get('/api/servers', async (ctx, next) => {
+    const { userId } = ctx.session
+    const presentable = await $.P.presentableServers(userId)
+
+    ctx.status = 200
+    ctx.body = presentable
+    await next()
   })
 
   R.get('/api/server/:id', async ctx => {
     const { userId } = ctx.session
     const { id } = ctx.params
 
-    const srv = $.discord.client.guilds.get(id)
+    const srv = await $.discord.getServer(id)
 
     if (srv == null) {
       ctx.body = { err: 'not found' }
@@ -23,16 +34,13 @@ module.exports = (R, $) => {
       return
     }
 
-    let gm
-    if (srv.members.has(userId)) {
-      gm = $.discord.gm(id, userId)
-    } else if ($.discord.isRoot(userId)) {
-      gm = $.discord.fakeGm({ id: userId })
-    } else {
+    const gm = await getGm(id, userId)
+    if (!gm) {
       ctx.body = { err: 'not_a_member' }
       ctx.status = 400
       return
     }
+
     const server = await $.P.presentableServer(srv, gm)
 
     ctx.body = server
@@ -41,9 +49,7 @@ module.exports = (R, $) => {
   R.get('/api/server/:id/slug', async ctx => {
     const { id } = ctx.params
 
-    const srv = $.discord.client.guilds.get(id)
-
-    console.log(srv)
+    const srv = await $.discord.getServer(id)
 
     if (srv == null) {
       ctx.body = { err: 'not found' }
@@ -51,20 +57,24 @@ module.exports = (R, $) => {
       return
     }
 
-    ctx.body = await $.P.serverSlug(srv)
+    ctx.body = srv
   })
 
   R.patch('/api/server/:id', async ctx => {
     const { userId } = ctx.session
     const { id } = ctx.params
 
-    let gm = $.discord.gm(id, userId)
-    if (gm == null && $.discord.isRoot(userId)) {
-      gm = $.discord.fakeGm({ id: userId })
+    const gm = await getGm(id, userId)
+    if (!gm) {
+      ctx.body = { err: 'not_a_member' }
+      ctx.status = 400
+      return
     }
 
+    const guildRoles = await $.discord.getRoles(id)
+
     // check perms
-    if (!$.discord.getPermissions(gm).canManageRoles) {
+    if (!$.discord.getPermissions(gm, guildRoles).canManageRoles) {
       ctx.status = 403
       ctx.body = { err: 'cannot_manage_roles' }
       return
@@ -98,36 +108,29 @@ module.exports = (R, $) => {
   R.patch('/api/servers/:server/roles', async ctx => {
     const { userId } = ctx.session
     const { server } = ctx.params
-
-    let gm = $.discord.gm(server, userId)
-    if (gm == null && $.discord.isRoot(userId)) {
-      gm = $.discord.fakeGm({ id: userId })
-    }
-
-    // check perms
-    // if (!$.discord.getPermissions(gm).canManageRoles) {
-    //   ctx.status = 403
-    //   ctx.body = { err: 'cannot_manage_roles' }
-    //   return
-    // }
-
     const { added, removed } = ctx.request.body
 
-    const allowedRoles = await $.server.getAllowedRoles(server)
-
-    const pred = r => $.discord.safeRole(server, r) && allowedRoles.indexOf(r) !== -1
-
-    if (added.length > 0) {
-      gm = await gm.addRoles(added.filter(pred))
+    let gm = await getGm(server, userId)
+    if (!gm) {
+      ctx.status = 404
+      return
     }
 
-    setTimeout(() => {
-      if (removed.length > 0) {
-        gm.removeRoles(removed.filter(pred))
-      }
-    }, 1000)
+    const currentRoles = gm.rolesList
+    const allowedRoles = await $.server.getAllowedRoles(server)
 
-    // console.log('role patch', { added, removed, allowedRoles, addedFiltered: added.filterNot(pred), removedFiltered: removed.filterNot(pred) })
+    // current roles and allowed roles are an inclusive set.
+    // first, filter added and removed.
+    const sanitizedAdded = added.filter(role => allowedRoles.includes(role))
+    const sanitizedRemoved = removed.filter(role => allowedRoles.includes(role))
+
+    // filter currentRoles by what's been removed (down is faster than up)
+    let newRoles = currentRoles.filter(role => !sanitizedRemoved.includes(role))
+
+    // last, add new roles
+    newRoles = [...newRoles, ...sanitizedAdded]
+
+    await $.discord.updateRoles(gm, newRoles)
 
     ctx.body = { ok: true }
   })

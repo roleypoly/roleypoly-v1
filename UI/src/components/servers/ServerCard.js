@@ -14,8 +14,6 @@ class ServerCard extends Component {
 
     let icon = ''
 
-    console.log(__filename, server)
-
     const s = server.get('server')
     const gm = server.get('gm')
     const perms = server.get('perms')

@@ -81,7 +81,7 @@ async function start() {
         try {
           ctx.body = fs.readFileSync(path.join(pub, 'index.html'), { encoding: 'utf-8' })
         } catch (e) {
-          ctx.body = "A problem occured."
+          ctx.body = 'A problem occured.'
           ctx.status = 500
           console.error(e)
         }
@@ -100,15 +100,14 @@ async function start() {
     } catch (e) {
       log.error(e)
       ctx.status = ctx.status || 500
-      
+
       if (DEVEL) {
         console.error(e)
-      } 
-      
+      }
+
       ctx.body = {
         err: 'something terrible happened.',
       }
-
     }
     let timeElapsed = new Date() - timeStart
 
