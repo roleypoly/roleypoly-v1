@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { NavLink } from 'react-router-dom'
+import { colorToCSS } from '../../utils'
 import './ServerCard.sass'
 
 class ServerCard extends Component {
@@ -59,7 +60,7 @@ class ServerCard extends Component {
         <div className="server-list__item__info">
           <b>{s.get('name')}</b>
           <br />
-          <span style={{ color: gm.get('color') }}>
+          <span style={{ color: colorToCSS(gm.get('color')) }}>
             {gm.get('nick') || user.get('username')}
           </span>{' '}
           {icon}
