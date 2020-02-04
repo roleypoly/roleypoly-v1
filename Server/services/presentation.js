@@ -58,7 +58,7 @@ class PresentationService extends Service {
         roles: serverRoles,
         message: serverData.message,
         categories: serverData.categories,
-        perms: this.discord.getPermissions(member, serverRoles, server),
+        perms: this.discord.getPermissions(member, serverRoles),
       }
     })
   }
@@ -73,6 +73,15 @@ class PresentationService extends Service {
     this.cache.set(key, returnVal)
 
     return returnVal
+  }
+
+  invalidate(deadKey) {
+    const keys = this.cache.keys()
+    for (let key of keys) {
+      if (key.includes(deadKey)) {
+        this.cache.del(key)
+      }
+    }
   }
 }
 

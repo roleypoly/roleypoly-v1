@@ -89,7 +89,11 @@ module.exports = (R, $) => {
       ...(categories != null ? { categories } : {}),
     })
 
+    
     ctx.body = { ok: true }
+
+    $.P.invalidate(id)
+    $.discord.invalidate(id)
   })
 
   R.get('/api/admin/servers', async ctx => {
@@ -131,8 +135,16 @@ module.exports = (R, $) => {
     // last, add new roles
     newRoles = [...newRoles, ...sanitizedAdded]
 
-    await $.discord.updateRoles(gm, newRoles)
+    if (!arrayMatches(currentRoles, newRoles)) {
+      await $.discord.updateRoles(gm, newRoles)
+    }
 
     ctx.body = { ok: true }
+    
+    $.P.invalidate(userId)
+    $.discord.invalidate(userId)
   })
 }
+
+const arrayMatches = (a, b) => 
+a.length === b.length && a.reduce((_, aValue) => b.contains(aValue), true)

@@ -238,6 +238,15 @@ class DiscordService extends Service {
 
     return returnVal
   }
+
+  invalidate(deadKey) {
+    const keys = this.cache.keys()
+    for (let key of keys) {
+      if (key.includes(deadKey)) {
+        this.cache.del(key)
+      }
+    }
+  }
 }
 
 module.exports = DiscordService
