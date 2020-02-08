@@ -122,12 +122,13 @@ module.exports = (R, $) => {
     }
 
     const currentRoles = gm.rolesList
+    const allRoles = await $.discord.getRoles(server)
     const allowedRoles = await $.server.getAllowedRoles(server)
-
+    
     // current roles and allowed roles are an inclusive set.
     // first, filter added and removed.
-    const sanitizedAdded = added.filter(role => allowedRoles.includes(role))
-    const sanitizedRemoved = removed.filter(role => allowedRoles.includes(role))
+    const sanitizedAdded = added.filter(role => allRoles.includes(role) && allowedRoles.includes(role))
+    const sanitizedRemoved = removed.filter(role => allRoles.includes(role) && allowedRoles.includes(role))
 
     // filter currentRoles by what's been removed (down is faster than up)
     let newRoles = currentRoles.filter(role => !sanitizedRemoved.includes(role))
