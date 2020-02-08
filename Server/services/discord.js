@@ -124,19 +124,13 @@ class DiscordService extends Service {
       }
     }
 
-    if (!!guild.ownerid) {
-      this.log.warn('Owner ID is null!', guild, gm)
-    }
-
-    const isOwner = !!guild.ownerid && guild.ownerid === gm.user.id
-
     const matchFor = permissionInt =>
       !!gm.rolesList
         .map(id => guildRoles.find(role => role.id === id))
         .filter(x => !!x)
         .find(role => (role.permissions & permissionInt) === permissionInt)
 
-    const isAdmin = isOwner || matchFor(0x00000008)
+    const isAdmin = guild.ownerid === gm.user.id || matchFor(0x00000008)
     const canManageRoles = isAdmin || matchFor(0x10000000)
 
     return {
