@@ -146,5 +146,4 @@ module.exports = (R, $) => {
   })
 }
 
-const arrayMatches = (a, b) => 
-a.length === b.length && a.reduce((_, aValue) => b.contains(aValue), true)
+const arrayMatches = (a, b) => a.length === b.length && a.reduce((_, aValue) => b.includes(aValue), true)
