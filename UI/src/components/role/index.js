@@ -35,7 +35,10 @@ class Role extends Component {
           }
         }}
         {...(disabled
-          ? { 'uk-tooltip': '', title: "I don't have permissions to grant this." }
+          ? {
+              'uk-tooltip': `I don't have permissions to grant this.`,
+              title: "I don't have permissions to grant this.",
+            }
           : {})}
         className={`role font-sans-serif ${disabled ? 'disabled' : ''} ${
           isDragging ? 'is-dragging' : ''
