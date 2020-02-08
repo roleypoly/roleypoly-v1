@@ -228,6 +228,10 @@ class DiscordService extends Service {
   }
 
   async cacheCurry(key, func) {
+    if (process.env.DISABLE_CACHE === 'true') {
+      return func()
+    }
+
     if (this.cache.has(key)) {
       return this.cache.get(key)
     }
