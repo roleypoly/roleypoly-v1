@@ -125,7 +125,7 @@ class DiscordService extends Service {
     }
 
     if (!!guild.ownerid) {
-      this.log.warn('Owner ID is null!', guild)
+      this.log.warn('Owner ID is null!', guild, gm)
     }
 
     const isOwner = !!guild.ownerid && guild.ownerid === gm.user.id
