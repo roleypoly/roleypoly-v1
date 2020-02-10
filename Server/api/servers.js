@@ -136,7 +136,11 @@ module.exports = (R, $) => {
     newRoles = [...newRoles, ...sanitizedAdded]
 
     if (!arrayMatches(currentRoles, newRoles)) {
+      console.log("updating!", { currentRoles, newRoles });
+      
       await $.discord.updateRoles(gm, newRoles)
+    } else {
+      console.log("not updating!", { currentRoles, newRoles });
     }
 
     ctx.body = { ok: true }
@@ -146,4 +150,18 @@ module.exports = (R, $) => {
   })
 }
 
-const arrayMatches = (a, b) => a.length === b.length && a.reduce((_, aValue) => b.includes(aValue), true)
+// if length is the same, check elements.
+
+const arrayMatches = (a, b) => {
+  if (a.length === b.length) {
+    for (let item of a) {
+      if (!b.includes(item)) {
+        return false
+      }
+    }
+
+    return true
+  }
+
+  return false
+}
