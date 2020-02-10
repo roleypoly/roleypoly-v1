@@ -136,11 +136,7 @@ module.exports = (R, $) => {
     newRoles = [...newRoles, ...sanitizedAdded]
 
     if (!arrayMatches(currentRoles, newRoles)) {
-      console.log("updating!", { currentRoles, newRoles });
-      
       await $.discord.updateRoles(gm, newRoles)
-    } else {
-      console.log("not updating!", { currentRoles, newRoles });
     }
 
     ctx.body = { ok: true }
