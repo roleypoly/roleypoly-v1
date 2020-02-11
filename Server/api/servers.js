@@ -50,7 +50,7 @@ module.exports = (R, $) => {
       ctx.body = server
     } catch (e) {
       const txid = await ksuid.random()
-      log.error(`presentable render failed -- txid: ${txid}`, id, userId, gm)
+      log.error(`presentable render failed -- txid: ${txid}`, id, userId, gm, e)
       ctx.status = 500
       ctx.body = { err: 'render_failed', txid }
     }
