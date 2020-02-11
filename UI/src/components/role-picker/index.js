@@ -67,6 +67,12 @@ class RolePicker extends Component {
     dispatch(Actions.closeMessageEditor)
   }
 
+  renderError() {
+    return <div className={`inner role-picker`}>
+      <pre>Something went terribly wrong. Please share this magical incantation in the Roleypoly Discord: {this.props.data.error.txid}</pre>
+    </div>
+  }
+
   renderServerMessage(server) {
     const isEditing = this.props.data.get('isEditingMessage')
     const roleManager = server.getIn(['perms', 'canManageRoles'])
@@ -139,6 +145,10 @@ class RolePicker extends Component {
   render() {
     const { data, server, dispatch } = this.props
     const vm = data.get('viewMap')
+
+    if (data.error) {
+      return this.renderError()
+    }
 
     if (server === undefined) {
       return null

@@ -8,6 +8,7 @@ const initialState = Map({
   viewMap: OrderedMap({}), // roles in categories
   originalRolesSelected: Map({}), // Map<role id, bool> -- original roles for diffing against selected
   rolesSelected: Map({}), // Map<role id, bool> -- new roles for diffing
+  error: null,
 })
 
 export default (state = initialState, { type, data }) => {
@@ -37,6 +38,9 @@ export default (state = initialState, { type, data }) => {
       return state.set('messageBuffer', data)
     // case Symbol.for('rp: zero role picker'):
     // return initialState
+
+    case Symbol.for('rp: error'):
+      return state.set('error', data)
 
     default:
       return state

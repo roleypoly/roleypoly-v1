@@ -1,3 +1,7 @@
+const ksuid = require('ksuid')
+const log = new (require('../logger'))('api/servers')
+
+
 module.exports = (R, $) => {
   const getGm = async (id, userId) => {
     let gm
@@ -41,9 +45,16 @@ module.exports = (R, $) => {
       return
     }
 
-    const server = await $.P.presentableServer(srv, gm)
+    try {
+      const server = await $.P.presentableServer(srv, gm)
+      ctx.body = server
+    } catch (e) {
+      const txid = await ksuid.random()
+      log.error(`presentable render failed -- txid: ${txid}`, id, userId, gm)
+      ctx.status = 500
+      ctx.body = { err: 'render_failed', txid }
+    }
 
-    ctx.body = server
   })
 
   R.get('/api/server/:id/slug', async ctx => {

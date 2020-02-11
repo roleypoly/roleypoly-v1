@@ -6,6 +6,16 @@ export const setup = id => async dispatch => {
   const rsp = await superagent.get(`/api/server/${id}`)
   const data = rsp.body
 
+  if (rsp.status === 500) {
+    dispatch({
+      type:  Symbol.for('rp: error'),
+      data: {
+        txid: data.txid,
+      }
+    })
+  }
+
+
   dispatch({
     type: Symbol.for('server: set'),
     data: {
