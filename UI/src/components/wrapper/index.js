@@ -1,12 +1,27 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Scrollbars from 'react-custom-scrollbars'
-import Logotype from '../logotype'
+import Logotype, { TransFlag } from '../logotype'
 import './wrapper.sass'
 import discordLogo from '../../pages/images/discord-logo.svg'
 
+let specialFills = {}
+let showTransFlag = false
+
+
 class Wrapper extends Component {
   render() {
+    const date = new Date()
+    if (
+      (date.getMonth() === 2 && date.getDate() === 31) || // TDOV (2 is March)
+      (date.getMonth() === 10 && date.getDate() === 20) // TDOR (10 is Nov)
+    ) {
+      specialFills = {
+        circleFill: '#FFAEC6',
+        typeFill: '#6FDCFF'
+      }
+      showTransFlag = true
+    }
     return (
       <div className="wrapper">
         <Scrollbars autoHeight autoHeightMax="calc(100vh + 2px)">
@@ -15,7 +30,9 @@ class Wrapper extends Component {
             <nav uk-navbar="" className="uk-navbar-transparent wrapper__nav">
               <div className="uk-navbar-left">
                 <Link to="/">
-                  <Logotype style={{ height: '2rem' }} className="wrapper__logotype" />
+                  <div style={{ display: 'flex' }}>
+                    <Logotype style={{ height: '2rem', marginRight: '12px' }} className="wrapper__logotype" {...specialFills} /> {showTransFlag && <TransFlag height="100%" width="75px" uk-tooltip="pos: bottom; title: Roleypoly says trans rights!" />}
+                  </div>
                 </Link>
               </div>
               <div className="uk-navbar-right">
