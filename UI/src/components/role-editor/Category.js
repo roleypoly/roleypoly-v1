@@ -38,6 +38,7 @@ class Category extends Component {
         </div>
         {category
           .get('roles_map')
+          .sortBy(r => r.get('position'))
           .reverse()
           .map((r, k) => <Role key={k} role={r} categoryId={name} />)
           .toArray()}
