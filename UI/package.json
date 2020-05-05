@@ -44,7 +44,7 @@
   ],
   "proxy": "http://localhost:6769",
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.7.0",
+    "@babel/plugin-proposal-decorators": "^7.8.3",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-node": "^10.0.0",
