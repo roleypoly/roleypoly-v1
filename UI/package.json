@@ -20,7 +20,7 @@
     "react-scripts": "3.2.0",
     "react-typist": "^2.0.5",
     "react-typist-cycle": "^0.1.2",
-    "redux": "^4.0.4",
+    "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "superagent": "^5.1.1",
