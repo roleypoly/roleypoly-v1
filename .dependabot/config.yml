@@ -1,0 +1,29 @@
+version: 1
+
+update_configs:
+    - package_manager: javascript
+      directory: /UI
+      update_schedule: live
+      target_branch: master
+      automerged_updates:
+        - match:
+            dependency_type: "all"
+            update_type: "semver:minor"
+
+    - package_manager: javascript
+      directory: /Server
+      update_schedule: live
+      target_branch: master
+      automerged_updates:
+        - match:
+            dependency_type: "all"
+            update_type: "semver:minor"
+
+    - package_manager: docker
+      directory: /
+      update_schedule: daily
+      target_branch: master
+      automerged_updates:
+        - match:
+            dependency_type: "all"
+            update_type: "semver:minor"
