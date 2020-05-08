@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
+import { GoSignOut } from 'react-icons/go'
+import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import './UserCard.sass'
 
@@ -15,8 +16,9 @@ class UserCard extends Component {
     const avatar = user.get('avatar')
 
     if (avatar === '' || avatar == null) {
-      return `https://cdn.discordapp.com/embed/avatars/${Math.ceil(Math.random() * 9999) %
-        5}.png`
+      return `https://cdn.discordapp.com/embed/avatars/${
+        Math.ceil(Math.random() * 9999) % 5
+      }.png`
     }
 
     return `https://cdn.discordapp.com/avatars/${user.get('id')}/${avatar}.png`
@@ -40,23 +42,13 @@ class UserCard extends Component {
               <a
                 uk-tooltip=""
                 title="Sign out"
-                uk-icon="icon: sign-out"
                 onClick={() => {
                   this.props.dispatch(Actions.userLogout)
                 }}
-              />
+              >
+                <GoSignOut className="smol-bump" />
+              </a>
             </li>
-            {this.props.user.isRoot === true ? (
-              <li>
-                <NavLink
-                  uk-tooltip=""
-                  title="Root"
-                  uk-icon="icon: bolt"
-                  to="/root/"
-                  activeClassName="uk-active"
-                />
-              </li>
-            ) : null}
           </ul>
         </div>
       </div>

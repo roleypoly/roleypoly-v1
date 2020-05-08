@@ -4,7 +4,7 @@
   transition: transform 0.2s ease-out, box-shadow 0.2s ease-out
   position: relative
   box-sizing: border-box
-  transform: translateZ(0) 
+  transform: translateZ(0)
 
   &::after
     content: ""
@@ -14,8 +14,8 @@
     right: 0
     left: 0
     background-color: rgba(0,0,0,0.1)
-    border-radius: 2px  
-    transform: translateZ(0) 
+    border-radius: 2px
+    transform: translateZ(0)
     opacity: 0
     transition: opacity 0.15s ease-in-out
 
@@ -30,11 +30,11 @@
     box-shadow: none
     &::after
       opacity: 1
-  
+
   &.primary
     background-color: var(--c-green)
     color: var(--c-dark)
-  
+
   &.secondary
     background-color: var(--c-3)
     color: var(--c-7)
@@ -61,3 +61,7 @@
 .rp-discord
   border: 1px solid var(--c-discord-dark)
   box-shadow: 0 0 1px rgba(0,0,0,0.3)
+
+svg.smol-bump
+  position: relative
+  top: -0.125rem

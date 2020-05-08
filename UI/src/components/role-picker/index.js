@@ -6,6 +6,7 @@ import { msgToReal } from '../../utils'
 import * as Actions from './actions'
 import Category from './Category'
 import './RolePicker.sass'
+import { GoTrashcan, GoCheck, GoPencil } from 'react-icons/go'
 
 const mapState = ({ rolePicker, servers }, ownProps) => {
   return {
@@ -90,9 +91,10 @@ class RolePicker extends Component {
             <div
               uk-tooltip=""
               title="Edit Server Message"
-              uk-icon="icon: pencil"
               onClick={this.openMessageEditor}
-            />
+            >
+              <GoPencil className="smol-bump" />
+            </div>
           </div>
           <p
             dangerouslySetInnerHTML={{
@@ -112,16 +114,23 @@ class RolePicker extends Component {
               uk-tooltip=""
               title="Save Server Message"
               onClick={this.saveServerMessage}
-              style={{ cursor: 'pointer', color: 'var(--c-green)' }}
-              uk-icon="icon: check; ratio: 1.4"
-            />
+              style={{ cursor: 'pointer', color: 'var(--c-green)', fontSize: '1.4rem' }}
+            >
+              <GoCheck className="smol-bump" />
+            </div>
             <div
               uk-tooltip=""
               title="Discard Edits"
               onClick={this.closeMessageEditor}
-              style={{ cursor: 'pointer', color: 'var(--c-red)', marginLeft: 10 }}
-              uk-icon="icon: trash; ratio: 0.9"
-            />
+              style={{
+                cursor: 'pointer',
+                color: 'var(--c-red)',
+                marginLeft: 10,
+                fontSize: '0.9rem',
+              }}
+            >
+              <GoTrashcan className="smol-bump" />
+            </div>
           </div>
           <textarea
             className="uk-width-1-2 uk-textarea role-picker__msg-editor"
@@ -159,8 +168,10 @@ class RolePicker extends Component {
                 to={`/s/${server.get('id')}/edit`}
                 uk-tooltip=""
                 title="Edit Categories"
-                uk-icon="icon: file-edit"
-              ></Link>
+                style={{ color: 'var(--c-7)' }}
+              >
+                <GoPencil className="smol-bump" />
+              </Link>
             ) : null}
             <div className="role-picker__spacer"></div>
             <div

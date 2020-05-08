@@ -3,6 +3,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 import { NavLink } from 'react-router-dom'
 import { colorToCSS } from '../../utils'
 import './ServerCard.sass'
+import { GoZap, GoStar } from 'react-icons/go'
 
 class ServerCard extends Component {
   static propTypes = {
@@ -27,8 +28,9 @@ class ServerCard extends Component {
           role="img"
           aria-label="Role Manager"
           className="server-list__item__tag"
-          uk-icon="icon: bolt; ratio: 0.7"
-        />
+        >
+          <GoZap />
+        </span>
       )
     }
 
@@ -40,8 +42,9 @@ class ServerCard extends Component {
           role="img"
           aria-label="Server Admin"
           className="server-list__item__tag"
-          uk-icon="icon: star; ratio: 0.7"
-        />
+        >
+          <GoStar />
+        </span>
       )
     }
 

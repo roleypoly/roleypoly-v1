@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { DropTarget } from 'react-dnd'
 import Role from '../role/draggable'
 import CategoryEditor from './CategoryEditor'
+import { GoPencil, GoEyeClosed } from 'react-icons/go'
 
 class Category extends Component {
   render() {
@@ -28,17 +29,21 @@ class Category extends Component {
         }`}
       >
         <div className="role-editor__category-header">
-          <h4>{category.get('name')}</h4>
-          <div
-            uk-tooltip=""
-            title="Edit"
-            uk-icon="icon: file-edit"
-            onClick={onEditOpen}
-          />
+          <h4>
+            {category.get('name')}
+            {category.get('hidden') && (
+              <span uk-tooltip="" title="Hidden" style={{ marginLeft: '0.5em' }}>
+                <GoEyeClosed />
+              </span>
+            )}
+          </h4>
+          <div uk-tooltip="" title="Edit" onClick={onEditOpen}>
+            <GoPencil />
+          </div>
         </div>
         {category
           .get('roles_map')
-          .sortBy(r => r.get('position'))
+          .sortBy((r) => r.get('position'))
           .reverse()
           .map((r, k) => <Role key={k} role={r} categoryId={name} />)
           .toArray()}

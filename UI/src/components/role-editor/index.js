@@ -2,6 +2,7 @@ import { Set } from 'immutable'
 import React, { Component } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { DropTarget } from 'react-dnd'
+import { GoPlus, GoInfo } from 'react-icons/go'
 import { connect } from 'react-redux'
 import { Link, Prompt, Redirect } from 'react-router-dom'
 import * as UIActions from '../../actions/ui'
@@ -81,7 +82,7 @@ class RoleEditor extends Component {
     dispatch(Actions.openEditor(name))
   }
 
-  editCategory = (category, id) => (key, type) => event => {
+  editCategory = (category, id) => (key, type) => (event) => {
     const { dispatch } = this.props
     let value
 
@@ -120,7 +121,7 @@ class RoleEditor extends Component {
     dispatch(Actions.saveServer(server))
   }
 
-  onBump = (category, name) => move => () =>
+  onBump = (category, name) => (move) => () =>
     this.props.dispatch(Actions.bumpCategory(category, name)(move))
 
   get hasChanged() {
@@ -173,7 +174,7 @@ class RoleEditor extends Component {
             <Scrollbars autoHeight autoHeightMax="calc(100vh - 110px)">
               {vm
                 .filter((_, k) => k !== 'Uncategorized')
-                .sortBy(c => c.get('position'))
+                .sortBy((c) => c.get('position'))
                 .map((c, name, arr) => (
                   <Category
                     key={name}
@@ -196,7 +197,7 @@ class RoleEditor extends Component {
                 title="Add new category"
                 className="role-editor__category add-button"
               >
-                <i uk-icon="icon: plus" />
+                <GoPlus />
               </div>
             </Scrollbars>
           </div>
@@ -209,14 +210,14 @@ class RoleEditor extends Component {
               <Scrollbars autoHeight autoHeightMax="calc(100vh - 145px)">
                 <div className="role-editor__uncat-zone">
                   {(vm.getIn(['Uncategorized', 'roles_map']) || Set())
-                    .sortBy(r => r.get('position'))
+                    .sortBy((r) => r.get('position'))
                     .reverse()
                     .map((r, k) => <Role key={k} categoryId="Uncategorized" role={r} />)
                     .toArray()}
                   {this.props.editor.get('hasSafeRoles') !== true ? (
                     <div className="role-editor__alert">
                       <Link to="/help/why-no-roles">
-                        Why are there no roles here? <i uk-icon="icon: info" />
+                        Why are there no roles here? <GoInfo />
                       </Link>
                     </div>
                   ) : null}

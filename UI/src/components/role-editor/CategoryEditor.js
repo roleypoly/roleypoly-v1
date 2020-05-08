@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
+import { GoChevronUp, GoChevronDown, GoTrashcan, GoInfo } from 'react-icons/go'
 
 export default class CategoryEditor extends Component {
-  onKeyPress = e => {
+  onKeyPress = (e) => {
     const { onSave } = this.props
 
     switch (e.key) {
@@ -37,7 +38,7 @@ export default class CategoryEditor extends Component {
                 uk-tooltip="delay: 1s"
                 title="Move category up"
               >
-                <i uk-icon="icon: chevron-up"></i>
+                <GoChevronUp />
               </div>
               <div
                 onClick={this.props.onBump(1)}
@@ -47,7 +48,7 @@ export default class CategoryEditor extends Component {
                 uk-tooltip="delay: 1s"
                 title="Move category down"
               >
-                <i uk-icon="icon: chevron-down"></i>
+                <GoChevronDown />
               </div>
             </div>
           </div>
@@ -70,12 +71,12 @@ export default class CategoryEditor extends Component {
           </div>
           <div style={{ marginTop: 10 }}>
             <div className="uk-form-label">
-              Type{' '}
-              <i
-                uk-icon="icon: info; ratio: 0.7"
+              <span
                 uk-tooltip=""
                 title="Single mode only lets a user pick one role in this category."
-              />
+              >
+                Type <GoInfo />
+              </span>
             </div>
             <div className="uk-form-controls">
               <select
@@ -93,7 +94,7 @@ export default class CategoryEditor extends Component {
               className="uk-button rp-button secondary role-editor__actions_delete"
               onClick={this.props.onDelete}
             >
-              <i uk-icon="icon: trash" />
+              <GoTrashcan />
             </button>
             <button
               className="uk-button rp-button primary role-editor__actions_save"
