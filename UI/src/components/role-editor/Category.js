@@ -32,13 +32,17 @@ class Category extends Component {
           <h4>
             {category.get('name')}
             {category.get('hidden') && (
-              <span uk-tooltip="" title="Hidden" style={{ marginLeft: '0.5em' }}>
-                <GoEyeClosed />
+              <span
+                uk-tooltip=""
+                title="Hidden.<br />No one may select these roles."
+                style={{ marginLeft: '0.5em', fontSize: '0.7em', color: 'var(--c-7)' }}
+              >
+                <GoEyeClosed className="smol-bump" />
               </span>
             )}
           </h4>
           <div uk-tooltip="" title="Edit" onClick={onEditOpen}>
-            <GoPencil />
+            <GoPencil className="smol-bump" />
           </div>
         </div>
         {category
