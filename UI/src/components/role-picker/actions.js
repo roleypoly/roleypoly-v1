@@ -1,8 +1,9 @@
 import { Map, Set, fromJS } from 'immutable'
 import superagent from 'superagent'
 import * as UIActions from '../../actions/ui'
+import uikit from 'uikit'
 
-export const setup = id => async dispatch => {
+export const setup = (id) => async (dispatch) => {
   const rsp = await superagent.get(`/api/server/${id}`)
   const data = rsp.body
 
@@ -16,7 +17,7 @@ export const setup = id => async dispatch => {
   dispatch(constructView(id))
 }
 
-export const getViewMap = server => {
+export const getViewMap = (server) => {
   const gmRoles = server.get('gm').get('rolesList')
   const roles = server.get('roles')
   const categories = server.get('categories')
@@ -24,11 +25,11 @@ export const getViewMap = server => {
 
   const allRoles = server
     .get('roles')
-    .filter(v => v.get('safety') === 0)
-    .map(r => r.get('id'))
+    .filter((v) => v.get('safety') === 0)
+    .map((r) => r.get('id'))
     .toSet()
   const accountedRoles = categories
-    .map(c => c.get('roles'))
+    .map((c) => c.get('roles'))
     .toSet()
     .flatten()
   const unaccountedRoles = allRoles.subtract(accountedRoles)
@@ -48,17 +49,17 @@ export const getViewMap = server => {
         'position',
         cat.get(
           'position',
-          categoriesIds.findIndex(v => v === idx)
+          categoriesIds.findIndex((v) => v === idx)
         )
       )
     )
     // .sortBy(cat => cat.get('position'))
-    .map(c => {
+    .map((c) => {
       const roles = c
         .get('roles')
         // fill in roles_map
-        .map(r => server.get('roles').find(sr => sr.get('id') === r))
-        .filter(r => r != null)
+        .map((r) => server.get('roles').find((sr) => sr.get('id') === r))
+        .filter((r) => r != null)
         // sort by server position, backwards.
         .sort((a, b) => a.position > b.position)
       // force data to sets
@@ -79,7 +80,7 @@ export const getViewMap = server => {
   }
 }
 
-export const constructView = id => (dispatch, getState) => {
+export const constructView = (id) => (dispatch, getState) => {
   const server = getState().servers.get(id)
 
   const { viewMap, selected } = getViewMap(server)
@@ -99,13 +100,17 @@ export const constructView = id => (dispatch, getState) => {
   dispatch(UIActions.fadeIn)
 }
 
-export const resetSelected = dispatch => {
+export const resetSelected = (dispatch) => {
   dispatch({
     type: Symbol.for('rp: reset selected'),
   })
 }
 
-export const submitSelected = serverId => async (dispatch, getState) => {
+export const submitSelected = (serverId) => async (dispatch, getState) => {
+  dispatch({
+    type: Symbol.for('rp: lock'),
+  })
+
   const { rolePicker } = getState()
   const original = rolePicker.get('originalRolesSelected')
   const current = rolePicker.get('rolesSelected')
@@ -123,19 +128,39 @@ export const submitSelected = serverId => async (dispatch, getState) => {
     return acc
   }, Map({ added: Set(), removed: Set() }))
 
-  await superagent.patch(`/api/servers/${serverId}/roles`).send(diff.toJS())
+  const response = await superagent
+    .patch(`/api/servers/${serverId}/roles`)
+    .send(diff.toJS())
+
+  if (!response.ok || !response.body.ok) {
+    uikit.notification('Failed to save roles. Please contact us.', {
+      pos: 'top-center',
+      status: 'danger',
+    })
+  } else {
+    uikit.notification(
+      response.body.status === 1
+        ? 'This Discord server is active.<br/>Your role updates will take a moment.'
+        : 'Roles saved!',
+      { pos: 'top-center', status: 'primary' }
+    )
+
+    dispatch({
+      type: Symbol.for('rp: unlock'),
+    })
+  }
 
   dispatch({
     type: Symbol.for('rp: sync selected roles'),
   })
 }
 
-export const updateRoles = roles => ({
+export const updateRoles = (roles) => ({
   type: Symbol.for('rp: update selected roles'),
   data: roles,
 })
 
-export const openMessageEditor = id => (dispatch, getState) => {
+export const openMessageEditor = (id) => (dispatch, getState) => {
   const message = getState().servers.getIn([id, 'message'])
   dispatch(editServerMessage(id, message))
   dispatch({
@@ -144,7 +169,7 @@ export const openMessageEditor = id => (dispatch, getState) => {
   })
 }
 
-export const saveServerMessage = id => async (dispatch, getState) => {
+export const saveServerMessage = (id) => async (dispatch, getState) => {
   const message = getState().rolePicker.get('messageBuffer')
 
   await superagent.patch(`/api/server/${id}`).send({ message })

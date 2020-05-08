@@ -8,6 +8,7 @@ const initialState = Map({
   viewMap: OrderedMap({}), // roles in categories
   originalRolesSelected: Map({}), // Map<role id, bool> -- original roles for diffing against selected
   rolesSelected: Map({}), // Map<role id, bool> -- new roles for diffing
+  lockedInterations: false,
 })
 
 export default (state = initialState, { type, data }) => {
@@ -35,6 +36,12 @@ export default (state = initialState, { type, data }) => {
 
     case Symbol.for('rp: edit message buffer'):
       return state.set('messageBuffer', data)
+
+    case Symbol.for('rp: lock'):
+      return state.set('lockedInteractions', true)
+
+    case Symbol.for('rp: unlock'):
+      return state.set('lockedInteractions', false)
     // case Symbol.for('rp: zero role picker'):
     // return initialState
 

@@ -1,6 +1,11 @@
 const Service = require('./Service')
 const superagent = require('superagent')
-const { DiscordClient, Member, RoleTransaction, TxDelta } = require('@roleypoly/rpc/discord')
+const {
+  DiscordClient,
+  Member,
+  RoleTransaction,
+  TxDelta,
+} = require('@roleypoly/rpc/discord')
 const { IDQuery, DiscordUser } = require('@roleypoly/rpc/shared')
 const { Empty } = require('google-protobuf/google/protobuf/empty_pb')
 const { NodeHttpTransport } = require('@improbable-eng/grpc-web-node-http-transport')
@@ -158,7 +163,7 @@ class DiscordService extends Service {
   async updateRolesTx(memberObj, { added, removed }) {
     const roleTx = new RoleTransaction()
     roleTx.setMember(this.memberToQueryProto(memberObj))
-    
+
     for (let toAdd of added) {
       const delta = new TxDelta()
       delta.setAction(TxDelta.Action.ADD)
@@ -173,7 +178,7 @@ class DiscordService extends Service {
       roleTx.addDelta(delta)
     }
 
-    await this.rpc.updateMemberRoles(roleTx, this.sharedHeaders)
+    return this.rpc.updateMemberRoles(roleTx, this.sharedHeaders)
   }
 
   memberToQueryProto(member) {

@@ -134,18 +134,27 @@ module.exports = (R, $) => {
     // last, add new roles
     newRoles = [...newRoles, ...sanitizedAdded]
 
-    if (!arrayMatches(currentRoles, newRoles)) {
-      if (process.env.FF_TransactionalRoles !== '0') {
-        await $.discord.updateRolesTx(gm, {
-          added: sanitizedAdded,
-          removed: sanitizedRemoved,
-        })
-      } else {
-        await $.discord.updateRoles(gm, newRoles)
+    let status = null
+
+    try {
+      if (!arrayMatches(currentRoles, newRoles)) {
+        if (process.env.FF_TransactionalRoles !== '0') {
+          const ret = await $.discord.updateRolesTx(gm, {
+            added: sanitizedAdded,
+            removed: sanitizedRemoved,
+          })
+          status = ret.toObject().status
+        } else {
+          await $.discord.updateRoles(gm, newRoles)
+        }
       }
+    } catch (e) {
+      ctx.status = 400
+      ctx.body = { ok: false }
+      return
     }
 
-    ctx.body = { ok: true }
+    ctx.body = { ok: true, status }
 
     $.P.invalidate(userId)
     $.discord.invalidate(userId)

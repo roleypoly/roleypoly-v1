@@ -24,6 +24,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "superagent": "^5.2.2",
+    "uikit": "^3.4.4",
     "uuid": "^3.3.3"
   },
   "scripts": {

@@ -38,7 +38,7 @@ class RolePicker extends Component {
     return this.props.server.get('id')
   }
 
-  isSelected = id => {
+  isSelected = (id) => {
     return this.props.data.getIn(['rolesSelected', id])
   }
 
@@ -47,12 +47,12 @@ class RolePicker extends Component {
     return !data.get('rolesSelected').equals(data.get('originalRolesSelected'))
   }
 
-  editServerMessage = e => {
+  editServerMessage = (e) => {
     const { dispatch } = this.props
     dispatch(Actions.editServerMessage(this.serverId, e.target.value))
   }
 
-  saveServerMessage = e => {
+  saveServerMessage = (e) => {
     const { dispatch } = this.props
     dispatch(Actions.saveServerMessage(this.serverId))
   }
@@ -174,7 +174,7 @@ class RolePicker extends Component {
                 Reset
               </button>
               <button
-                disabled={!this.rolesHaveChanged}
+                disabled={!this.rolesHaveChanged || data.get('lockedInteractions')}
                 onClick={() =>
                   dispatch(Actions.submitSelected(this.props.match.params.server))
                 }
@@ -186,14 +186,14 @@ class RolePicker extends Component {
           </div>
           <div className="role-picker__categories">
             {vm
-              .sortBy(v => v.get('position'))
+              .sortBy((v) => v.get('position'))
               .map((c, name) => (
                 <Category
                   key={name}
                   name={name}
                   category={c}
                   isSelected={this.isSelected}
-                  onChange={roles => dispatch(Actions.updateRoles(roles))}
+                  onChange={(roles) => dispatch(Actions.updateRoles(roles))}
                 />
               ))
               .toArray()}
