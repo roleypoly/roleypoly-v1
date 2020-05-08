@@ -22,7 +22,7 @@ module.exports = (R, $) => {
     await next()
   })
 
-  R.get('/api/server/:id', async ctx => {
+  R.get('/api/server/:id', async (ctx) => {
     const { userId } = ctx.session
     const { id } = ctx.params
 
@@ -46,7 +46,7 @@ module.exports = (R, $) => {
     ctx.body = server
   })
 
-  R.get('/api/server/:id/slug', async ctx => {
+  R.get('/api/server/:id/slug', async (ctx) => {
     const { id } = ctx.params
 
     const srv = await $.discord.getServer(id)
@@ -60,7 +60,7 @@ module.exports = (R, $) => {
     ctx.body = srv
   })
 
-  R.patch('/api/server/:id', async ctx => {
+  R.patch('/api/server/:id', async (ctx) => {
     const { userId } = ctx.session
     const { id } = ctx.params
 
@@ -89,20 +89,19 @@ module.exports = (R, $) => {
       ...(categories != null ? { categories } : {}),
     })
 
-    
     ctx.body = { ok: true }
 
     $.P.invalidate(id)
     $.discord.invalidate(id)
   })
 
-  R.get('/api/admin/servers', async ctx => {
+  R.get('/api/admin/servers', async (ctx) => {
     const { userId } = ctx.session
     if (!$.discord.isRoot(userId)) {
       return
     }
 
-    ctx.body = $.discord.client.guilds.map(g => ({
+    ctx.body = $.discord.client.guilds.map((g) => ({
       url: `${process.env.APP_URL}/s/${g.id}`,
       name: g.name,
       members: g.members.array().length,
@@ -110,7 +109,7 @@ module.exports = (R, $) => {
     }))
   })
 
-  R.patch('/api/servers/:server/roles', async ctx => {
+  R.patch('/api/servers/:server/roles', async (ctx) => {
     const { userId } = ctx.session
     const { server } = ctx.params
     const { added, removed } = ctx.request.body
@@ -126,21 +125,28 @@ module.exports = (R, $) => {
 
     // current roles and allowed roles are an inclusive set.
     // first, filter added and removed.
-    const sanitizedAdded = added.filter(role => allowedRoles.includes(role))
-    const sanitizedRemoved = removed.filter(role => allowedRoles.includes(role))
+    const sanitizedAdded = added.filter((role) => allowedRoles.includes(role))
+    const sanitizedRemoved = removed.filter((role) => allowedRoles.includes(role))
 
     // filter currentRoles by what's been removed (down is faster than up)
-    let newRoles = currentRoles.filter(role => !sanitizedRemoved.includes(role))
+    let newRoles = currentRoles.filter((role) => !sanitizedRemoved.includes(role))
 
     // last, add new roles
     newRoles = [...newRoles, ...sanitizedAdded]
 
     if (!arrayMatches(currentRoles, newRoles)) {
-      await $.discord.updateRoles(gm, newRoles)
+      if (process.env.FF_TransactionalRoles !== '0') {
+        await $.discord.updateRolesTx(gm, {
+          added: sanitizedAdded,
+          removed: sanitizedRemoved,
+        })
+      } else {
+        await $.discord.updateRoles(gm, newRoles)
+      }
     }
 
     ctx.body = { ok: true }
-    
+
     $.P.invalidate(userId)
     $.discord.invalidate(userId)
   })

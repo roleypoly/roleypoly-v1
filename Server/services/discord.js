@@ -1,6 +1,6 @@
 const Service = require('./Service')
 const superagent = require('superagent')
-const { DiscordClient, Member } = require('@roleypoly/rpc/discord')
+const { DiscordClient, Member, RoleTransaction, TxDelta } = require('@roleypoly/rpc/discord')
 const { IDQuery, DiscordUser } = require('@roleypoly/rpc/shared')
 const { Empty } = require('google-protobuf/google/protobuf/empty_pb')
 const { NodeHttpTransport } = require('@improbable-eng/grpc-web-node-http-transport')
@@ -34,7 +34,7 @@ class DiscordService extends Service {
     this.bootstrapRetries = 0
     this.bootstrapRetriesMax = 10
 
-    this.bootstrap().catch(e => {
+    this.bootstrap().catch((e) => {
       console.error(`bootstrap failure`, e)
       process.exit(-1)
     })
@@ -44,7 +44,7 @@ class DiscordService extends Service {
     try {
       const ownUser = await this.rpc.ownUser(new Empty(), this.sharedHeaders)
       this.ownUser = ownUser.toObject()
-      
+
       const listGuilds = await this.rpc.listGuilds(new Empty(), this.sharedHeaders)
       this.syncGuilds(listGuilds.toObject().guildsList)
     } catch (e) {
@@ -112,7 +112,7 @@ class DiscordService extends Service {
       q.setGuildid(serverId)
 
       const roles = await this.rpc.getGuildRoles(q, this.sharedHeaders)
-      return roles.toObject().rolesList.filter(role => role.id !== serverId)
+      return roles.toObject().rolesList.filter((role) => role.id !== serverId)
     })
   }
 
@@ -124,11 +124,11 @@ class DiscordService extends Service {
       }
     }
 
-    const matchFor = permissionInt =>
+    const matchFor = (permissionInt) =>
       !!gm.rolesList
-        .map(id => guildRoles.find(role => role.id === id))
-        .filter(x => !!x)
-        .find(role => (role.permissions & permissionInt) === permissionInt)
+        .map((id) => guildRoles.find((role) => role.id === id))
+        .filter((x) => !!x)
+        .find((role) => (role.permissions & permissionInt) === permissionInt)
 
     const isAdmin = guild.ownerid === gm.user.id || matchFor(0x00000008)
     const canManageRoles = isAdmin || matchFor(0x10000000)
@@ -153,6 +153,34 @@ class DiscordService extends Service {
     memberObj.rolesList = newRoles
     const member = this.memberToProto(memberObj)
     await this.rpc.updateMember(member, this.sharedHeaders)
+  }
+
+  async updateRolesTx(memberObj, { added, removed }) {
+    const roleTx = new RoleTransaction()
+    roleTx.setMember(this.memberToQueryProto(memberObj))
+    
+    for (let toAdd of added) {
+      const delta = new TxDelta()
+      delta.setAction(TxDelta.Action.ADD)
+      delta.setRole(toAdd)
+      roleTx.addDelta(delta)
+    }
+
+    for (let toRemove of removed) {
+      const delta = new TxDelta()
+      delta.setAction(TxDelta.Action.REMOVE)
+      delta.setRole(toRemove)
+      roleTx.addDelta(delta)
+    }
+
+    await this.rpc.updateMemberRoles(roleTx, this.sharedHeaders)
+  }
+
+  memberToQueryProto(member) {
+    const query = new IDQuery()
+    query.setGuildid(member.guildid)
+    query.setMemberid(member.user.id)
+    return query
   }
 
   memberToProto(member) {
@@ -224,7 +252,7 @@ class DiscordService extends Service {
   }
 
   async syncGuilds(guilds) {
-    guilds.forEach(guild => this.ctx.server.ensure(guild))
+    guilds.forEach((guild) => this.ctx.server.ensure(guild))
   }
 
   async cacheCurry(key, func) {
