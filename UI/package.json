@@ -8,16 +8,16 @@
     "immutable": "^3.8.2",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
-    "react": "^16.12.0",
+    "react": "^16.13.1",
     "react-custom-scrollbars": "^4.2.1",
     "react-dnd": "^7.0.0",
     "react-dnd-html5-backend": "^7.0.0",
-    "react-dom": "^16.12.0",
+    "react-dom": "^16.13.1",
     "react-immutable-proptypes": "^2.1.0",
-    "react-redux": "^7.1.3",
+    "react-redux": "^7.2.0",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.2.0",
+    "react-scripts": "3.4.1",
     "react-typist": "^2.0.5",
     "react-typist-cycle": "^0.1.2",
     "redux": "^4.0.5",
@@ -52,6 +52,6 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-standard": "^4.0.1",
     "node-sass-chokidar": "^1.4.0",
-    "prettier": "^1.19.1"
+    "prettier": "^2.0.5"
   }
 }
