@@ -33,7 +33,7 @@
     "pm2": "^4.4.0",
     "sequelize": "^5.21.2",
     "socket.io": "^2.3.0",
-    "superagent": "^5.1.1",
+    "superagent": "^5.3.1",
     "uuid": "^3.3.3"
   },
   "devDependencies": {
