@@ -1,4 +1,4 @@
-export const fadeOut = cb => dispatch => {
+export const fadeOut = (cb) => (dispatch) => {
   dispatch({
     type: Symbol.for('app fade'),
     data: true,

@@ -17,7 +17,7 @@ class Category extends Component {
     )
   }
 
-  onRoleToggle = id => (next, old) => {
+  onRoleToggle = (id) => (next, old) => {
     const type = this.props.category.get('type')
 
     switch (type) {
@@ -45,7 +45,7 @@ class Category extends Component {
         <h4>{category.get('name')}</h4>
         {category
           .get('roles_map')
-          .sortBy(r => r.get('position'))
+          .sortBy((r) => r.get('position'))
           .reverse()
           .map((r, k) => {
             const id = r.get('id')

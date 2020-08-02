@@ -1,7 +1,7 @@
 import superagent from 'superagent'
 import { history } from '../router/history'
 
-export const fetchServers = async dispatch => {
+export const fetchServers = async (dispatch) => {
   const rsp = await superagent.get('/api/servers')
 
   dispatch({
@@ -14,7 +14,7 @@ export const fetchServers = async dispatch => {
   })
 }
 
-export const userInit = async dispatch => {
+export const userInit = async (dispatch) => {
   if (!window.location.pathname.startsWith('/oauth')) {
     try {
       const rsp = await superagent.get('/api/auth/user')
@@ -38,7 +38,7 @@ export const userInit = async dispatch => {
   }
 }
 
-export const userLogout = async dispatch => {
+export const userLogout = async (dispatch) => {
   try {
     await superagent.post('/api/auth/logout')
   } catch (e) {}
@@ -50,7 +50,7 @@ export const userLogout = async dispatch => {
   window.location.href = '/'
 }
 
-export const startServerPolling = dispatch => {
+export const startServerPolling = (dispatch) => {
   return poll(window.__APP_STORE__.dispatch, window.__APP_STORE__.getState) // let's not cheat... :c
 }
 

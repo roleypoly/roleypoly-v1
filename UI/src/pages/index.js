@@ -8,7 +8,7 @@ import Error404 from './Error404'
 export { default as Landing } from './Landing'
 export { default as Error404 } from './Error404'
 
-const Pages = props => {
+const Pages = (props) => {
   return (
     <div className="pages">
       <Scrollbars autoHeight autoHeightMax="calc(100vh - 80px)">

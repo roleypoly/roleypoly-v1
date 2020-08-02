@@ -8,7 +8,6 @@ import discordLogo from '../../pages/images/discord-logo.svg'
 let specialFills = {}
 let showTransFlag = false
 
-
 class Wrapper extends Component {
   render() {
     const date = new Date()
@@ -18,7 +17,7 @@ class Wrapper extends Component {
     ) {
       specialFills = {
         circleFill: '#FFAEC6',
-        typeFill: '#6FDCFF'
+        typeFill: '#6FDCFF',
       }
       showTransFlag = true
     }
@@ -31,7 +30,18 @@ class Wrapper extends Component {
               <div className="uk-navbar-left">
                 <Link to="/">
                   <div style={{ display: 'flex' }}>
-                    <Logotype style={{ height: '2rem', marginRight: '12px' }} className="wrapper__logotype" {...specialFills} /> {showTransFlag && <TransFlag height="100%" width="75px" uk-tooltip="pos: bottom; title: Roleypoly says trans rights!" />}
+                    <Logotype
+                      style={{ height: '2rem', marginRight: '12px' }}
+                      className="wrapper__logotype"
+                      {...specialFills}
+                    />{' '}
+                    {showTransFlag && (
+                      <TransFlag
+                        height="100%"
+                        width="75px"
+                        uk-tooltip="pos: bottom; title: Roleypoly says trans rights!"
+                      />
+                    )}
                   </div>
                 </Link>
               </div>
