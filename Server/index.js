@@ -12,7 +12,7 @@ const Roleypoly = require('./Roleypoly')
 const ksuid = require('ksuid')
 
 // monkey patch async-reduce because F U T U R E
-Array.prototype.areduce = async function(predicate, acc = []) {
+Array.prototype.areduce = async function (predicate, acc = []) {
   // eslint-disable-line
   for (let i of this) {
     acc = await predicate(acc, i)
@@ -23,8 +23,8 @@ Array.prototype.areduce = async function(predicate, acc = []) {
 
 Array.prototype.filterNot =
   Array.prototype.filterNot ||
-  function(predicate) {
-    return this.filter(v => !predicate(v))
+  function (predicate) {
+    return this.filter((v) => !predicate(v))
   }
 
 // Create the server and socket.io server
@@ -139,6 +139,6 @@ async function start() {
   server.listen(process.env.APP_PORT || 6769)
 }
 
-start().catch(e => {
+start().catch((e) => {
   log.fatal('app failed to start', e)
 })

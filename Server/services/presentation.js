@@ -43,7 +43,7 @@ class PresentationService extends Service {
       const serverData = await this.ctx.server.get(server.id)
       const serverRoles = await this.discord.getRoles(server.id)
       const memberRoles = member.rolesList
-        .map(id => serverRoles.find(role => role.id === id))
+        .map((id) => serverRoles.find((role) => role.id === id))
         .sort((a, b) => (a.position > b.position ? -1 : 1))
 
       const color = memberRoles.length > 0 ? memberRoles[0].color : 0
@@ -67,7 +67,7 @@ class PresentationService extends Service {
     if (process.env.DISABLE_CACHE === 'true') {
       return func()
     }
-    
+
     if (this.cache.has(key)) {
       return this.cache.get(key)
     }

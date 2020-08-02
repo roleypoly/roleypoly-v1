@@ -1,5 +1,5 @@
 module.exports = (R, $) => {
-  R.post('/api/auth/token', async ctx => {
+  R.post('/api/auth/token', async (ctx) => {
     const { token } = ctx.request.body
 
     if (token == null || token === '') {
@@ -27,7 +27,7 @@ module.exports = (R, $) => {
     }
   })
 
-  R.get('/api/auth/user', async ctx => {
+  R.get('/api/auth/user', async (ctx) => {
     if (ctx.session.accessToken === undefined) {
       ctx.body = { err: 'not_logged_in' }
       ctx.status = 401
@@ -46,7 +46,7 @@ module.exports = (R, $) => {
     }
   })
 
-  R.get('/api/auth/redirect', ctx => {
+  R.get('/api/auth/redirect', (ctx) => {
     const url = $.discord.getAuthUrl()
     if (ctx.query.url === '✔️') {
       ctx.body = { url }
@@ -56,11 +56,11 @@ module.exports = (R, $) => {
     ctx.redirect(url)
   })
 
-  R.post('/api/auth/logout', ctx => {
+  R.post('/api/auth/logout', (ctx) => {
     ctx.session = null
   })
 
-  R.get('/api/oauth/bot', ctx => {
+  R.get('/api/oauth/bot', (ctx) => {
     const url = $.discord.getBotJoinUrl()
     if (ctx.query.url === '✔️') {
       ctx.body = { url }
@@ -70,5 +70,5 @@ module.exports = (R, $) => {
     ctx.redirect(url)
   })
 
-  R.get('/api/oauth/bot/callback', ctx => {})
+  R.get('/api/oauth/bot/callback', (ctx) => {})
 }
