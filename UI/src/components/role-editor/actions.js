@@ -1,4 +1,4 @@
-import { Set } from 'immutable'
+import { OrderedMap, Set } from 'immutable'
 import * as UIActions from '../../actions/ui'
 import { getViewMap, setup } from '../role-picker/actions'
 import uuidv4 from 'uuid/v4'
@@ -138,34 +138,40 @@ export const createCategory = (dispatch, getState) => {
   })
 }
 
-export const bumpCategory = (category, name) => (move) => async (dispatch, getState) => {
+export const bumpCategory = (category, id) => (move) => async (dispatch, getState) => {
+  console.log({ category, id, move })
   const { roleEditor } = getState()
   const vm = roleEditor.get('viewMap')
+  const vmSeq = vm.valueSeq().filterNot((item) => item.get('name') === 'Uncategorized')
+  console.log({ vm, vmSeq })
 
-  const position = category.get('position')
-  const nextPos = position + move
+  const oldPosition = vmSeq.findKey((item) => item.get('id') === id)
+  const newPosition = Math.max(0, Math.min(vm.size - 1, oldPosition + move))
+  console.log({ oldPosition, newPosition })
 
-  const replaceThisOne = vm.findKey((category) => category.get('position') === nextPos)
+  const vmSeqExcludingBump = vmSeq.splice(oldPosition, 1)
+
+  console.log({ vmSeqExcludingBump: vmSeqExcludingBump.toJS() })
+  const vmSeqWithBump = vmSeqExcludingBump
+    .slice(0, newPosition)
+    .concat([category])
+    .concat(vmSeqExcludingBump.slice(newPosition))
+
+  console.log({ vmSeqWithBump: vmSeqWithBump.toJS() })
+  const vmSeqNewOrdering = vmSeqWithBump
+    .map((item, idx) => item.set('position', idx))
+    .sortBy((item) => item.get('position'))
+
+  console.log({ vmSeqNewOrdering: vmSeqNewOrdering.toJS() })
+  const newVm = vmSeqNewOrdering
+    // .add(vm.find((item) => item.get('name') === 'Uncategorized'))
+    .reduce((acc, item) => acc.set(item.get('id'), item), OrderedMap())
+    .set('Uncategorized', vm.get('Uncategorized'))
 
   dispatch({
-    type: Symbol.for('re: edit category'),
-    data: {
-      id: name,
-      key: 'position',
-      value: nextPos,
-    },
+    type: Symbol.for('re: replace viewmap'),
+    data: newVm,
   })
-
-  if (!!replaceThisOne) {
-    dispatch({
-      type: Symbol.for('re: edit category'),
-      data: {
-        id: replaceThisOne,
-        key: 'position',
-        value: position,
-      },
-    })
-  }
 }
 
 export const saveServer = (id) => async (dispatch, getState) => {

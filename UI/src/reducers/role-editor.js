@@ -16,6 +16,9 @@ const reducer = (state = initialState, { type, data }) => {
         ...rest,
       })
 
+    case Symbol.for('re: replace viewmap'):
+      return state.set('viewMap', data)
+
     case Symbol.for('re: set category'):
       return state.setIn(['viewMap', data.id], Map(data))
 
@@ -44,11 +47,11 @@ const reducer = (state = initialState, { type, data }) => {
         rmCat
           .set(
             'roles',
-            rmCat.get('roles').filterNot(r => r === data.role.get('id'))
+            rmCat.get('roles').filterNot((r) => r === data.role.get('id'))
           )
           .set(
             'roles_map',
-            rmCat.get('roles_map').filterNot(r => r.get('id') === data.role.get('id'))
+            rmCat.get('roles_map').filterNot((r) => r.get('id') === data.role.get('id'))
           )
       )
 

@@ -44,17 +44,7 @@ export const getViewMap = (server) => {
         name: 'Uncategorized',
       })
     )
-    .map((cat, idx) =>
-      cat.set(
-        'position',
-        cat.get(
-          'position',
-          categoriesIds.findIndex((v) => v === idx)
-        )
-      )
-    )
-    // .sortBy(cat => cat.get('position'))
-    .map((c) => {
+    .map((c, id) => {
       const roles = c
         .get('roles')
         // fill in roles_map
@@ -63,7 +53,10 @@ export const getViewMap = (server) => {
         // sort by server position, backwards.
         .sort((a, b) => a.position > b.position)
       // force data to sets
-      return c.set('roles_map', Set(roles)).set('roles', Set(c.get('roles')))
+      return c
+        .set('roles_map', Set(roles))
+        .set('roles', Set(c.get('roles')))
+        .set('id', id)
     })
 
   const selected = roles.reduce(
