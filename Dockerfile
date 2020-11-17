@@ -1,4 +1,4 @@
-FROM node:12.16-alpine AS base
+FROM node:15.2.1-alpine AS base
 
 FROM base AS uibase
 WORKDIR /src/UI
