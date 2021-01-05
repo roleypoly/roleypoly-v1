@@ -150,6 +150,7 @@ class DiscordService extends Service {
       q.setGuildid(serverId)
 
       const guild = await this.rpc.getGuild(q, this.sharedHeaders)
+      this.ctx.servers.ensure(guild.toObject())
       return guild.toObject()
     })
   }
