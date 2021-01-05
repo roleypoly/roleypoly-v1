@@ -40,7 +40,15 @@ class PresentationService extends Service {
 
   presentableServer(server, member) {
     return this.cacheCurry(`ps:${server.id}-${member.user.id}`, async () => {
-      const serverData = await this.ctx.server.get(server.id)
+      let message = ''
+      let categories = []
+
+      try {
+        const serverData = await this.ctx.server.get(server.id)
+        message = serverData.message
+        categories = serverData.categories
+      } catch (e) {}
+
       const serverRoles = await this.discord.getRoles(server.id)
       const memberRoles = member.rolesList
         .map((id) => serverRoles.find((role) => role.id === id))
@@ -54,11 +62,11 @@ class PresentationService extends Service {
           ...member,
           color,
         },
-        server: server,
         roles: serverRoles,
-        message: serverData.message,
-        categories: serverData.categories,
         perms: this.discord.getPermissions(member, serverRoles, server),
+        server,
+        message,
+        categories,
       }
     })
   }
