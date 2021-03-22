@@ -159,6 +159,18 @@ module.exports = (R, $) => {
     $.P.invalidate(userId)
     $.discord.invalidate(userId)
   })
+
+  R.get('/x/import-to-next/:server', async (ctx) => {
+    const { server } = ctx.params
+    const { authorization } = ctx.headers
+
+    if (authorization !== `Shared ${process.env.BOT_IMPORT_TOKEN}`) {
+      return
+    }
+
+    const serverData = await $.server.get(server)
+    ctx.body = serverData
+  })
 }
 
 // if length is the same, check elements.
