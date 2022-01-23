@@ -63,7 +63,7 @@ class Wrapper extends Component {
                     <a href="https://discord.gg/PWQUVsd">Roleypoly on Discord</a>
                   </li>
                   <li>
-                    <a href="https://patreon.com/kata">Patreon</a>
+                    <a href="https://patreon.com/roleypoly">Patreon</a>
                   </li>
                 </ul>
               </div>
